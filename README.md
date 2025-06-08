@@ -1,0 +1,3 @@
+- This manuscript is intended to submit to [BMC Bioinformatics](https://bmcbioinformatics.biomedcentral.com/submission-guidelines/preparing-your-manuscript)
+- This template is from [here](https://www.springernature.com/gp/authors/campaigns/latex-author-support).
+  - On [Overleaf](https://www.overleaf.com/latex/templates/springer-nature-latex-template/gsvvftmrppwq). 
