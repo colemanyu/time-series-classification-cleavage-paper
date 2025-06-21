@@ -5,6 +5,9 @@
 
 % Time series classification in detail, especially Rocket-based methods
 
+% We need to prepare a dataset that contains the positive samples and the negative samples. Positive (negative) samples refer to the strings that (do not) contain a cleavage site. 
+
+
 %%%
 This manuscript aims to transform the problem of predicting human dicer cleavage sites into a multivariate time series classification problem. This allows algorithms from the time series community to be run, and it gives us more ways to analyze and visualize such data.
 Time series data is good for visualization.
@@ -166,7 +169,7 @@ It makes the prediction of the secondary structure easier and more applicable th
 Secondary structure can still shed light on some of these functions in the structure-function relationships.
 We employ RNAfold from the ViennaRNA Package\footnote{The latest stable release is Version 2.7.0, accessed on Feb 2025) to predict the secondary structure for a given pri-miRNA~\cite{ViennaRNAPackage202011}.}.
 RNAfold returns the secondary structure in the dot-bracket notation and a matrix for the base-pair probabilities.
-Equipped with the matrix, we can construct the base-pair probability sequence of the original sequence. The first ten entries of the probability sequence of our running example are shown in~\ref{tab:hsa-let-7a-1}.
+Equipped with the matrix, we can construct the base-pair probability sequence of the original sequence. The first ten entries of the probability sequence of our running example are shown in Table~\ref{tab:hsa-let-7a-1}.
 \begin{definition}[Dot-bracket notation] 
 \label{def:dot-bracket}
 Dot-bracket notation is a way of representing the secondary structure of the given string $s$. One of the following symbols is assigned to each base in $s.$
@@ -646,7 +649,33 @@ Figure~\ref{fig:transformation_relationships} shows how to use the discussed not
 \label{fig:transformation_relationships}
 \end{figure}
 
+\subsection{Time series classification}
 
-\subsubsection{Time series classification}
+In this study, we propose a novel approach to predict human dicer cleavage sites by reframing this task as a multivariate time series classification problem.
+We have introduced how to transform the information of the sequence, the secondary structure, and its probability sequence into a time series.
+In this session, we will introduce the time series classifier used in this manuscript.
+
+There are many classifiers defined on time series data, including distance-based, feature-based, interval-based, shapelet-based, dictionary-based, convolution-based, and deep learning-based. Also, two or more of the above approaches can be combined, namely hybrid approaches~\cite{BakeReduxReview2024}.
+For a complete review of time series classification, we would like to direct the readers to~\cite{BakeReduxReview2024, GreatMultivariateTime2021, GreatTimeSeries2017} for details.
+As our downstream classifier, we adopt convolution-based classifiers for their simplicity and accuracy.
+The convolution-based approaches leverage a simple design pattern, which is the over-production of features, followed by a selection strategy.
+In the first step, a large number of features about the instances are produced. The features encode the characteristics of the instances and the computational complexity of it is low.
+Then, a simple classifier such as a linear ridge classiﬁer determines which features are most useful.
+%%% Above is not tidy yet.
+
+\subsubsection{Convolution based classification}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.8\columnwidth]{figures/rocket_convolution.pptx.pdf}}
+\caption{Convolution}
+\label{fig:rocket_convolution}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.8\columnwidth]{figures/pipeline.pptx.pdf}}
+\caption{Pipeline. Cylinder: Database / Dataset, Rectangle (Box): Process / Task / Transformation, Parallelogram: Input / Output, Rounded Rectangle (Capsule shape): Model / Component}
+\label{fig:pipeline}
+\end{figure}
+Test for references~\cite{DiCleavePlus2025}.
+
 \subsection{Evaluation}
-
