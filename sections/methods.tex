@@ -1,28 +1,19 @@
 \section{Methods} \label{sec:methods}
-% What is time series and time series classification?
+Our main goal is to classify whether an input pattern contains a cleavage site of Dicer.
+We aim to transform the problem of predicting human dicer cleavage sites into a multivariate time series classification problem. This allows us to use algorithms from the time series community. It gives us more ways to analyze and visualize the data.
 
-% Transformation method. Especially our new transformation method involving a probability sequence
-
-% Time series classification in detail, especially Rocket-based methods
-
-% We need to prepare a dataset that contains the positive samples and the negative samples. Positive (negative) samples refer to the strings that (do not) contain a cleavage site. 
-
-
-%%%
-This manuscript aims to transform the problem of predicting human dicer cleavage sites into a multivariate time series classification problem. This allows algorithms from the time series community to be run, and it gives us more ways to analyze and visualize such data.
-Time series data is good for visualization.
 In this session, we first discuss how to prepare the dataset.
-Since we want to transform the data into time series representations, we briefly review time series and then propose transformation algorithms.
+We briefly review the definitions of time series and then propose transformation algorithms which allow us to to transform the data into time series representations.
 After that, time series classifiers are discussed.
-Finally, we discuss how to evaluate the performance of the time series classifiers.
-
-Our main goal is to build a classifier that checks whether an input string contains a cleavage site of Dicer.
+Finally, we discuss the evaluation metrics used in this study.
 
 \subsection{Data preparation}
-We use miRBase database~\cite{MiRBaseToolsMicroRNA2008}\footnote{The current website is \url{www.mirbase.org}, and the newest version of the database is Release 22.1 (accessed on Feb 2025).}. 
+% We need to prepare a dataset that contains the positive samples and the negative samples. 
+% Positive (negative) samples refer to the strings that (do not) contain a cleavage site. 
+We used miRBase database~\cite{MiRBaseToolsMicroRNA2008}\footnote{The website is \url{www.mirbase.org}, and the newest version of the database is Release 22.1 (Accessed on 2025-06-22).}. 
 The database consists of miRNA data from different organisms, such as humans, mice, and C. elegans~\cite{MiRBaseConverterBioconductorPackage2018}.
-Each data entry refers to a miRNA sequence, along with other properties such as name, accession (the identifier used in miRBase), organism (from which it comes), and information on its derivative miRNA products.
-In this manuscript, we are interested in pri-miRNA in humans.
+Each data entry refers to a miRNA sequence, along with other properties such as name, accession which is the identifier used in miRBase, organism which indicates from which it comes, and information on its derivative miRNA products.
+We are interested in pri-miRNA in humans.
 The derivative miRNA products are the mature miRNAs. 
 The database also annotates the location of the mature miRNA in the original pri-miRNA and states whether or not its existence has experimental evidence.
 
@@ -103,20 +94,21 @@ The database also annotates the location of the mature miRNA in the original pri
          } \\
          \hline
     \end{tabular}}
-    \caption{Selected representative records from miRBase. For the last two columns, there are three lines in each cell. The first line shows the name of this Mature miRNA product. The second line shows its location in the original sequence. We use the $x:y$ notation to denote that this product is located from the $x$ position to the $y$ position in the original sequence, inclusively.}
+    \caption{Selected representative records from miRBase. For the last two columns, there are three lines in each cell. The first line shows the name of this mature miRNA product. The second line shows its location in the original sequence. We use the $x:y$ notation to denote that this product is located from the $x$ position to the $y$ position in the original sequence. Both ends are inclusive.}
     \label{tab:miRBase}
 \end{table}
 The database contains 38589 miRNA records.
 Table~\ref{tab:miRBase} shows four representative records from miRBase database.
-We use Table~\ref{tab:miRBase} to elucidate our selection criteria. 
+We use it to elucidate our selection criteria. 
 The records are rows in the table.
 We selected the records from humans (Homo sapiens).
 It resulted in 1917 records.
-In order to have the actual locations of the two cleavage sites in the pri-miRNA sequence that have the experimental evidence, we selected the records with the two mature miRNAs resulting from cleavage at the 5p arm and the 3p arm that have experimental support.
-According to the above selection criteria, only ``MI0000060'' would be selected for our further analysis in the four records in Table~\ref{tab:miRBase}.
+In order to have the actual locations of the two cleavage sites in the pri-miRNA sequence that have experimental evidences, we selected the records with the two mature miRNAs resulting from cleavage at the 5p arm and the 3p arm that have experimental supports.
+According to the above selection criteria, only ``MI0000060'' would be selected.
 
 \begin{table}[ht]
     \centering
+      % Overfull \hbox (x pt too wide) 
       % https://blog.csdn.net/weixin_46777569/article/details/126260667
       \resizebox{\columnwidth}{!}{\begin{tabular}{c | c}
          \hline
@@ -140,40 +132,44 @@ According to the above selection criteria, only ``MI0000060'' would be selected 
          \hline
          \makecell{
          1 (0.549, 0.946, 0.987, 0.987, 0.904) 5 \\
-         6 (\textcolor{red}{\textbf{-1.000}}, 0.841, 0.974, 0.981, 0.890) 10
+         6 (\textcolor{red}{\textbf{0.000}}, 0.841, 0.974, 0.981, 0.890) 10
          } & \\
          \hline
     \end{tabular}}
+    % https://tex.stackexchange.com/questions/531/what-is-the-best-way-to-use-quotation-mark-glyphs
     % https://www.overleaf.com/learn/latex/Using_colors_in_LaTeX
-    \caption{The whole sequence of ``hsa-let-7a-1'' with the locations of its two mature miRNA and its predicted secondary structure.
+    \caption{The whole sequence of ``hsa-let-7a-1'' with the locations of its two mature miRNAs and its predicted secondary structure by RNAfold.
     We have numbered each line with the staring and ending positions.
-    The corresponding positions of the two mature miRNAs and the probability of the unpaired `U' are \textcolor{red}{\textbf{bolded and in red}}.}
+    The corresponding positions of the two mature miRNAs and the probability of the unpaired ``U'' are \textcolor{red}{\textbf{bolded and in red}}.}
     \label{tab:hsa-let-7a-1}
 \end{table}
-% https://tex.stackexchange.com/questions/531/what-is-the-best-way-to-use-quotation-mark-glyphs
-
+After the selection process, we selected 827 experimental validated pre-miRNA sequences together with its two mature miRNA products, and this formed our dataset.
 We use ``hsa-let-7a-1'' as our running example.
 The whole sequence of it and its necessary information for our downstream analysis is listed in Table~\ref{tab:hsa-let-7a-1}.
 
-After the selection process, we selected 827 experimental validated pre-miRNA sequences together with its two mature miRNA products, and this formed our dataset.
-
 \subsubsection{Argument the dataset with Secondary Structure information}
 We want to use the domain knowledge about pre-miRNA sequences to improve our classifier's accuracy. 
-We leverage the secondary structure of these sequences to achieve it.
+We leverage the secondary structure of these sequences to achieve this.
 Recall that a specific three-dimensional (3D) structure is required for DNA, RNA, and protein to perform functions~\cite{UnderstandingBioinformatics2008}.
 However, finding these 3D structures using experimental methods such as X-ray crystallography or nuclear magnetic resonance (NMR) is costly and time-consuming.
 Hence, the prediction methods on such 3D structures are necessary and helpful for the downstream analysis.
 However, prediction of such 3D structures is difficult. One of the reasons is that there are some “nonconventional” base-pair interactions (e.g., A-G) that allow an RNA structure to fold into a 3D structure. It makes the search space for prediction much larger than, in the 2D case, the secondary structure.
 The local structure of the 3D structures, the secondary structures, only focus on the conventional (G-C and A-U) base-pair interactions~\cite{MolecularBiologyCell2022}.
 It makes the prediction of the secondary structure easier and more applicable than predicting the 3D structure.
+
 Secondary structure can still shed light on some of these functions in the structure-function relationships.
-We employ RNAfold from the ViennaRNA Package\footnote{The latest stable release is Version 2.7.0, accessed on Feb 2025) to predict the secondary structure for a given pri-miRNA~\cite{ViennaRNAPackage202011}.}.
+We employ RNAfold from the ViennaRNA Package\footnote{The latest stable release is Version 2.7.0, accessed on 2025-06-22) to predict the secondary structure for a given pri-miRNA~\cite{ViennaRNAPackage202011}.}.
 RNAfold returns the secondary structure in the dot-bracket notation and a matrix for the base-pair probabilities.
-Equipped with the matrix, we can construct the base-pair probability sequence of the original sequence. The first ten entries of the probability sequence of our running example are shown in Table~\ref{tab:hsa-let-7a-1}.
+Equipped with the matrix, we can construct the base-pair probability sequence of the original sequence. 
+For the unpaired nucleotide, its base pair probability is 0.  
+The first ten entries of the probability sequence of our running example are shown in Table~\ref{tab:hsa-let-7a-1}.
+
+The secondary structure of ``hsa-let-7a-1'' in dot-bracket notation has been shown in Table~\ref{tab:hsa-let-7a-1}. The visualization of it has been shown in Figure~\ref{fig:hsa-let-7a-1_ss}.
+
 \begin{definition}[Dot-bracket notation] 
 \label{def:dot-bracket}
-Dot-bracket notation is a way of representing the secondary structure of the given string $s$. One of the following symbols is assigned to each base in $s.$
-% https://www.overleaf.com/learn/latex/Lists
+Dot-bracket notation is a way of representing the secondary structure of the given string $s$. 
+One of the following symbols is assigned to each base in $s$.
 \begin{itemize}
   \item Open parentheses $($ indicates that the base is paired with a complementary base further along in $s$.
   \item Close parentheses $)$ indicates that the base is paired with a complementary base earlier in $s$.
@@ -181,33 +177,26 @@ Dot-bracket notation is a way of representing the secondary structure of the giv
 \end{itemize}
 \end{definition}
 
-
-The secondary structure of ``hsa-let-7a-1'' in dot-bracket notation has been shown in Table~\ref{tab:hsa-let-7a-1}. The visualization of it has been shown in 
-% https://www.overleaf.com/learn/latex/Footnotes
-Figure~\ref{fig:hsa-let-7a-1_ss}\footnote{The main body of the figure is created by RNAfold web server (\url{http://rna.tbi.univie.ac.at//cgi-bin/RNAWebSuite/RNAfold.cgi}, accessed on Feb 2025), included in ~\cite{ViennaRNAPackage202011}}.
-The nodes' colors show the base-pair probabilities. 
-The deeper the color, the higher the probability. 
-The unpaired nodes are in white.
-
 \subsubsection{Extract cleavage patterns}
-% https://tex.stackexchange.com/questions/47324/superscript-outside-math-mode
 The locations of the two mature miRNAs on the main sequence indicate the probable locations of the two cleavage sites. 
-The 5p cleavage site (i.e., the cleavage site near the 5p end) must be beyond and near the ending location of the 5p mature miRNA. 
-For example, the ending position of the 5p mature miRNA for ``hsa-let-7a-1'' (i.e., ``hsa-let-7a-5p'') is 27, as shown in Figure~\ref{fig:hsa-let-7a-1_ss}. So, the 5p cleavage site would be one of the bonds beyond the 27\textsuperscript{th} nucleotide, as indicated by a scissor in the Figure. We deemed the immediate bond next to the ending position of the 5p mature miRNA the 5p cleavage site with the knowledge that the actual cleavage site may not be this immediate bond but the nearby bonds after it. 
+The 5p cleavage site must be beyond and near the ending location of the 5p mature miRNA. 
+For example, the ending position of the 5p mature miRNA for ``hsa-let-7a-1'' (i.e., ``hsa-let-7a-5p'') is 27, as shown in Figure~\ref{fig:hsa-let-7a-1_ss}. So, the 5p cleavage site would be one of the bonds beyond the 27\textsuperscript{th} nucleotide, as indicated by a scissor in the Figure. We deemed the immediate bond next to the ending position of the 5p mature miRNA the 5p cleavage site, with the knowledge that the actual cleavage site may not be this immediate bond but the nearby bonds after it. 
 The same applies to the 3p cleavage site. It is at the immediate bond before the starting position of the 3p mature miRNA, which is 57.
 
-We extract a 14-string (a.k.a, string with length $= 14$) with the cleavage site located at the center.
+We extract a 14-string (i.e., string with length $= 14$) with the cleavage site located at the center.
 The first 7 nt (nucleotide) before the center are \textcolor{red}{\textbf{bolded and in red}}.
 In our running example, it would be ``\textcolor{red}{\textbf{UAUAGUU}}UUAGGU'' for the 5p cleavage site and ``\textcolor{red}{\textbf{GAGAUAA}}CUAUACA'' for the 3p cleavage site.
 We call these 14-strings cleavage patterns as they contains the cleavage sites.
-We can also generate non-cleavage patterns by selecting a 14-string with the center 6 nt away from the corresponding cleavage sites towards the corresponding mature miRNA.
+
+We can also generate non-cleavage patterns by selecting a 14-string with the center 6 nt away from the corresponding cleavage sites towards the corresponding mature miRNA~\cite{LBSizeCleavImprovedSupport2016, ReCGBMGradientBoostingbased2021}.
 For example, the bond that is 6nt away from the 5p cleavage site towards 5p mature miRNA is the bond between 21\textsuperscript{st} and 22\textsuperscript{nd} nucleuotides.
 It is based on the assumption that the dicer is less likely to cut the middle of the mature miRNA than the opposite side.
 So, in our example, the 5p non-cleavage pattern would be ``\textcolor{red}{\textbf{AGGUUGU}}AUAGUUU''.
-The center of the 3p non-cleavage pattern is the bond between 62\textsuperscript{nd} and 63\textsuperscript{rd} nucleuotides. The 3p non-cleavage pattern would be ``\textcolor{red}{\textbf{ACUAUAC}}AAUCUAC''.
+The center of the 3p non-cleavage pattern is the bond between 62\textsuperscript{nd} and 63\textsuperscript{rd} nucleuotides. 
+The 3p non-cleavage pattern would be ``\textcolor{red}{\textbf{ACUAUAC}}AAUCUAC''.
 
 In conclusion, for a given pri-miRNA, we can generate two cleavage patterns (positive samples) and two non-cleavage patterns (negative samples).
-We also call these four patterns simply the ``four strings'' of a given pri-miRNA.
+For convenient, we also call these four patterns simply the ``four strings'' of a given pri-miRNA.
 The four strings of ``hsa-let-7a-1'' are listed in Table~\ref{tab:hsa-let-7a-1_eight_strings}.
 % https://tex.stackexchange.com/questions/48632/underscores-in-words-text
 % https://tex.stackexchange.com/questions/534381/underscore-is-shorter-for-ttfamily
@@ -218,10 +207,10 @@ The four strings of ``hsa-let-7a-1'' are listed in Table~\ref{tab:hsa-let-7a-1_e
           & 5p-cleav & non-5p-cleav & 3p-cleav & 3p-non-cleav \\
          \hline  
          Input strand & 
-         \texttt{UAUAGUUUUAGGGU} & 
-         \texttt{AGGUUGUAUAGUUU} & 
-         \texttt{GAGAUAACUAUACA} & 
-         \texttt{ACUAUACAAUCUAC} \\
+         \texttt{\textcolor{red}{UAUAGUU}UUAGGGU} & 
+         \texttt{\textcolor{red}{AGGUUGU}AUAGUUU} & 
+         \texttt{\textcolor{red}{GAGAUAA}CUAUACA} & 
+         \texttt{\textcolor{red}{ACUAUAC}AAUCUAC} \\
          \hline
          Complementary strand & \texttt{AUAUCAA\char`_\char`_\char`_\char`_\char`_UA} & 
          \texttt{C\char`_CUGUUGAUAUGU} & 
@@ -229,17 +218,19 @@ The four strings of ``hsa-let-7a-1'' are listed in Table~\ref{tab:hsa-let-7a-1_e
          \texttt{UGAUAUGUUGGAUG} \\
          \hline
     \end{tabular}}
-    \caption{The first row shows the four strings of ``hsa-let-7a-1''. If they are regarded as the input strands, the complementary strands are shown in the second row.}
+    \caption{The first row shows the four strings of ``hsa-let-7a-1''. Their complementary strands are shown in the second row.}
     \label{tab:hsa-let-7a-1_eight_strings}
 \end{table}
-We could construct the complementary strand of each of the string/ strand in the ``four strings'' by finding the corresponding paired base for each of the bases in the input strand by considering the secondary structure information. 
+We could construct the complementary strand of each of the strand in the ``four strings'' by finding the corresponding paired base for each of the bases in the input strand by considering the secondary structure information. 
 Bases refer to the nucleotides. We will use these two terms interchangeably.
 We use `\_' to denote the unpaired base in the complementary strand.
-For example, in Figure~\ref{fig:hsa-let-7a-1_ss}, the sub-string ``UUAGG'' in the 5p-cleavage pattern ``UAUAGUUUUAGGGU'' are unpaired while other bases do pair with some bases in the complementary strand, the resulting complementary strand is ``AUAUCAA\_\_\_\_\_UA''. Note that the five underscores indicate that ``UUAGG'' is unpaired. There is a loop/ budge there.
+For example, in Figure~\ref{fig:hsa-let-7a-1_ss}, the sub-string ``UUAGG'' in the 5p-cleavage pattern ``UAUAGUUUUAGGGU'' are unpaired while other bases do pair with some bases in the complementary strand, the resulting complementary strand is ``AUAUCAA\_\_\_\_\_UA''. 
+Note that the five underscores indicate that ``UUAGG'' is unpaired. There is a loop/ budge there.
 
 The strand and its complementary strand together can then encode the loop/ budge information.
-We call the four original input strands and the constructed four complementary strands together as the ``eight strings'' of the input pre-miRNA.
+We call the four original input strands and the constructed four complementary strands together as the ``eight strings'' of the input pre-miRNA, also shown in Table~\ref{tab:hsa-let-7a-1_eight_strings}.
 We are now ready to transform the ``eight strings'' into time series.
+Of note, we also have the base pair probability sequences that are of the same length as these strings. 
 
 \subsection{Time Series}
 \begin{definition}[Time Series] 
@@ -255,70 +246,48 @@ Formally, $T(i:j) = t_i, t_{i+1}, ..., t_j$, where $1 \leq i \leq j \leq n$.
 The above two notations are also used to represent string and its subsequence.
 
 \subsubsection{Transform strings into time series}
-Both strings and time series are temporal sequences. The order in a sequence usually represents time ordering. They are the values on the x-axis if we plot them on an x-y plane.
-
-The only difference between strings and time series is the behavioral attributes~\cite{DataMiningTextbook2015}. They are the values on the y-axis.
-For strings, also known as words, a y-value is a symbol from a predefined set called the alphabet. Thus, we also refer to the symbols as letters.
+% Transformation method. Especially our new transformation method involving a probability sequence
+Both strings and time series are temporal sequences. The order in a sequence usually represents time ordering. 
+% They are the values on the x-axis if we plot them on an x-y plane.
+The only difference between strings and time series is the behavioral attributes~\cite{DataMiningTextbook2015}. 
+% They are the values on the y-axis.
+For strings, also known as words, a y-value is a symbol from a predefined set called the alphabet. 
+Thus, we also refer to the symbols as letters.
 For example, the alphabet is $\{A, C, G, T\}$ in the DNA string, while $\{A, C, G, U\}$ in the RNA string.
-For time series, a y-value is a scalar number. The number can be an integer or a real number. The important point is that they are naturally ordered. The ``greater than'' and ``smaller than'' are well-defined. There is no ordering in the alphabet unless some external domain knowledge is introduced to explain why a letter is smaller (greater) than another letter.
+For time series, a y-value is a scalar number. The number can be an integer or a real number. The important point is that they are naturally ordered. 
+The ``greater than'' and ``smaller than'' are well-defined. 
+There is no ordering in the alphabet unless some external domain knowledge is introduced.
 
 In the bioinformatics community, the study of applying signal processing techniques to genomic data, which includes DNA and RNA strings, is called ``Genomic Signal Processing'' (GSP)~\cite{DNANumericalRepresentations2017}.
 In the field of GSP, the time series representations of DNA strings are called DNA numeric representations (DNR).
 Many DNRs have been proposed in the field of GSP, with applications including identifying protein-coding regions in DNA sequences~\cite{IdentificationProteinCodingRegions2011}, biological sequence querying~\cite{TimefrequencyBasedBiological2010}, and finding similarities between DNA sequences~\cite{NovelMethodComparative2014}.
-We noted that DNA strings and RNA strings are the same from the computational point of view. They are simply strings with different alphabets.
+We noted that DNA strings and RNA strings are the same from the computational point of view. 
+They are simply strings with different alphabets.
 Recall that the alphabet of DNA is $\{A, C, G, T\}$ and that of RNA is $\{A, C, G, U\}$.
 Many transformation methods designed for DNA are applicable to RNA by simply substituting $T$ for $U$.
-In this manuscript, our default alphabet is  $\{A, C, G, U\}$.
+In this study, our default alphabet is  $\{A, C, G, U\}$.
 % https://www.reddit.com/r/grammar/comments/bfuqx4/what_is_the_correct_wording_for_one_of_if_not_the/
 One of the simple, if not the simplest, transformations is to map the letters in the alphabet into integer numbers without considering any domain knowledge about the nucleotides.
-Method 1 in Table~\ref{tab:time_series_transform} shows this approach. We call this method ``Toy'.
-This method belongs to a group of methods called the ``single-value'' approach~\cite{SearchingMiningTrillions2012, ConversionNucleotidesSequences2002, AutoregressiveModelingFeature2004, DNASequencesClassification2001, DNANumericalRepresentations2017}.
+% Method 1 in Table~\ref{tab:time_series_transform} shows this approach. We call this method ``Toy''.
+This method belongs to a group of methods called the ``Single value mapping'' approach~\cite{SearchingMiningTrillions2012, ConversionNucleotidesSequences2002, AutoregressiveModelingFeature2004, DNASequencesClassification2001, DNANumericalRepresentations2017}.
 One single value is assigned to each of the letters.
+
 A more reasonable approach in this category is to employ the domain knowledge during assignments.
 For example, \cite{ATCGNucleotideFluctuation2007} employs the atomic number of each nucleotide as the transformed values where $\{78, 70, 58, 66\}$ is assigned to  $\{G, A, C, T\}$ respectively.
-\cite{CodingMeasureScheme2006} uses ``electron-ion'' interaction potential representation (EIIP) as such values. These values are $\{0:0806, 0:1260, 0:1340, 0:1335\}$.
-Our goal is to transform the input strand and its complementary strand into two-time series and aim to capture the information of these sequences and the secondary structure.
+\cite{CodingMeasureScheme2006} uses ``electron-ion'' interaction potential representation (EIIP) as such values. 
+These values are $\{0:0806, 0:1260, 0:1340, 0:1335\}$.
+Our goal is to transform the input strand and its complementary strand into two time series and aim to capture the information of these sequences and the secondary structure.
 So, we need to employ the complementarity property during the transformation~\cite{DNANumericalRepresentations2007}.
-Recall that in the base-pairing rules, `A' pairs with `U'\footnote{In DNA, `A' pairs with `T'} to form two hydrogen bonds while `G' pairs with `C' to form three hydrogen bonds. 
-Hence, `A' (`C') can be regarded as the "inverse" of `U' (`G').
-Recall that we call `-1' as the inverse of `1' and vice versa under addition in Algebra.
+Recall that in the base-pairing rules, ``A'' pairs with ``U''\footnote{In DNA, ``A'' pairs with ``T''} to form two hydrogen bonds while ``G'' pairs with ``C'' to form three hydrogen bonds. 
+Hence, ``A'' (``C'') can be regarded as the ``inverse'' of ``U'' (``G'')~\footnote{Recall that we call ``-1' as the inverse of ``1''' and vice versa under addition in Algebra.}.
 We can preserve these base-pairing rules in the time series 
 representation by assigning A (G) and U (C)  opposite values.
 The time series of the complementary strand would then be a flipped version along the y-axis of the original strand. 
-
-We can group the four nucleotides by their chemical structures.
+We group the four nucleotides by their chemical structures.
 `A' and `G' have a two-ring structure. They are purines.
 `U' and `C' have a one-ring structure. They are pyrimidines.
 We put `A' and `G' (`U' and `C') in the same group.
 These two groups would be on the two sides of the number line with zero in the middle.
-
-Now the only remaining question before assigning $\{-2, -1, +1, +2\}$ to $\{A, C, G, U\}$ is which nucleotide in the same group we should assign a larger absolute value.
-In other words, for `A' and `G', which one should be assigned a larger absolute value?
-In this manuscript, we adopted the ``A = 2 and G = 1'' assignment.
-The reasoning is as follows.
-The main goal of this manuscript is to find the two cleavage sites on the pre-miRNA.
-The cleavage sites are the bonds along the strands, the phosphodiester linkages, or bonds.
-After this pre-miRNA is cleaved, the resulting double-stranded miRNA molecule is unwound to form the guide strand and the passenger strand.
-The stability of the double strand would affect the unwinding process.
-There are three hydrogen bonds in C-G pairs and two in A-U pairs. 
-C-G pairs are more stable than A-U pairs.
-This means that in regions with more C-G pairs, the double strands hold more tightly, and the unwinding process is less likely to occur than in regions with more A-U pairs. 
-So, we want to emphasize the existence of such less stable A-U pairs in the double strands in our time series representations. 
-We assign A and U with larger absolute values than those of G and C.
-With this reasoning, we propose the second transformation method, Method 2, in Table~\ref{tab:time_series_transform}. 
-It is called ``Single-value''. It is our baseline transformation method in the single-value category.
-
-Instead of looking at the values in the time series one by one, we can accumulate the values assigned to each nucleotide.
-The ``cumulative version'' allows us to focus on analyzing the ``trend'' such as increasing and decreasing, by accumulating what has happened in the past.
-The ``original version'' (Single-value) allows us to focus on the absolute values of the alphabet and ignore what has happened in the past.
-
-Until now, we have used only one time series to encode the dynamic of the four letters in the original string; we can also represent the dynamic using two time series. Each time series only represents the dynamic of the occurrences of one nucleotide and its inverse.
-One time series encodes the dynamic of ``A and U'', and the other encodes that of ``G and C''.
-There are two variations of the multivariate methods.
-One is the ``Multivariate with different length'' and the other is ``Multivariate with same length''.
-This method is shown in row 4 in Table~\ref{tab:time_series_transform}
-In table~\ref{tab:time_series_transform}, transformations 1, 2, 3, 5 are lossless while transformation 4 is lossy.
-Lossy transformation refers to a transformation that does not allow us to restore the original string by the new time series representation.
 
 % https://tex.stackexchange.com/questions/47170/how-to-write-conditional-equations-with-one-sided-curly-brackets
 % https://tex.stackexchange.com/questions/76189/how-to-put-a-formula-into-a-table-cell
@@ -332,30 +301,33 @@ Lossy transformation refers to a transformation that does not allow us to restor
             $s = G, A, G, A, U, A, A, C, U, A$
          } \\
          \hline
+         % 1 & 
+         % % Name
+         % \makecell{Single value mapping \\ without  \\ domain knowledge} & 
+         % % Numeric representation
+         % % https://tex.stackexchange.com/questions/2441/how-to-add-a-forced-line-break-inside-a-table-cell
+         % % https://tex.stackexchange.com/questions/281571/how-to-left-align-text-in-a-table-with-makecell
+         % \makecell[l]{
+         % for $i = 1$ to $|s|$: \\ 
+         % \(\displaystyle
+         % t_i= 
+         %    \begin{cases}
+         %        2 & \text{if } s_i = A\\
+         %        1 & \text{if } s_i = C\\
+         %        -1 & \text{if } s_i = G\\
+         %        -2 & \text{if } s_i = U\\
+         %    \end{cases}
+         % \) \\
+         % return $t$
+         % } &
+         % % Example
+         % $t = -1, 2, -1, 2, -2, 2, 2, 1, -2, 2$ \\
+         % \hline
          1 & 
          % Name
-         Toy &  
-         % Numeric representation
-         % https://tex.stackexchange.com/questions/2441/how-to-add-a-forced-line-break-inside-a-table-cell
-         % https://tex.stackexchange.com/questions/281571/how-to-left-align-text-in-a-table-with-makecell
-         \makecell[l]{
-         for $i = 1$ to $|s|$: \\ 
-         \(\displaystyle
-         t_i= 
-            \begin{cases}
-                0 & \text{if } s_i = A\\
-                1 & \text{if } s_i = C\\
-                2 & \text{if } s_i = G\\
-                3 & \text{if } s_i = U\\
-            \end{cases}
-         \)
-         } &
-         % Example
-         $t = 2, 0, 2, 0, 3, 0, 0, 1, 3, 0$ \\
-         \hline
-         2 & 
-         % Name
-         Single-value &
+         Single value mapping
+         % \makecell{Single value mapping \\ with \\ domain knowledge} 
+         &
          % Numeric representation
          \makecell[l]{
          for $i = 1$ to $|s|$: \\ 
@@ -367,14 +339,74 @@ Lossy transformation refers to a transformation that does not allow us to restor
                 -1 & \text{if } s_i = C\\
                 -2 & \text{if } s_i = U\\
             \end{cases}
-         \)
+         \) \\
+         return $t$
          } &
          % Example
          $t = 1, 2, 1, 2, -2, 2, 2, -1, -2, 2$ \\
          \hline
+         2 & 
+         % Name
+         \makecell{Grouped \\ variable-length \\ channel mapping} &
+         % Numeric representation
+         \makecell[l]{
+         $ j=1, k=1 $ \\
+         for $i = 1$ to $|s|$: \\ 
+        \(\displaystyle
+         t^1_j= 
+            \begin{cases}
+                1, \quad j=j+1 & \text{if } s_i = A\\
+                - 1, \quad j=j+1 & \text{if } s_i = U\\
+            \end{cases}
+         \) \\
+         \(\displaystyle
+         t^2_k= 
+            \begin{cases}
+                1, \quad k=k+1 & \text{if } s_i = G\\
+                -1, \quad k=k+1 & \text{if } s_i = C\\
+            \end{cases}
+         \) \\
+         return $t^1[1:j], t^2[1:k]$
+         } &
+         % Example
+        \makecell{
+            $t^1 = 1, 1, -1, 1, 1, -1, 1$ \\
+            $t^2 = 1, 1, -1$
+         } \\
+         \hline
          3 & 
          % Name
-         Cumulative &
+         \makecell{Grouped \\ fixed-length \\ channel mapping} &
+         % Numeric representation
+         \makecell[l]{
+         for $i = 1$ to $|s|$: \\ 
+        \(\displaystyle
+         t^1_i= 
+            \begin{cases}
+                1, \quad j=j+1 & \text{if } s_i = A\\
+                - 1, \quad j=j+1 & \text{if } s_i = U\\
+                0 & \text{otherwise } \\
+            \end{cases}
+         \) \\
+         \(\displaystyle
+         t^2_i= 
+            \begin{cases}
+                1, \quad k=k+1 & \text{if } s_i = G\\
+                -1, \quad k=k+1 & \text{if } s_i = C\\
+                0 & \text{otherwise } \\
+            \end{cases}
+         \) \\
+         return $t^1, t^2$
+         } &
+         % Example
+        \makecell{
+            $t^1 = 0, 1, 0, 1, -1, 1, 1, 0, -1, 1$ \\
+            $t^2 = 1, 0, 1, 0, 0, 0, 0, -1, 0, 0$
+         } \\
+         \hline
+         4 & 
+         % Name
+         Cumulative mapping &
          % Numeric representation
          % https://www.overleaf.com/learn/latex/Spacing_in_math_mode
          % Not used
@@ -389,105 +421,156 @@ Lossy transformation refers to a transformation that does not allow us to restor
                 t_i - 1 & \text{if } s_i = C\\
                 t_i - 2 & \text{if } s_i = U\\
             \end{cases}
-         \)
+         \) \\
+         return $t$
          } &
          % Example
          $t = 0, 1, 3, 4, 6, 4, 6, 8, 7, 5, 7$ \\
          \hline
-         4 & 
-         % Name
-         \makecell{Multivariate with \\ different length} &
-         % Numeric representation
-         \makecell[l]{
-         $t_{1,0} = 0, t_{2,0} = 0$ \\
-         $j = 0, k = 0$ \\
-         for $i = 1$ to $|s|$: \\ 
-         \(\displaystyle
-         t_{1, {j+1}}= 
-            \begin{cases}
-                t_j + 1; \quad j=j+1 & \text{if } s_i = A\\
-                t_j - 1; \quad j=j+1 & \text{if } s_i = U\\
-            \end{cases}
-         \) \\
-         \(\displaystyle
-         t_{1, {k+1}}= 
-            \begin{cases}
-                t_k + 1; \quad k=k+1 & \text{if } s_i = G\\
-                t_k -1; \quad k=k+1 & \text{if } s_i = C\\
-            \end{cases}
-         \)
-         } &
-         % Example
-         \makecell{
-            $t_1 = 0, -1, 0, -1, 0, 1, 2, 3$ \\
-            $t_2 = 0, -1, 0, -1$
-         } \\
-         \hline
          5 & 
          % Name
-         \makecell{Multivariate with \\ same length} &
+         \makecell{Cumulative grouped \\ variable-length \\ channel mapping} &
          % Numeric representation
          \makecell[l]{
-         $t_{1,0} = 0, t_{2,0} = 0$ \\
+         $t^1_1 = 0, t^2_1 = 0$ \\
+         $j = 1, k = 1$ \\
          for $i = 1$ to $|s|$: \\ 
          \(\displaystyle
-         t_{1, {i+1}}= 
+         t^1_{j+1}= 
             \begin{cases}
-                t_i + 1 & \text{if } s_i = A\\
-                t_i & \text{if } s_i = G\\
-                t_i & \text{if } s_i = C\\
-                t_i - 1 & \text{if } s_i = U\\
+                t^1_j + 1, \quad j=j+1 & \text{if } s_i = A\\
+                t^1_j - 1, \quad j=j+1 & \text{if } s_i = U\\
             \end{cases}
          \) \\
          \(\displaystyle
-         t_{2, {i+1}}= 
+         t^2_{k+1}= 
             \begin{cases}
-                t_i & \text{if } s_i = A\\
-                t_i + 1 & \text{if } s_i = G\\
-                t_i -1 & \text{if } s_i = C\\
-                t_i & \text{if } s_i = U\\
+                t^2_k + 1, \quad k=k+1 & \text{if } s_i = G\\
+                t^2_k -1, \quad k=k+1 & \text{if } s_i = C\\
             \end{cases}
-         \)
+         \) \\
+         return $t^1[1:j], t^2[1:k]$
          } &
          % Example
          \makecell{
-            $t_1 = 0, -1, 0, -1, 0, 0, 1, 2, 2, 2, 3$ \\
-            $t_2 = 0, 0, 0, 0, 0, -1, -1, -1, 0, -1, -1$
+            $t^1 = 0, 1, 2, 1, 2, 3, 2, 3$ \\
+            $t^2 = 0, 1, 2, 1$
+         } \\
+         \hline
+         6 & 
+         % Name
+         \makecell{Cumulative grouped \\ fixed-length \\ channel mapping} &
+         % Numeric representation
+         \makecell[l]{
+         $t^1_0 = 0, t^2_0 = 0$ \\
+         for $i = 1$ to $|s|$: \\ 
+         \(\displaystyle
+         t^1_{i+1}= 
+            \begin{cases}
+                t^1_i + 1 & \text{if } s_i = A\\
+                t^1_i - 1 & \text{if } s_i = U\\
+                t^1_i & \text{otherwise } \\
+            \end{cases}
+         \) \\
+         \(\displaystyle
+         t^2_{i+1}= 
+            \begin{cases}
+                t^2_i + 1 & \text{if } s_i = G\\
+                t^2_i -1 & \text{if } s_i = C\\
+                t^2_i & \text{otherwise } \\
+            \end{cases}
+         \) \\
+         return $t^1, t^2$
+         } &
+         % Example
+         \makecell{
+            $t^1 = 0, 0, 1, 1, 2, 1, 2, 3, 3, 2, 3$ \\
+            $t^2 = 0, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1$
          } \\
          \hline
     \end{tabular}}
-    \caption{Time series transformation for RNA string $s$}
+    \caption{Time series transformation for RNA string $s$. The ending index in indexing is exclusive.}
     \label{tab:time_series_transform}
 \end{table}
+Now the only remaining question before assigning $\{-2, -1, +1, +2\}$ to $\{A, C, G, U\}$ is which nucleotide in the same group we should assign a larger absolute value.
+% For example, for ``A' and `'G'', which one should be assigned a larger absolute value?
+We adopted the ``A = 2 and G = 1'' assignment.
+The reasoning is as follows.
+The main goal of this manuscript is to find the two cleavage sites on the pre-miRNA.
+The cleavage sites are the bonds along the strands, the phosphodiester linkages, or bonds.
+After this pre-miRNA is cleaved, the resulting double-stranded miRNA molecule is unwound to form the guide strand and the passenger strand.
+The stability of the double strand would affect the unwinding process.
+There are three hydrogen bonds in C-G pairs and two in A-U pairs. 
+Hence, C-G pairs are more stable than A-U pairs.
+This means that in regions with more C-G pairs, the double strands hold more tightly, and the unwinding process is less likely to occur than in regions with more A-U pairs. 
+So, we want to emphasize the existence of such less stable A-U pairs in the double strands in our time series representations. 
+We assign A and U with larger absolute values than those of G and C.
+With this reasoning, we propose the our first transformation method, in row 1 in Table~\ref{tab:time_series_transform}. 
+We can also transform each RNA sequence into a multivariate time series using grouped binary encoding, where nucleotides are grouped into (A, U) and (G, C). Each time series channel indicates the presence of a nucleotide from the respective group at each time step.
+The kind of methods release our assumption that A (U) has a larger absolute value than G (C).
+Noted that each channel may differ in length depending on group-specific occurrences, we propose two variation. The first one allows the output to be variable-length sequences per channel. The second one always return two resulting sequences with fixed length.
+These methods are rows 2 and 3 in Table~\ref{tab:time_series_transform}. 
+
+Instead of looking at the values in the time series one by one, we can accumulate the values assigned to each nucleotide.
+The ``Single value mapping'' and its two vairations allows us to focus on the absolute values of the alphabet and ignore what has happened in the past.
+The ``cumulative version'' allows us to focus on analyzing the ``trend'' such as increasing and decreasing, by accumulating what has happened in the past.
+We show the ``Cumulative mapping'' in row 4 in the Table~\ref{tab:time_series_transform}
+We can also use two channels to represents the time dynamics of a nucleotide group in ``Cumulative mapping''. For the output, we can allow variable-length channels or fixed-length channels.
+These two variations has been shown in rows 5 and 6 in the table.
+
+Of note, some our proposed transformations are lossy.
+Lossy transformation refers to a transformation that does not allow us to restore the original string from the new time series representation.
+Methods 2, 4 and 5 are lossy.
+It does not guarantee that lossless transformation performs better than lossy transformation for the downstream analsys because lossy transformation may provide better generalization.
+
+\subsubsection{Incorporating base-pair probabilities}
+We propose a novel time series transformation for RNA sequences incorporating the predicted secondary structures and the base-pair probabilities.
+Recall that RNA secondary structure prediction algorithm is a kind of RNA folding algorithm.
+The RNA folding algorithms attempt to solve a harder problem: predicting the 3D structure of a given RNA sequence.
+Meanwhile, the RNA secondary structure prediction algorithm returns the predicted secondary structure of a given RNA sequence, a planar graph such as the minimum free energy structure.
+It also returns a probability matrix for the base-pair probabilities, which denote the probabilities of pairing one nucleotide with the other nucleotide.
+In our case, the bases in an RNA sequence will be either paired up with another base in the same sequence or remain unpaired.
+For example in Figure~\ref{fig:hsa-let-7a-1_ss}, the 1\textsuperscript{st} base `U' is paired up with the 80\textsuperscript{th} base `A'.
+The 6\textsuperscript{th} base `U' is unpaired.
+The width and height of the probability matrix are the length of the RNA sequence because it is a pairwise matrix.
+From this matrix, we can construct the base-pair probability time series $s^P$ of the whole sequence $s$.
+The unpaired base will have very small probabilities in any base-pair.
+In our formulation, we deemed these small probabilities as $0$ to emphasize that these bases are deemed to be unpaired in the resulting predicted secondary structure. 
+
+Table~\ref{tab:time_series_transform_prob} incorporates the base-pair probability time series into the transformation methods listed in Table~\ref{tab:time_series_transform}.
+We use the first ten bases of the sequence of ``“hsa-let-7a'' as a running example. It is denoted as $s$ and its corresponding probability time series is denoted as $s^P$.
 
 \begin{table}[ht]
     \centering
     \resizebox{\columnwidth}{!}{\begin{tabular}{c | c | c | c}
          \hline
-         & Name & Numeric representation &
+         & Name & Numeric representation & 
          \makecell{
             Example for \\
-            $s = C, \_, C, U, G, U, U, G, A, U$ with \\
-            $s^p = 0.843, -1, 0.807, 0.807, 0.793,$\\
-            $0.914, 0.982, 1.000, 0.993, 0.999$
+            $s = C, \_, C, U, G, U, U, G, A, U$ \\
+            $s^P = 0.843, 0.000, 0.807, 0.807, 0.793,$\\
+            $0.914, 0.982, 1.000, 0.999, 0.999$
          } \\
          \hline
          1 & 
          % Name
-         Single-value &
+         Single value mapping
+         % \makecell{Single value mapping \\ with \\ domain knowledge} 
+         &
          % Numeric representation
-         \makecell{
+         \makecell[l]{
          for $i = 1$ to $|s|$: \\ 
          \(\displaystyle
          t_i= 
             \begin{cases}
-                2 \cdot s^p_i & \text{if } s_i = A\\
-                1 \cdot s^p_i & \text{if } s_i = G\\
-                -1 \cdot s^p_i & \text{if } s_i = C\\
-                -2 \cdot s^p_i& \text{if } s_i = U\\
+                2 \cdot s^P_i & \text{if } s_i = A\\
+                1 \cdot s^P_i & \text{if } s_i = G\\
+                -1 \cdot s^P_i & \text{if } s_i = C\\
+                -2 \cdot s^P_i & \text{if } s_i = U\\
                 0 & \text{if } s_i = \_\\
             \end{cases}
-         \)
+         \) \\
+         return $t$
          } &
          % Example
          \makecell{
@@ -502,144 +585,210 @@ Lossy transformation refers to a transformation that does not allow us to restor
          \hline
          2 & 
          % Name
-         Cumulative &
+         \makecell{Grouped \\ variable-length \\ channel mapping} &
+         % Numeric representation
+         \makecell[l]{
+         $ j=1, k=1 $ \\
+         for $i = 1$ to $|s|$: \\ 
+        \(\displaystyle
+         t^1_j= 
+            \begin{cases}
+                1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = A\\
+                - 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = U\\
+                0, \quad j=j+1 & \text{if } s_i = \_\\
+            \end{cases}
+         \) \\
+         \(\displaystyle
+         t^2_k= 
+            \begin{cases}
+                1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = G\\
+                -1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = C\\
+            \end{cases}
+         \) \\
+         return $t^1[1:j], t^2[1:k]$
+         } &
+         % Example
+         \makecell{
+         Without base-pair probability: \\
+         $t^1 = 0, -1, -1, -1, 1, -1$ \\
+         $t^2 = -1, -1, 1, 1$ \\
+         \\
+         With base-pair probability: \\
+         $t^1 = 0.000, -0.807, -0.914, -0.982, 0.999, -0.999$ \\
+         $t^2 = -0.843, -0.807, 0.793, 1.000$ 
+         } \\
+         \hline
+         3 & 
+         % Name
+         \makecell{Grouped \\ fixed-length \\ channel mapping} &
+         % Numeric representation
+         \makecell[l]{
+         for $i = 1$ to $|s|$: \\ 
+        \(\displaystyle
+         t^1_i= 
+            \begin{cases}
+                1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = A\\
+                - 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = U\\
+                0 & \text{otherwise } \\
+            \end{cases}
+         \) \\
+         \(\displaystyle
+         t^2_i= 
+            \begin{cases}
+                1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = G\\
+                -1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = C\\
+                0 & \text{otherwise } \\
+            \end{cases}
+         \) \\
+         return $t^1, t^2$
+         } &
+         % Example
+         \makecell{
+         Without base-pair probability: \\
+         $t^1 = 0, 0, 0, -1, 0, -1, -1, 0, 1, -1$ \\
+         $t^2 = -1, 0, -1, 0, 1, 0, 0, 1, 0, 0$ \\
+         \\
+         With base-pair probability: \\
+         $t^1 = 0.000, 0.000, 0.000, -0.807, $\\
+         $0.000, -0.914, -0.982, $ \\
+         $0.000, 0.999, -0.9999$ \\
+         $t^2 = -0.843, 0.000, -0.807, 0.000, $\\
+         $0.793, 0.000, 0.000, $ \\
+         $1.000, 0.000, 0.000$ 
+         } \\
+         \hline
+         4 & 
+         % Name
+         Cumulative mapping &
          % Numeric representation
          % https://www.overleaf.com/learn/latex/Spacing_in_math_mode
          % Not used
-         \makecell{
+         \makecell[l]{
          $t_1 = 0$ \\
          for $i = 1$ to $|s|$: \\ 
          \(\displaystyle
          t_{i+1}= 
             \begin{cases}
-                t_i + 2 \cdot s^p_i & \text{if } s_i = A\\
-                t_i + 1 \cdot s^p_i & \text{if } s_i = G\\
-                t_i - 1 \cdot s^p_i & \text{if } s_i = C\\
-                t_i - 2 \cdot s^p_i & \text{if } s_i = U\\
+                t_i + 2 \cdot s^P_i & \text{if } s_i = A\\
+                t_i + 1 \cdot s^P_i & \text{if } s_i = G\\
+                t_i - 1 \cdot s^P_i & \text{if } s_i = C\\
+                t_i - 2 \cdot s^P_i & \text{if } s_i = U\\
                 t_i & \text{if } s_i = \_\\
             \end{cases}
-         \)
+         \) \\
+         return $t$
          } &
          % Example
          \makecell{
          Without base-pair probability: \\
-         $t = 0, -1, -1, -2, -4,$ \\
-         $-3, -5, -7, -6, -4, -6$ \\
+         $t = 0, -1, -1, -2, -4, -3, -5, -7, -6, -4, -6$ \\
          \\
          With base-pair probability: \\
          $t = 0.000, -0.843, -0.843, -1.650, $\\
-         $-3.265, -2.471, -4.300, -6.263,  $\\
-         $-5.264, -3.265, -5.263$
+         $-3.265, -2.471, -4.300, -6.263, $ \\ 
+         $-5.264, -3.265, -5.263$ 
          } \\
          \hline
-         3 & 
+         5 & 
          % Name
-         \makecell{Multivariate with \\ same length} &
+         \makecell{Cumulative grouped \\ variable-length \\ channel mapping} &
          % Numeric representation
-         \makecell{
-         $t_{1,0} = 0, t_{2,0} = 0$ \\
+         \makecell[l]{
+         $t^1_1 = 0, t^2_1 = 0$ \\
+         $j = 1, k = 1$ \\
          for $i = 1$ to $|s|$: \\ 
          \(\displaystyle
-         t_{1, {i+1}}= 
+         t^1_{j+1}= 
             \begin{cases}
-                t_i + 1 \cdot s^p_i & \text{if } s_i = A\\
-                t_i \cdot s^p_i & \text{if } s_i = G\\
-                t_i \cdot s^p_i & \text{if } s_i = C\\
-                t_i - 1 \cdot s^p_i & \text{if } s_i = U\\
-                t_i \cdot s^p_i & \text{if } s_i = \_\\
+                t^1_j + 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = A\\
+                t^1_j - 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = U\\
+                t^1_j, \quad j=j+1 & \text{if } s_i = \_\\
             \end{cases}
          \) \\
          \(\displaystyle
-         t_{2, {i+1}}= 
+         t^2_{k+1}= 
             \begin{cases}
-                t_i \cdot s^p_i & \text{if } s_i = A\\
-                t_i + 1 \cdot s^p_i & \text{if } s_i = G\\
-                t_i -1 \cdot s^p_i & \text{if } s_i = C\\
-                t_i \cdot s^p_i & \text{if } s_i = U\\
-                t_i \cdot s^p_i & \text{if } s_i = \_\\
+                t^2_k + 1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = G\\
+                t^2_k -1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = C\\
             \end{cases}
-         \)
+         \) \\
+         return $t^1[1:j], t^2[1:k]$
          } &
          % Example
          \makecell{
          Without base-pair probability: \\
-         $t_1 = 0, 0, 0, 0, 0, -1, -1, -1, -2, -1, -1$ \\
-         $t_2 = 0, 1, 1, 2, 1, 1, 0, -1, -1, -1, -2$ \\
+         $t^1 = 0, -1, -2, -3, -2, -3$ \\
+         $t^2 = 0, -1, -2, -1, 0$ \\
          \\
          With base-pair probability: \\
-         $t_1 = 0.000, 0.000, 0.000, 0.000, $ \\
-         $0.000, -0.793, -0.793, -0.793, $ \\
-         $-1.793, -0.794, -0.794$ \\
-         $t_2 = 0.000, 0.843, 0.843, 1.650, $ \\
-         $0.843, 0.843, -0.071, -1.053, $ \\
-         $-1.053, -1.053, -2.052$ \\
+         $t^1 = 0.000, -0.807, -1.722, $ \\
+         $-2.703, -1.704, -2.703$ \\ 
+         $t^2 = 0.000, -0.843, -1.650, $ \\
+         $-0.857, 0.143$ \\ 
          } \\
          \hline
-         4 & 
+         6 & 
          % Name
-         \makecell{Multivariate with \\ different length} &
+         \makecell{Cumulative grouped \\ fixed-length \\ channel mapping} &
          % Numeric representation
-         \makecell{
-         $t_{1,0} = 0, t_{2,0} = 0$ \\
-         $j = 0, k = 0$ \\
+         \makecell[l]{
+         $t^1_0 = 0, t^2_0 = 0$ \\
          for $i = 1$ to $|s|$: \\ 
          \(\displaystyle
-         t_{1, {j+1}}= 
+         t^1_{i+1}= 
             \begin{cases}
-                t_j + 1 \cdot s^p_i; \quad j=j+1 & \text{if } s_i = A\\
-                t_j - 1 \cdot s^p_i; \quad j=j+1 & \text{if } s_i = U\\
+                t^1_i + 1 \cdot s^P_i & \text{if } s_i = A\\
+                t^1_i - 1 \cdot s^P_i & \text{if } s_i = U\\
+                t^1_i & \text{otherwise } \\
             \end{cases}
          \) \\
          \(\displaystyle
-         t_{1, {k+1}}= 
+         t^2_{i+1}= 
             \begin{cases}
-                t_k + 1 \cdot s^p_i; \quad k=k+1 & \text{if } s_i = G\\
-                t_k -1 \cdot s^p_i; \quad k=k+1 & \text{if } s_i = C\\
+                t^2_i + 1 \cdot s^P_i & \text{if } s_i = G\\
+                t^2_i -1 \cdot s^P_i & \text{if } s_i = C\\
+                t^2_i & \text{otherwise } \\
             \end{cases}
-         \)
+         \) \\
+         return $t^1, t^2$
          } &
          % Example
          \makecell{
          Without base-pair probability: \\
-         $t_1 = 0, -1, -2, -1$ \\
-         $t_2 = 0, -1, -2, -1$ \\
+         $t^1 = 0, 0, 0, 0, -1, -1, -2, -3, -3, -2, -3$ \\
+         $t^2 = 0, -1, -1, -2, -2, -1, -1, -1, 0, 0, 0$ \\
          \\
          With base-pair probability: \\
-         $t_1 = 0.000, -0.793, -1.793, -0.794$ \\
-         $t_2 = 0.000, 0.843, 1.650, 0.843,$ \\ 
-         $-0.071, -1.053, -2.052$ \\
+         $t^1 = 0.000, 0.000, 0.000, 0.000, $ \\
+         $-0.807, -0.807, -1.722, -2.703,$ \\ 
+         $-2.703, -1.704, -2.703$ \\
+         $t^2 = 0.000, -0.843, -0.843, -1.650, $ \\
+         $-1.650, -0.857, -0.857, -0.857,$ \\ 
+         $0.143, 0.143, 0.143$ \\
          } \\
          \hline
     \end{tabular}}
-    \caption{Time series transformation for RNA complementary string $s$ with its probability time series $s^p$}
+    \caption{Time series transformation for RNA complementary string $s$ with its probability time series $s^p$. The ending index in indexing is exclusive.}
     \label{tab:time_series_transform_prob}
 \end{table}
 
 
-\subsubsection{Incorporating base-pair probabilities}
-We propose a novel time series transformation for RNA sequences incorporating the predicted secondary structures and the base-pair probabilities.
-RNA secondary structure prediction algorithm is a kind of RNA folding algorithm.
-The RNA folding algorithms attempt to solve a harder problem: predicting the 3D structure of a given RNA sequence.
-Meanwhile, the RNA secondary structure prediction algorithm returns the predicted secondary structure of a given RNA sequence, a planar graph such as the minimum free energy structure.
-It also returns a probability matrix for the base-pair probabilities, which denote the probabilities of pairing one nucleotide with the other nucleotide.
-In our case, the bases in an RNA sequence will be either paired up with another base in the same sequence or remain unpaired.
-For example, the 1\textsuperscript{st} base `U' is paired up with the 80\textsuperscript{th} base `A'.
-The 6\textsuperscript{th} base `U' is unpaired.
-The width and height of the probability matrix are the length of the RNA sequence because it is a pairwise matrix.
-From this matrix, we can construct the base-pair probability time series of the whole sequence.
-The unpaired base will have very small probabilities in any base-pair.
-In our formulation, we denote these small probabilities as $-1$ to emphasize these bases are deemed to be unpaired in the resulting predicted secondary structure. 
-Table~\ref{tab:hsa-let-7a-1} shows the base-pair probabilities for the first ten bases of the sequence of ``“hsa-let-7a''. Since the 6\textsuperscript{th} base `U' is unpaired, its probability is assigned as ``-1''.
-
-Table~\ref{tab:time_series_transform_prob} incorporates the base-pair probability time series into the transformation methods listed in Table~\ref{tab:time_series_transform}.
-
 \subsubsection{Accumulating from the beginning of the pre-miRNA sequence}
-``Cumulative'' would return different result if we choose different starts for the accumulation.
+In cumulative encoding, it would return different result if we choose different starts for the accumulation.
+We can start the accumulation from the beginning of the full sequence or just from the beginning of the selected subsequence.
+The first one preserves the global context by recording the previous counts of the nucleotide up to the selected subsequence.
+It can be useful when early elements (those before the selected subsequence) influence later interpretation. 
+In other words, the previous nucleotides may affect the chemical property of the selected subsequence.
+The second one only focus on the local history by ignoring the global history.
+The time series encoded in this way are more consistent.
+It is useful if the the previous nucleotides does not affect the chemical property of the selected subsequence.
 
 Considering the time series representation of $s(6:10) = UUGAU$ of the running example $s$ in Table~\ref{tab:time_series_transform_prob}, the ``Cumulative'' transformation without base-pair probability of it starting at the beginning of $s$ (i.e., $s_1$) would be 
 $t(7:11) = -3, -5, -7, -6, -4, -6$. 
 If we start the ``Cumulative'' at the beginning of $s(6:10)$ (i.e., $s(6)$), the resulting time series would be $0, -2, -4, -3, -1, -3$. Note that these two time series have the same trend, but they start at different values. The first one starts at $-3$ while the latter one starts at $0$. 
+We name the first approach as ``Global Cumulative'' and the later one as ``Local Cumulative''.
 % After Z-normalization, these two time series will have similar trends but not the same trends as they have different means and variances.
+
 Figure~\ref{fig:transformation_relationships} shows how to use the discussed notion in transformations.
 \begin{figure}[ht]
 \centering
@@ -650,7 +799,7 @@ Figure~\ref{fig:transformation_relationships} shows how to use the discussed not
 \end{figure}
 
 \subsection{Time series classification}
-
+% What is time series and time series classification?
 In this study, we propose a novel approach to predict human dicer cleavage sites by reframing this task as a multivariate time series classification problem.
 We have introduced how to transform the information of the sequence, the secondary structure, and its probability sequence into a time series.
 In this session, we will introduce the time series classifier used in this manuscript.
@@ -664,7 +813,7 @@ Then, a simple classifier such as a linear ridge classiﬁer determines which fe
 %%% Above is not tidy yet.
 
 \subsubsection{Convolution based classification}
-
+% Time series classification in detail, especially Rocket-based methods
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.8\columnwidth]{figures/rocket_convolution.pptx.pdf}}
 \caption{Convolution}
@@ -676,6 +825,6 @@ Then, a simple classifier such as a linear ridge classiﬁer determines which fe
 \caption{Pipeline. Cylinder: Database / Dataset, Rectangle (Box): Process / Task / Transformation, Parallelogram: Input / Output, Rounded Rectangle (Capsule shape): Model / Component}
 \label{fig:pipeline}
 \end{figure}
-Test for references~\cite{DiCleavePlus2025}.
+
 
 \subsection{Evaluation}
