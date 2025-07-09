@@ -1,1 +1,644 @@
-\section{Results} \label{sec:rsults}
+\section{Results} \label{sec:results}
+% 5-fold cross-validation
+Our primary goal is to develop an efficient and accurate classification model that does not require complex feature engineering for human dicer cleavage sites.
+We have proposed six time series construction methods and used them with five rocket-based time series transformation methods, namely ROCKET, MiniROCKET, MultiROCKET, Hydra, and MultiROCKET-Hydra.
+The derived features from the transformation methods are then fed into a simple linear classifier to obtain the final classification result.
+We employed a Ridge classifier for this purpose.
+A Ridge classifier is suggested for small datasets, as in our case, while a logistic regression classifier is suggested for large datasets~\cite{BakeReduxReview2024}.
+
+In all experiments, the models were trained and evaluated using 5-fold cross-validation.
+Recall that we retrieved 827 empirically validated sequences of pre-miRNAs.
+There are 5p-arm and 3p-arm in each sequence.
+For each arm, we have defined a cleavage pattern and a non-cleavage pattern.
+Three datasets, namely ``5p'', ``3p'' and ``multi'' were constructed by these patterns.
+The ``5p'' dataset comprises 827 positive instances and an equal number of negative instances.
+We refer to the cleavage patterns as positive instances and the non-cleavage patterns as negative instances.
+The same applies to the '3p' dataset.
+The "5p" and "3p" datasets are binary classification datasets.
+We used all the patterns from both the 5p-arm and the 3p-arm to form the ``multi'' dataset.
+There are 827 ``5p'' instances (cleavage patterns from the 5p-arm), 827 ``3p'' instances, and 1654 negative instances.
+
+For every fold in 5-fold cross-validation, the dataset is divided into a training set and a test set with a size of 80\% and 20\% of the whole dataset, respectively.
+In each fold derived from ``5p'' and ``3p'' datasets, the training set has a size of 1323, and the test set has a size of 331.
+In each fold derived from ``multi'' dataset, the training set has a size of 2262, and the test set has a size of 662.
+We keep the class distribution approximately the same in each fold, as it is in the original dataset.
+We used the average of the five classification metrics.
+
+In our experiments, the ROCKET-family classifiers require all channels in the multivariate time series to have equal length. To satisfy this constraint, we apply padding to shorter channels using the constant value 100, which does not appear in the original encodings. This choice ensures that the padding does not introduce ambiguity or interfere with the semantic meaning of the encoded nucleotide signals.
+
+\subsection{Channel ablation study}
+We utilized three types of data as the input features for each instance.
+They are (1) the RNA sequence, which consists of the primary strand and its complementary strand, (2) the secondary structure information, and (3) the base-pair probability sequence.
+To input such data into our time series-based classifiers, we converted the data into multivariate time series.
+The RNA strand and its complementary strand are strings. Each is encoded into one or two channels, depending on the encoding method used.
+For example, ``single value mapping'' encodes each of them in one channel while ``Grouped variable-length channel mapping'' employs two channels to encode each of them.
+The secondary structure information, represented in dot-bracket notation, is a string. It is also converted into a time series.
+The base-pair probability sequence is already in numerical form and does not require further transformation.
+It can either be used as a standalone channel or incorporated into the encoding of the complementary strand.
+We perform a channel ablation study to determine the most informative combination of the above channels.
+
+We refer to the multivariate time series that consists of the channels from the RNA sequence only as the baseline setting.
+We add the other channels based on this baseline.
+It leads to the following combinations of channels:
+\begin{itemize}
+  \item Baseline: Time series derived solely from the RNA strand.
+  \item Baseline + Secondary Structure (SS): Baseline plus the time series representation of the secondary structure.
+  \item Baseline + Base-pair probability (Standalone as a separated channel): Baseline plus the base-pair probability sequence as a separated channel.
+  \item Baseline + Base-Pair Probability (Incorporated): Baseline with the base-pair probability sequence incorporated into the encoding of the complementary strand.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\resizebox{\columnwidth}{!}{\begin{tabular}{llccccc|ccccc|ccccc}
+\toprule
+\multirow{2}{*}{} & \multirow{2}{*}{Classifier} 
+& \multicolumn{5}{c|}{5p arm} 
+& \multicolumn{5}{c|}{3p arm} 
+& \multicolumn{5}{c}{Multi} \\
+\cmidrule(lr){3-7} \cmidrule(lr){8-12} \cmidrule(lr){13-17}
+& & Acc & Sp & Sn & F1 & MCC & Acc & Sp & Sn & F1 & MCC & Acc & Sp & Sn & F1 & MCC \\
+\midrule
+\multirow{5}{*}{\makecell{Baseline \\ (cfg 1)}} 
+              & ROCKET  
+              & 0.781 & 0.743 & 0.819 & 0.789 & 0.563  
+              & 0.790 & 0.773 & 0.807 & 0.793 & 0.580  
+              & 0.717 & 0.838 & 0.685 & 0.700 & 0.538 \\
+              & MiniROCKET 
+              & 0.755 & 0.728 & 0.782 & 0.762 & 0.512  
+              & 0.788 & 0.781 & 0.794 & 0.789 & 0.576  
+              & 0.685 & 0.823 & 0.653 & 0.662 & 0.486 \\
+              & MultiROCKET 
+              & 0.784 & 0.767 & 0.801 & 0.787 & 0.569  
+              & 0.803 & 0.792 & 0.814 & 0.805 & 0.606  
+              & 0.691 & 0.830 & 0.667 & 0.672 & 0.501 \\
+              & Hydra 
+              & 0.830 & 0.800 & 0.860 & 0.835 & 0.663  
+              & 0.808 & 0.797 & 0.820 & 0.810 & 0.617  
+              & 0.731 & 0.844 & 0.696 & 0.712 & 0.560 \\
+              & MultiROCKET-Hydra 
+              & 0.796 & 0.778 & 0.815 & 0.800 & 0.594  
+              & 0.807 & 0.767 & 0.816 & 0.808 & 0.614  
+              & 0.701 & 0.836 & 0.681 & 0.686 & 0.520 \\
+\midrule
+\multirow{5}{*}{\makecell{Baseline + \\Secondary \\ Structre \\ (cfg 2)}} 
+              & ROCKET  
+              & \textcolor{red}{\textbf{0.847}} & \textcolor{red}{\textbf{0.832}} & 0.862 & \textcolor{red}{\textbf{0.849}} & \textcolor{red}{\textbf{0.695}}  
+              & \textcolor{red}{\textbf{0.855}} & 0.842 & \textcolor{red}{\textbf{0.868}} & \textcolor{red}{\textbf{0.857}} & \textcolor{red}{\textbf{0.711}}  
+              & \textcolor{red}{\textbf{0.836}} & \textcolor{red}{\textbf{0.907}} & \textcolor{red}{\textbf{0.828}} & \textcolor{red}{\textbf{0.833}} & \textcolor{red}{\textbf{0.736}} \\
+              & MiniROCKET 
+              & 0.825 & 0.807 & 0.843 & 0.827 & 0.652  
+              & 0.822 & 0.802 & 0.843 & 0.826 & 0.646 
+              & 0.823 & 0.900 & 0.812 & 0.818 & 0.715 \\
+              & MultiROCKET 
+              & 0.812 & 0.803 & 0.822 & 0.814 & 0.626  
+              & 0.824 & 0.809 & 0.839 & 0.826 & 0.649  
+              & 0.796 & 0.888 & 0.791 & 0.792 & 0.673 \\
+              & Hydra 
+              & 0.845 & 0.816 & \textcolor{red}{\textbf{0.873}} & \textcolor{red}{\textbf{0.849}} & 0.691  
+              & 0.846 & 0.817 & 0.874 & 0.850 & 0.693  
+              & 0.830 & 0.901 & 0.814 & 0.826 & 0.724 \\
+              & MultiROCKET-Hydra 
+              & 0.817 & 0.809 & 0.826 & 0.819 & 0.635  
+              & 0.825 & 0.816 & 0.834 & 0.826 & 0.652  
+              & 0.803 & 0.891 & 0.798 & 0.800 & 0.684 \\
+\midrule
+\multirow{5}{*}{\makecell{Baseline + \\Base-pair \\probability \\(Standalone) \\ (cfg 3)}} 
+              & ROCKET  
+              & 0.842 & 0.828 & 0.855 & 0.844 & 0.684  
+              & \textcolor{red}{\textbf{0.855}} & \textcolor{red}{\textbf{0.856}} & 0.854 & 0.855 & 0.710  
+              & 0.795 & 0.885 & 0.783 & 0.789 & 0.670 \\
+              & MiniROCKET 
+              & 0.817 & 0.820 & 0.814 & 0.816 & 0.634  
+              & 0.836 & 0.834 & 0.838 & 0.836 & 0.673  
+              & 0.772 & 0.872 & 0.757 & 0.764 & 0.632 \\
+              & MultiROCKET 
+              & 0.822 & 0.813 & 0.832 & 0.824 & 0.645  
+              & 0.825 & 0.831 & 0.820 & 0.824 & 0.651  
+              & 0.758 & 0.866 & 0.747 & 0.750 & 0.612 \\
+              & Hydra 
+              & 0.846 & 0.827 & 0.865 & \textcolor{red}{\textbf{0.849}} & 0.693  
+              & 0.851 & 0.840 & 0.861 & 0.852 & 0.702  
+              & 0.789 & 0.879 & 0.769 & 0.780 & 0.658 \\
+              & MultiROCKET-Hydra 
+              & 0.822 & 0.809 & 0.834 & 0.824 & 0.644  
+              & 0.835 & 0.840 & 0.830 & 0.834 & 0.670  
+              & 0.759 & 0.866 & 0.746 & 0.750 & 0.611 \\
+\midrule
+\multirow{5}{*}{\makecell{Baseline + \\Base-pair \\probability \\(Incorporated) \\ (cfg 4)}} 
+              & ROCKET  
+              & 0.799 & 0.771 & 0.827 & 0.805 & 0.600  
+              & 0.809 & 0.786 & 0.832 & 0.813 & 0.619  
+              & 0.737 & 0.850 & 0.712 & 0.724 & 0.573 \\
+              & MiniROCKET & 0.776 & 0.756 & 0.797 & 0.781 & 0.554  
+              & 0.801 & 0.808 & 0.794 & 0.799 & 0.603  
+              & 0.705 & 0.835 & 0.675 & 0.684 & 0.521 \\
+              & MultiROCKET & 0.814 & 0.801 & 0.828 & 0.817 & 0.630  
+              & 0.816 & 0.812 & 0.820 & 0.816 & 0.634  
+              & 0.726 & 0.848 & 0.706 & 0.712 & 0.556 \\
+              & Hydra & 0.822 & 0.787 & 0.857 & 0.828 & 0.647  
+              & 0.834 & 0.828 & 0.840 & 0.835 & 0.669  
+              & 0.759 & 0.862 & 0.734 & 0.746 & 0.608 \\
+              & MultiROCKET-Hydra & 0.814 & 0.802 & 0.820 & 0.817 & 0.629  
+              & 0.820 & 0.825 & 0.816 & 0.819 & 0.642  
+              & 0.736 & 0.853 & 0.717 & 0.723 & 0.874 \\
+% \midrule
+% \multirow{5}{*}{\makecell{Single value mapping\\(Include Secondary Structure \\ Sequence, Base Pair Probability \\ Sequence)}} 
+%               & ROCKET  
+%               & \textcolor{red}{\textbf{0.849}} & \textcolor{red}{\textbf{0.842}} & 0.857 & \textcolor{red}{\textbf{0.851}} & \textcolor{red}{\textbf{0.699}}  
+%               & \textcolor{red}{\textbf{0.863}} & \textcolor{red}{\textbf{0.854}} & \textcolor{red}{\textbf{0.873}} & \textcolor{red}{\textbf{0.865}} & \textcolor{red}{\textbf{0.727}}  
+%               & \textcolor{red}{\textbf{0.853}} & \textcolor{red}{\textbf{0.917}} & \textcolor{red}{\textbf{0.847}} & \textcolor{red}{\textbf{0.851}} & \textcolor{red}{\textbf{0.764}} \\
+%               & MiniROCKET 
+%               & 0.823 & 0.809 & 0.837 & 0.825 & 0.647  
+%               & 0.823 & 0.828 & 0.817 & 0.822 & 0.647  
+%               & 0.835 & 0.906 & 0.828 & 0.833 & 0.735 \\
+%               & MultiROCKET 
+%               & 0.821 & 0.802 & 0.840 & 0.824 & 0.643  
+%               & 0.839 & 0.826 & 0.852 & 0.841 & 0.679  
+%               & 0.811 & 0.894 & 0.806 & 0.809 & 0.697 \\
+%               & Hydra 
+%               & 0.843 & 0.820 & 0.867 & 0.847 & 0.688  
+%               & 0.838 & 0.819 & 0.857 & 0.841 & 0.677  
+%               & 0.831 & 0.901 & 0.815 & 0.827 & 0.727 \\
+%               & MultiROCKET-Hydra 
+%               & 0.820 & 0.803 & 0.837 & 0.823 & 0.640  
+%               & 0.840 & 0.830 & 0.850 & 0.841 & 0.680  
+%               & 0.816 & 0.896 & 0.810 & 0.814 & 0.704 \\
+% \midrule
+% \multirow{5}{*}{\makecell{Single value mapping\\(Involve SS, Base Pair Probability  \\Sequence in the \\ transformation)}} 
+%               & ROCKET  
+%               & 0.846 & 0.830 & 0.857 & 0.848 & 0.692  
+%               & 0.857 & 0.844 & 0.869 & 0.858 & 0.714  
+%               & 0.844 & 0.912 & 0.836 & 0.842 & 0.749 \\
+%               & MiniROCKET & 0.820 & 0.811 & 0.830 & 0.822 & 0.642  
+%               & 0.839 & 0.828 & 0.849 & 0.840 & 0.678  
+%               & 0.823 & 0.900 & 0.813 & 0.818 & 0.715 \\
+%               & MultiROCKET & 0.819 & 0.809 & 0.828 & 0.820 & 0.638  
+%               & 0.836 & 0.833 & 0.838 & 0.835 & 0.672  
+%               & 0.810 & 0.894 & 0.804 & 0.807 & 0.694 \\
+%               & Hydra & 0.847 & 0.822 & 0.872 & 0.851 & 0.695  
+%               & 0.845 & 0.824 & 0.867 & 0.849 & 0.691  
+%               & 0.837 & 0.905 & 0.822 & 0.833 & 0.736 \\
+%               & MultiROCKET-Hydra & 0.822 & 0.809 & 0.834 & 0.824 & 0.644  
+%               & 0.843 & 0.839 & 0.846 & 0.843 & 0.686  
+%               & 0.816 & 0.897 & 0.810 & 0.813 & 0.705 \\
+% \midrule
+% \multirow{5}{*}{\makecell{Single value mapping\\(All)}} 
+%               & ROCKET  & 0.845 & 0.836 & 0.854 & 0.846 & 0.690  
+%               & 0.859 & 0.846 & 0.871 & 0.860 & 0.718  
+%               & 0.851 & 0.915 & 0.844 & 0.849 & 0.761 \\
+%               & MiniROCKET & 0.825 & 0.815 & 0.834 & 0.826 & 0.651  
+%               & 0.827 & 0.831 & 0.823 & 0.827 & 0.654  
+%               & 0.835 & 0.906 & 0.828 & 0.833 & 0.734 \\
+%               & MultiROCKET & 0.826 & 0.814 & 0.838 & 0.828 & 0.652  
+%               & 0.844 & 0.845 & 0.843 & 0.844 & 0.688  
+%               & 0.812 & 0.896 & 0.808 & 0.809 & 0.699 \\
+%               & Hydra & 0.848 & 0.839 & 0.856 & 0.849 & 0.696  
+%               & 0.842 & 0.822 & 0.862 & 0.845 & 0.685  
+%               & 0.832 & 0.902 & 0.817 & 0.828 & 0.729 \\
+%               & MultiROCKET-Hydra & 0.828 & 0.815 & 0.842 & 0.830 & 0.657  
+%               & 0.834 & 0.833 & 0.834 & 0.834 & 0.668  
+%               & 0.818 & 0.898 & 0.812 & 0.856 & 0.709 \\
+\bottomrule
+\end{tabular}}
+\caption{Channel ablation study.}
+\label{tab:channel_ablation}
+\end{table}
+We use the ``single value mapping'' as the baseline encoding method in this experiment.
+Table~\ref{tab:channel_ablation} shows the result.
+From the table, we can see that the addition of secondary structure, base-pair probability as a standalone channel, and base-pair probability incorporated in the encoding can improve the performance of the five classification metrics.
+We plotted the critical difference (CD) diagram to visualize Table~\ref{tab:channel_ablation} to make the performances of different combinations more obvious.
+In CD diagrams, lower-ranked methods (toward the right) are better.
+A horizontal bar connecting combinations indicates no statistically significant difference.
+In other words, including a specific channel improves performance more if its corresponding configuration appears more to the right of the Baseline.
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/channel_ablation_cd_5p.pdf}
+        \caption{5p}
+        % \label{fig:sub1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/channel_ablation_cd_3p.pdf}
+        \caption{3p}
+        % \label{fig:sub2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/channel_ablation_cd_multi.pdf}
+        \caption{multi}
+        % \label{fig:sub3}
+    \end{subfigure}
+    \caption{CD diagrams of channel ablation study. Where cfg (configuration) 1: Baseline, cfg 2: Baseline + Secondary Structure, cfg 3: Baseline + Base-pair probability (Standalone), cfg 4: Baseline + Base-pair probability (Incorporated)}
+    \label{fig:channel_ablation_cd}
+\end{figure}
+From Figure~\ref{fig:channel_ablation_cd}, we can see that including time series derived from Secondary Structure information and base-pair probability as a separate channel can significantly improve the performance of the classifiers. Incorporating the base-pair probability sequence in the time series encoding of the complementary strand can also improve the classifier, but to a minor degree compared to serving as a separate channel. In our downstream analysis, we adopt the combination of strand time series, secondary structure time series, and base-pair probability time series as our multivariate time series input.
+
+
+
+
+
+\subsection{Predictive performance}
+The experiment is conducted on three datasets: the 5p-arm, the 3p-arm, and the multi-class datasets.
+Recall that we have nine encoding methods and five ROCKET-based classifiers.
+It results in 45 combinations of encoding methods and classifiers.
+Based on the previous subsection, the selected input configuration consists of strand, secondary structure, base-pair probability sequence as a standalone sequence.
+\begin{table}[htbp]
+\centering
+\resizebox{\columnwidth}{!}{\begin{tabular}{llccccc|ccccc|ccccc}
+\toprule
+\multirow{2}{*}{} & \multirow{2}{*}{Classifier} 
+& \multicolumn{5}{c|}{5p arm} 
+& \multicolumn{5}{c|}{3p arm} 
+& \multicolumn{5}{c}{Multi} \\
+\cmidrule(lr){3-7} \cmidrule(lr){8-12} \cmidrule(lr){13-17}
+& & Acc & Sp & Sn & F1 & MCC & Acc & Sp & Sn & F1 & MCC & Acc & Sp & Sn & F1 & MCC \\
+\midrule
+\multirow{5}{*}{\makecell{Single value mapping \\(enc 1)}} 
+              & ROCKET  
+              & 0.849 & 0.842 & 0.857 & 0.851& 0.699  
+              & 0.863 & 0.854 & 0.873 & 0.865 & 0.727  
+              & 0.853 & 0.917 & 0.847 & 0.851 & 0.764 \\
+              & MiniROCKET 
+              & 0.823 & 0.809 & 0.837 & 0.825 & 0.647  
+              & 0.823 & 0.828 & 0.817 & 0.822 & 0.647  
+              & 0.835 & 0.906 & 0.828 & 0.833 & 0.735 \\
+              & MultiROCKET 
+              & 0.821 & 0.802 & 0.840 & 0.824 & 0.643  
+              & 0.839 & 0.826 & 0.852 & 0.841 & 0.679  
+              & 0.811 & 0.894 & 0.806 & 0.809 & 0.697 \\
+              & Hydra 
+              & 0.843 & 0.820 & 0.867 & 0.847 & 0.688  
+              & 0.838 & 0.819 & 0.857 & 0.841 & 0.677  
+              & 0.831 & 0.901 & 0.815 & 0.827 & 0.727 \\
+              & MultiROCKET-Hydra 
+              & 0.820 & 0.803 & 0.837 & 0.823 & 0.640  
+              & 0.840 & 0.830 & 0.850 & 0.841 & 0.680  
+              & 0.816 & 0.896 & 0.810 & 0.814 & 0.704 \\
+\midrule
+\multirow{5}{*}{\makecell{Grouped\\ variable-length\\ channel mapping \\(enc 2)}} 
+              & ROCKET  
+              & 0.835 & 0.826 & 0.844 & 0.836 & 0.670  
+              & 0.855 & 0.849 & 0.861 & 0.856 & 0.710  
+              & 0.846 & 0.913 & 0.839 & 0.844 & 0.752 \\
+              & MiniROCKET 
+              & 0.843 & 0.833 & 0.853 & 0.844 & 0.686  
+              & 0.831 & 0.821 & 0.842 & 0.833 & 0.663  
+              & 0.837 & 0.907 & 0.828 & 0.834 & 0.737 \\
+              & MultiROCKET
+              & 0.819 & 0.809 & 0.828 & 0.820 & 0.638  
+              & 0.817 & 0.814 & 0.820 & 0.818 & 0.634  
+              & \textcolor{red}{\textbf{0.890}} & 0.894 & 0.806 & 0.808 & 0.695 \\
+              & Hydra
+              & 0.825 & 0.780 & 0.869 & 0.832 & 0.653  
+              & 0.811 & 0.769 & 0.854 & 0.819 & 0.626  
+              & 0.818 & 0.892 & 0.765 & 0.812 & 0.705 \\
+              & MultiROCKET-Hydra
+              & 0.818 & 0.814 & 0.822 & 0.819 & 0.636  
+              & 0.831 & 0.825 & 0.837 & 0.832 & 0.662  
+              & 0.820 & 0.900 & 0.815 & 0.818 & 0.710 \\
+\midrule
+\multirow{5}{*}{\makecell{Grouped\\ fixed-length\\ channel mapping \\ (enc 3)}} 
+              & ROCKET  
+              & 0.851 & 0.843 & 0.859 & 0.852 & 0.702  
+              & 0.863 & 0.850 & 0.875 & 0.864 & 0.726  
+              & 0.849 & 0.915 & 0.843 & 0.847 & 0.757 \\
+              & MiniROCKET 
+              & 0.844 & 0.836 & 0.853 & 0.845 & 0.689  
+              & 0.840 & 0.826 & 0.855 & 0.843 & 0.682  
+              & 0.851 & 0.915 & 0.844 & 0.849 & 0.760 \\
+              & MultiROCKET
+              & 0.831 & 0.815 & 0.848 & 0.834 & 0.663  
+              & 0.824 & 0.813 & 0.836 & 0.826 & 0.649  
+              & 0.811 & 0.896 & 0.808 & 0.808 & 0.698 \\
+              & Hydra
+              & 0.848 & 0.816 & 0.880 & 0.853 & 0.699  
+              & 0.862 & 0.839 & 0.884 & 0.864 & 0.724  
+              & 0.843 & 0.908 & 0.837 & 0.839 & 0.746 \\
+              & MultiROCKET-Hydra
+              & 0.836 & 0.813 & 0.859 & 0.839 & 0.672  
+              & 0.833 & 0.820 & 0.845 & 0.835 & 0.665  
+              & 0.828 & 0.905 & 0.824 & 0.826 & 0.725 \\
+\midrule
+\multirow{5}{*}{\makecell{Cumulative mapping \\ (enc 4)}} 
+              & ROCKET  
+              & 0.850 & 0.834 & 0.866 & 0.852 & 0.701  
+              & 0.863 & 0.855 & 0.871 & 0.864 & 0.726  
+              & 0.852 & 0.915 & 0.842 & 0.850 & 0.762 \\
+              & MiniROCKET 
+              & 0.840 & 0.821 & 0.860 & 0.843 & 0.682  
+              & 0.840 & 0.837 & 0.844 & 0.841 & 0.682  
+              & 0.843 & 0.911 & 0.835 & 0.840 & 0.747 \\
+              & MultiROCKET
+              & 0.822 & 0.809 & 0.834 & 0.824 & 0.644  
+              & 0.832 & 0.830 & 0.834 & 0.832 & 0.665  
+              & 0.820 & 0.898 & 0.810 & 0.816 & 0.709 \\
+              & Hydra
+              & 0.848 & 0.819 & 0.878 & 0.853 & 0.698  
+              & 0.853 & 0.856 & 0.869 & 0.855 & 0.705  
+              & 0.845 & 0.910 & 0.830 & 0.841 & 0.749 \\
+              & MultiROCKET-Hydra
+              & 0.824 & 0.811 & 0.856 & 0.825 & 0.647  
+              & 0.838 & 0.833 & 0.843 & 0.839 & 0.677  
+              & 0.821 & 0.898 & 0.810 & 0.817 & 0.711 \\
+\midrule
+\multirow{5}{*}{\makecell{Cumulative grouped \\ variable-length \\ channel mapping \\ (enc 5)}} 
+              & ROCKET  
+              & 0.843 & 0.821 & 0.866 & 0.847 & 0.688  
+              & 0.856 & 0.840 & 0.871 & 0.857 & 0.712  
+              & 0.855 & 0.916 & 0.843 & 0.851 & 0.766 \\
+              & MiniROCKET 
+              & 0.845 & 0.826 & 0.865 & 0.848 & 0.691  
+              & 0.836 & 0.833 & 0.838 & 0.836 & 0.672  
+              & 0.840 & 0.909 & 0.833 & 0.838 & 0.742 \\
+              & MultiROCKET
+              & 0.826 & 0.814 & 0.838 & 0.828 & 0.653  
+              & 0.815 & 0.820 & 0.810 & 0.814 & 0.631  
+              & 0.826 & 0.902 & 0.820 & 0.824 & 0.721 \\
+              & Hydra
+              & 0.850 & 0.819 & \textcolor{red}{\textbf{0.880}} & 0.854 & 0.701  
+              & 0.834 & 0.807 & 0.861 & 0.838 & 0.669  
+              & 0.833 & 0.903 & 0.818 & 0.829 & 0.731 \\
+              & MultiROCKET-Hydra
+              & 0.824 & 0.810 & 0.838 & 0.826 & 0.649  
+              & 0.833 & 0.833 & 0.833 & 0.833 & 0.666  
+              & 0.830 & 0.903 & 0.821 & 0.827 & 0.726 \\
+\midrule
+\multirow{5}{*}{\makecell{Cumulative grouped \\ fixed-length \\ channel mapping \\ (enc 6)}} 
+              & ROCKET  
+              & 0.856 & 0.836 & 0.876 & 0.858 & 0.712  
+              & \textcolor{red}{\textbf{0.870}} & \textcolor{red}{\textbf{0.861}} & \textcolor{red}{\textbf{0.879}} & \textcolor{red}{\textbf{0.871}} & \textcolor{red}{\textbf{0.741}}  
+              & 0.863 & \textcolor{red}{\textbf{0.921}} & \textcolor{red}{\textbf{0.852}} & \textcolor{red}{\textbf{0.860}} & \textcolor{red}{\textbf{0.780}} \\
+              & MiniROCKET 
+              & 0.856 & 0.837 & 0.874 & 0.858 & 0.712  
+              & 0.842 & 0.839 & 0.845 & 0.843 & 0.685  
+              & 0.845 & 0.912 & 0.837 & 0.843 & 0.751 \\
+              & MultiROCKET
+              & 0.820 & 0.802 & 0.839 & 0.824 & 0.642  
+              & 0.798 & 0.798 & 0.798 & 0.798 & 0.597  
+              & 0.809 & 0.894 & 0.806 & 0.807 & 0.694 \\
+              & Hydra
+              & 0.850 & 0.814 & 0.885 & 0.855 & 0.701  
+              & 0.855 & 0.840 & 0.869 & 0.857 & 0.711  
+              & 0.847 & 0.910 & 0.831 & 0.843 & 0.752 \\
+              & MultiROCKET-Hydra
+              & 0.820 & 0.801 & 0.839 & 0.823 & 0.641  
+              & 0.807 & 0.813 & 0.802 & 0.806 & 0.615  
+              & 0.821 & 0.900 & 0.817 & 0.819 & 0.713 \\
+\midrule
+\multirow{5}{*}{\makecell{Global \\ Cumulative mapping \\ (enc 7)}} 
+              & ROCKET  
+              & 0.850 & 0.834 & 0.866 & 0.852 & 0.701  
+              & 0.863 & 0.855 & 0.871 & 0.864 & 0.726  
+              & 0.852 & 0.915 & 0.842 & 0.850 & 0.762 \\
+              & MiniROCKET 
+              & 0.847 & 0.832 & 0.862 & 0.849 & 0.695  
+              & 0.848 & 0.839 & 0.857 & 0.850 & 0.697  
+              & 0.845 & 0.911 & 0.836 & 0.843 & 0.750 \\
+              & MultiROCKET
+              & 0.827 & 0.819 & 0.834 & 0.828 & 0.653  
+              & 0.847 & 0.842 & 0.853 & 0.848 & 0.695  
+              & 0.825 & 0.901 & 0.817 & 0.822 & 0.718 \\
+              & Hydra
+              & 0.851 & 0.821 & 0.880 & 0.855 & 0.703  
+              & 0.861 & 0.848 & 0.874 & 0.863 & 0.722  
+              & 0.847 & 0.911 & 0.834 & 0.844 & 0.753 \\
+              & MultiROCKET-Hydra
+              & 0.829 & 0.823 & 0.834 & 0.830 & 0.658  
+              & 0.843 & 0.838 & 0.849 & 0.844 & 0.688  
+              & 0.832 & 0.905 & 0.823 & 0.829 & 0.730 \\
+\midrule
+\multirow{5}{*}{\makecell{Global \\ Cumulative grouped \\ variable-length \\ channel mapping \\ (enc 8)}} 
+              & ROCKET  
+              & 0.840 & 0.814 & 0.867 & 0.844 & 0.682  
+              & 0.853 & 0.838 & 0.867 & 0.854 & 0.706  
+              & 0.856 & 0.917 & 0.845 & 0.853 & 0.768 \\
+              & MiniROCKET 
+              & 0.848 & 0.834 & 0.862 & 0.850 & 0.697  
+              & 0.841 & 0.824 & 0.859 & 0.844 & 0.683  
+              & 0.844 & 0.911 & 0.856 & 0.842 & 0.748 \\
+              & MultiROCKET
+              & 0.834 & 0.828 & 0.839 & 0.834 & 0.668  
+              & 0.831 & 0.821 & 0.842 & 0.833 & 0.663  
+              & 0.828 & 0.904 & 0.823 & 0.826 & 0.724 \\
+              & Hydra
+              & 0.857 & 0.821 & 0.894 & 0.862 & \textcolor{red}{\textbf{0.717}}  
+              & 0.822 & 0.786 & 0.857 & 0.828 & 0.645  
+              & 0.826 & 0.898 & 0.806 & 0.820 & 0.717 \\
+              & MultiROCKET-Hydra
+              & 0.837 & 0.834 & 0.839 & 0.837 & 0.674  
+              & 0.834 & 0.827 & 0.840 & 0.835 & 0.668  
+              & 0.835 & 0.907 & 0.828 & 0.832 & 0.734 \\
+\midrule
+\multirow{5}{*}{\makecell{Global \\ Cumulative grouped \\ fixed-length \\ channel mapping \\ (enc 9)}} 
+              & ROCKET  
+              & 0.856 & 0.836 & 0.876 & 0.858 & 0.712  
+              & \textcolor{red}{\textbf{0.870}} & \textcolor{red}{\textbf{0.861}} & \textcolor{red}{\textbf{0.879}} & \textcolor{red}{\textbf{0.871}} & \textcolor{red}{\textbf{0.741}}  
+              & 0.863 & \textcolor{red}{\textbf{0.921}} & \textcolor{red}{\textbf{0.852}} & \textcolor{red}{\textbf{0.860}} & \textcolor{red}{\textbf{0.780}} \\
+              & MiniROCKET 
+              & \textcolor{red}{\textbf{0.857}} & \textcolor{red}{\textbf{0.845}} & 0.870 & \textcolor{red}{\textbf{0.859}} & 0.715  
+              & 0.840 & 0.821 & 0.859 & 0.843 & 0.681  
+              & 0.844 & 0.911 & 0.837 & 0.842 & 0.749 \\
+              & MultiROCKET
+              & 0.829 & 0.825 & 0.833 & 0.830 & 0.658  
+              & 0.820 & 0.816 & 0.823 & 0.820 & 0.640  
+              & 0.819 & 0.900 & 0.816 & 0.817 & 0.710 \\
+              & Hydra
+              & 0.856 & 0.817 & 0.894 & 0.861 & 0.713  
+              & 0.859 & 0.838 & 0.880 & 0.862 & 0.719  
+              & 0.846 & 0.911 & 0.832 & 0.843 & 0.752 \\
+              & MultiROCKET-Hydra
+              & 0.829 & 0.824 & 0.834 & 0.830 & 0.658  
+              & 0.822 & 0.825 & 0.819 & 0.821 & 0.644  
+              & 0.827 & 0.904 & 0.823 & 0.824 & 0.722 \\
+\bottomrule
+\end{tabular}}
+\caption{Transformation methods.}
+\label{tab:pred_res_trans_methods}
+\end{table}
+The result is shown in Table~\ref{tab:pred_res_trans_methods}.
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/best_classifier_cd_5p.pdf}
+        \caption{5p}
+        % \label{fig:sub1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/best_classifier_cd_3p.pdf}
+        \caption{3p}
+        % \label{fig:sub2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/best_classifier_cd_multi.pdf}
+        \caption{multi}
+        % \label{fig:sub3}
+    \end{subfigure}
+    \caption{CD diagrams of best models.}
+    \label{fig:best_model_cd}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/best_encoding_cd_5p.pdf}
+        \caption{5p}
+        % \label{fig:sub1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/best_encoding_cd_3p.pdf}
+        \caption{3p}
+        % \label{fig:sub2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/best_encoding_cd_multi.pdf}
+        \caption{multi}
+        % \label{fig:sub3}
+    \end{subfigure}
+    \caption{CD diagrams of best encoding.}
+    \label{fig:best_encoding_cd}
+\end{figure}
+To summarize the result, we plot the CD diagrams to summarize the general best classifier, as shown in Figure~\ref{fig:best_model_cd} and the general best encoding method~\ref{fig:best_encoding_cd}.
+
+The best combination of encoding method and classifier is shown in Table~\ref{tab:best_minirocket_dicleave}.
+For 5p-arm dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
+For all five classification metrics, it outperforms the state-of-the-art method, DiCleave.
+For 3p-arm dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
+Out of the five classification metrics, it outperforms DiCleave, except in specificity.
+For multi-class dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
+For all five classification metrics, it outperforms DiCleave.
+
+\begin{table}[htbp]
+\centering
+\resizebox{\columnwidth}{!}{\begin{tabular}{llcccccc}
+\toprule
+Dataset & Methods & Acc & Sp & Sn & F1 & MCC & Time (s) \\
+\midrule
+5' prediction & enc 9 + MiniROCKET & \textcolor{red}{\textbf{0.857}} & \textcolor{red}{\textbf{0.845}} & \textcolor{red}{\textbf{0.870}} & \textcolor{red}{\textbf{0.859}} & \textcolor{red}{\textbf{0.715}} & \textcolor{red}{\textbf{0.787}} \\
+              & DiCleave & 0.818 & 0.790 & 0.846 & 0.822 & 0.653  & 21.249 \\
+              
+\midrule
+3' prediction & enc 9 + Rocket  & \textcolor{red}{\textbf{0.870}} & 0.861 & \textcolor{red}{\textbf{0.879}} & \textcolor{red}{\textbf{0.871}} & \textcolor{red}{\textbf{0.741}} & 4.311 \\
+              & enc 7 + MiniROCKET & 0.848 & 0.839 & 0.857 & 0.850 & 0.697 & \textcolor{red}{\textbf{0.989}} \\
+              & DiCleave & 0.854 & \textcolor{red}{\textbf{0.891}} & 0.817 & 0.847 & 0.715  & 15.919 \\
+\midrule
+Multi-class prediction & enc 9 + Rocket  & \textcolor{red}{\textbf{0.863}} & \textcolor{red}{\textbf{0.921}} & \textcolor{red}{\textbf{0.852}} & \textcolor{red}{\textbf{0.860}} & \textcolor{red}{\textbf{0.780}} & 12.208 \\
+              & enc 3 + MiniROCKET & 0.851 & 0.915 & 0.844 & 0.849 & 0.760 & \textcolor{red}{\textbf{4.550}} \\
+              & DiCleave & 0.820 & 0.895 & 0.804 & 0.815 & 0.710  & 131.151 \\
+\bottomrule
+\end{tabular}}
+    \caption{Comparative analysis between the best combinations of the encoding method with ROCKET and MiniROCKET, with DiCleave.}
+    \label{tab:best_minirocket_dicleave}
+\end{table}
+
+
+
+
+\subsection{Running time analysis}
+To compare the computational efficiency of MTSCCleav and the current state-of-the-art method, namely DiCleave, we conducted a comparative analysis of their running times.
+For DiCleave, we employed the code from its supporting website, without any modifications.
+All experiments were conducted on the same machine (a personal laptop equipped with an Apple M1 Pro chip and 16 GB of memory) and using the same splits of the training and testing datasets under 5-fold cross-validation to ensure fairness.
+The reported running times are the averages of the five runs.
+The timing results were measured from the training phase to the return of the five classification metrics.
+We have ignored the computation time for raw input preprocessing because it is the shared part of both methods.
+The computation time for the time series encoding of MTSCCleav is also not included because they are simple $O(n)$ algorithms where $n$ is the size of the input.
+
+The result is shown in Table~\ref{tab:best_minirocket_dicleave}.
+We reported the best combination of encoding method and classifier.
+MiniROCKET is the most computationally efficient of the five rocket-based classifiers in this study.
+We also included its best result, along with the corresponding encoding method, even though this combination is not the best overall.
+From Table~\ref{tab:pred_res_trans_methods}, the best results for 5' prediction, 3' prediction and multi-class prediction are from the combinations of ``enc 9 + MiniROCKET'', ``ecv 9 + ROCKET'' and ``enc 9 + ROCKET'', respectively.
+Note that for 3' prediction and multi-class prediction, the combination of ``enc 6 + ROKCET'' also returns the same result.
+
+MTSCCleav demonstrates a significant advantage in computational efficiency, achieving an average 27.0X, 3.7X and 10.7X speedup over DiCleave, for 5', 3' and multi prediction, respectively.
+If we also consider using the MiniROCKET in the case of 3' and multi-class prediction, it achieves 16.1X and 28.8X speedup.
+To note, in the case of 3' prediction,  the performance of MiniROCKET is only slightly lower than DiCleave.
+In the case of multi-class prediction, the performance of MiniROCKET is better than DiCleave.
+The running time difference is because DiCleave is a deep learning-based method that requires substantial time for model inference, while MTSCleav leverages efficient ROCKET-based classifiers.
+This significant reduction in runtime makes MTSCCleav more suitable for large-scale data and real-time applications.
+
+
+
+
+
+%%%
+%%%
+%%%
+
+
+
+
+
+
+
+\subsection{Subsequence importance}
+To evaluate the sensitivity of MTSCCleav to subsequences of the original input, we conducted a perturbation experiment to evaluate the importance of subsequences based on masking windows.
+The goal of this experiment is to identify which subsequences of the entire time series are critical for classification.
+The main idea is to see how various modifications to the original input affect model performance.
+It hints at which features are essential for the classification.
+
+The model is trained on the original training dataset.
+For each instance in the testing dataset, we measure its original score and the masked score.
+We slid a masking window $w$ with a fixed length $|w|$ over the input time series $T$.
+For each window position $i \in \{1, 2, ..., |T|-|w|+1\}$, we masked all entries across all the channels of $T$ within the window.
+Hence, we removed or hid that portion of information from the model during inference.
+The changes in classification performance in terms of accuracy relative to the unmasked original input of each $i$ are recorded.
+Intuitively, if the information of a subsequence is critical for the classification, the masking of this subsequence would lead to a great drop in classification performance.
+We aggregated the importance score across the testing dataset.
+\begin{figure}[htbp]
+    \centering
+    % Top subfigure
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/perturbation_5p.pdf}
+        \caption{5p}
+        % \label{fig:top}
+    \end{subfigure}
+    \vspace{0.5cm}  % Space between the two
+    % Bottom subfigure
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/perturbation_3p.pdf}
+        \caption{3p}
+        % \label{fig:bottom}
+    \end{subfigure}
+    \caption{Perturbation.}
+    \label{fig:perturbation}
+\end{figure}
+The result of the perturbation experiment for the 5p and 3p datasets is shown in Figure~\ref{fig:perturbation}.
+In this experiment, we want to focus on the structural information of RNA. Hence, we only include the time series resulted from the strand information.
+Besides, we mask a subsequence in the perturbation experiment.
+Hence, for the encoding methods, we cannot use the methods derived from the ``Cumulative mapping'' as the accumulation would lead to the information from the masked region.
+We adopted ``Grouped fixed-length channel mapping'' as the encoding method and ROCKET as the classifier. 
+
+In the 5p dataset, we found that masking subsequences at the end caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(a).
+In the 3p dataset, we found that masking subsequences at the beginning caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(b).
+
+
+
+%%%
+
+
+
+
+
+
+
+
+
+
+
+

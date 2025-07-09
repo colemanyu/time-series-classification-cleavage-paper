@@ -1,1 +1,19 @@
+%%%
+
 \section{Discussion} \label{sec:discussion}
+For the result of predictive performance, from Table~\ref{tab:pred_res_trans_methods} and Figures~\ref{fig:best_model_cd}, \ref{fig:best_encoding_cd}.
+
+Out of the three datasets, the best classifier is ROCKET.
+The ranking of the five classifiers by performance, starting from the best, is as follows: ROCKET, Hydra, MiniROCKET, MultiROCKET-Hydra, MultiROCKET.
+
+On the 5p-arm dataset, the best encoding method is ``Global Cumulative grouped fixed-length channel mapping''.
+On the 3p-arm and multi-class datasets, the best encoding method is ``Global Cumulative mapping''.
+
+Fixed-length grouped channel mappings outperform variable-length counterparts, likely because fixed-length schemes better preserve the original positional information of nucleotides within the sequence.
+
+Global cumulative encodings, which compute cumulative mappings starting from the beginning of the sequence, consistently yield better performance than local cumulative or non-cumulative methods.
+
+Cumulative-based encodings perform better than single-value mappings, suggesting that the accumulated nucleotide signal is more informative for cleavage site prediction than the local or isolated presence of nucleotides.
+
+
+%%%

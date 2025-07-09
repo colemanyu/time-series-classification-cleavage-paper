@@ -60,6 +60,8 @@
 
 % Coleman
 \usepackage{makecell}
+% sub figure
+\usepackage{subcaption} % "Package caption Warning"
 %%%%
 
 %%%%%=============================================================================%%%%
@@ -98,6 +100,7 @@
 % https://www.overleaf.com/learn/latex/Multi-file_LaTeX_projects
 \usepackage{blindtext}
 \usepackage{subfiles} % Best loaded last in the preamble
+
 \begin{document}
 % Coleman
 % \title[short title]{full title}
@@ -148,7 +151,9 @@
 %% Sample for structured abstract %%
 %%================================%%
 
-\abstract{\textbf{Background:} MicroRNAs (miRNAs) are small non-coding RNAs (ncRNAs) that regulate gene expression at the post-transcriptional level and hence play essential roles in diverse biological processes such as development and differentiation.
+\abstract{
+%%%
+\textbf{Background:} MicroRNAs (miRNAs) are small non-coding RNAs (ncRNAs) that regulate gene expression at the post-transcriptional level and hence play essential roles in diverse biological processes such as development and differentiation.
 The biogenesis of miRNAs requires Dicer, which is an enzyme, to cleave at specific sites on the precursor miRNAs (pre-miRNAs).
 These sites are called cleavage sites.
 Several machine learning approaches, such as ReCGBM and DiCleave, have been proposed to predict human dicer cleavage sites.
@@ -183,10 +188,11 @@ Code is available at: \href{https://github.com/cyuab/time-series-classification-
 % Testing for bibliography~\cite{DiCleaveDeepLearning2024}.
 \subfile{sections/background} % 1500 words
 \subfile{sections/methods} % 1500 words
-% \subfile{sections/results} % 500 words
-% \subfile{sections/discussion} % 500 words
-% \subfile{sections/conclusions} % 500 words
-
+\subfile{sections/results} % 1000 ~ 1500 words
+\subfile{sections/discussion} % 500 words
+\subfile{sections/conclusions} % 500 words
+\subfile{sections/appendix}
+\subfile{sections/test}
 
 %%===========================================================================================%%
 %% If you are submitting to one of the Nature Portfolio journals, using the eJP submission   %%

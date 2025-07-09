@@ -1,4 +1,10 @@
+%%%
+
 \section{Methods} \label{sec:methods}
+%  Multivariate Time Series Clasification
+% Transformations
+% Rocket
+
 Our main goal is to classify whether an input pattern contains a cleavage site of Dicer.
 We aim to transform the problem of predicting human dicer cleavage sites into a multivariate time series classification problem. This allows us to use algorithms from the time series community. It gives us more ways to analyze and visualize the data.
 
@@ -145,7 +151,7 @@ According to the above selection criteria, only ``MI0000060'' would be selected.
 \end{table}
 After the selection process, we selected 827 experimental validated pre-miRNA sequences together with its two mature miRNA products, and this formed our dataset.
 We use ``hsa-let-7a-1'' as our running example.
-The whole sequence of it and its necessary information for our downstream analysis is listed in Table~\ref{tab:hsa-let-7a-1}.
+The whole sequence of it and its necessary information for our downstream analysis are listed in Table~\ref{tab:hsa-let-7a-1}.
 
 \subsubsection{Argument the dataset with Secondary Structure information}
 We want to use the domain knowledge about pre-miRNA sequences to improve our classifier's accuracy. 
@@ -153,7 +159,7 @@ We leverage the secondary structure of these sequences to achieve this.
 Recall that a specific three-dimensional (3D) structure is required for DNA, RNA, and protein to perform functions~\cite{UnderstandingBioinformatics2008}.
 However, finding these 3D structures using experimental methods such as X-ray crystallography or nuclear magnetic resonance (NMR) is costly and time-consuming.
 Hence, the prediction methods on such 3D structures are necessary and helpful for the downstream analysis.
-However, prediction of such 3D structures is difficult. One of the reasons is that there are some “nonconventional” base-pair interactions (e.g., A-G) that allow an RNA structure to fold into a 3D structure. It makes the search space for prediction much larger than, in the 2D case, the secondary structure.
+However, prediction of such 3D structures is difficult. One of the reasons is that there are some “nonconventional” base-pair interactions (e.g., noncanonical and rare A-G) that allow an RNA structure to fold into a 3D structure, in addition to the (G,U) wobble pair, which are common and functionally important in RNA secondary structures.. It makes the search space for prediction much larger than, in the 2D case, the secondary structure.
 The local structure of the 3D structures, the secondary structures, only focus on the conventional (G-C and A-U) base-pair interactions~\cite{MolecularBiologyCell2022}.
 It makes the prediction of the secondary structure easier and more applicable than predicting the 3D structure.
 
@@ -232,7 +238,7 @@ We call the four original input strands and the constructed four complementary s
 We are now ready to transform the ``eight strings'' into time series.
 Of note, we also have the base pair probability sequences that are of the same length as these strings. 
 
-\subsection{Time Series}
+\subsection{Time Series Construction}
 \begin{definition}[Time Series] 
 \label{def:ts}
 A time series $T = t_1, t_2, ..., t_n$ is a sequence of real-valued numbers with length = $n$.
@@ -275,7 +281,7 @@ One single value is assigned to each of the letters.
 A more reasonable approach in this category is to employ the domain knowledge during assignments.
 For example, \cite{ATCGNucleotideFluctuation2007} employs the atomic number of each nucleotide as the transformed values where $\{78, 70, 58, 66\}$ is assigned to  $\{G, A, C, T\}$ respectively.
 \cite{CodingMeasureScheme2006} uses ``electron-ion'' interaction potential representation (EIIP) as such values. 
-These values are $\{0:0806, 0:1260, 0:1340, 0:1335\}$.
+These values are $\{G:0806, A:1260, C:1340, T:1335\}$.
 Our goal is to transform the input strand and its complementary strand into two time series and aim to capture the information of these sequences and the secondary structure.
 So, we need to employ the complementarity property during the transformation~\cite{DNANumericalRepresentations2007}.
 Recall that in the base-pairing rules, ``A'' pairs with ``U''\footnote{In DNA, ``A'' pairs with ``T''} to form two hydrogen bonds while ``G'' pairs with ``C'' to form three hydrogen bonds. 
@@ -514,13 +520,13 @@ These methods are rows 2 and 3 in Table~\ref{tab:time_series_transform}.
 Instead of looking at the values in the time series one by one, we can accumulate the values assigned to each nucleotide.
 The ``Single value mapping'' and its two vairations allows us to focus on the absolute values of the alphabet and ignore what has happened in the past.
 The ``cumulative version'' allows us to focus on analyzing the ``trend'' such as increasing and decreasing, by accumulating what has happened in the past.
-We show the ``Cumulative mapping'' in row 4 in the Table~\ref{tab:time_series_transform}
-We can also use two channels to represents the time dynamics of a nucleotide group in ``Cumulative mapping''. For the output, we can allow variable-length channels or fixed-length channels.
-These two variations has been shown in rows 5 and 6 in the table.
+We show the ``Cumulative mapping'' in row 4 in the Table~\ref{tab:time_series_transform}.
+We can also use two channels to represent the time dynamics of a nucleotide group in ``Cumulative mapping''. For the output, we can allow variable-length channels or fixed-length channels.
+These two variations have been shown in rows 5 and 6 in the table.
 
 Of note, some our proposed transformations are lossy.
 Lossy transformation refers to a transformation that does not allow us to restore the original string from the new time series representation.
-Methods 2, 4 and 5 are lossy.
+Row 2, 4 and 5 are lossy.
 It does not guarantee that lossless transformation performs better than lossy transformation for the downstream analsys because lossy transformation may provide better generalization.
 
 \subsubsection{Incorporating base-pair probabilities}
@@ -799,26 +805,74 @@ Figure~\ref{fig:transformation_relationships} shows how to use the discussed not
 \end{figure}
 
 \subsection{Time series classification}
-% What is time series and time series classification?
 In this study, we propose a novel approach to predict human dicer cleavage sites by reframing this task as a multivariate time series classification problem.
+In univariate time series classification, an instance in the dataset consists of a time series $x = x_1, x_2, ..., x_m$ with $m$ observations and a discrete class label $y$, which takes $c$ possible values.
+If $c = 2$, we refer to these problems as binary classification problems.
+If $c > 2$, we refer to these problems as multiclass classification problems.
+In multivariate time series classification, the time series is not a single sequence but a list of vectors over $d$ dimensions and $m$ observations.
+$x = <x_1, x_2, ..., x_d>$, where $x_k = x_{1,k}, x_{2,k}, ..., x_{m,k}$.
+We also denote the $j$\textsuperscript{th} of the $i$\textsuperscript{th} case of dimension $k$ as a scalar number $x_{i,j,k}$.
+
 We have introduced how to transform the information of the sequence, the secondary structure, and its probability sequence into a time series.
 In this session, we will introduce the time series classifier used in this manuscript.
-
-There are many classifiers defined on time series data, including distance-based, feature-based, interval-based, shapelet-based, dictionary-based, convolution-based, and deep learning-based. Also, two or more of the above approaches can be combined, namely hybrid approaches~\cite{BakeReduxReview2024}.
+There are many classifiers defined for time series data, including distance-based, feature-based, interval-based, shapelet-based, dictionary-based, convolution-based, and deep learning-based classifiers. Additionally, two or more of the above approaches can be combined, resulting in hybrid approaches~\cite{BakeReduxReview2024}.
 For a complete review of time series classification, we would like to direct the readers to~\cite{BakeReduxReview2024, GreatMultivariateTime2021, GreatTimeSeries2017} for details.
-As our downstream classifier, we adopt convolution-based classifiers for their simplicity and accuracy.
-The convolution-based approaches leverage a simple design pattern, which is the over-production of features, followed by a selection strategy.
-In the first step, a large number of features about the instances are produced. The features encode the characteristics of the instances and the computational complexity of it is low.
-Then, a simple classifier such as a linear ridge classiﬁer determines which features are most useful.
-%%% Above is not tidy yet.
+As our downstream classifier, we employ convolution-based classifiers due to their simplicity and accuracy.
 
-\subsubsection{Convolution based classification}
-% Time series classification in detail, especially Rocket-based methods
+\subsubsection{Convolution-based classification}
+Convolution-based classifiers first use randomly parameterized kernels to perform convolutions on the original time series.
+Each convolution is performed by sliding a kernel across the original time series and computing a dot product.
+The output of this process is another time series, namely an activation map.
+Figure~\ref{fig:rocket_convolution} shows two kernels $\omega_1$ and $\omega_2$ , each of which performs convolution with $T$.
+For example, $\omega_1$ performs dot product with $T(1:3)$ and result $3$ as the first entry of the activation map.
+By sliding the kernel one time stamp at a time, an activation map is produced for each kernel.
+Then, the summary features are derived from the activation map, such as the maximum and proportion of positive values.
+
+Typically, convolution-based approaches employ a simple design pattern, which involves the overproduction of features followed by a selection strategy.
+A large number of features are generated about the instances. 
+Then, a simple classifier such as a linear ridge classifier determines which features are most useful.
+
+
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.8\columnwidth]{figures/rocket_convolution.pptx.pdf}}
 \caption{Convolution}
 \label{fig:rocket_convolution}
 \end{figure}
+
+
+The most popular convolution-based approach is the Random Convolutional Kernel Transform (ROCKET)~\cite{ROCKETExceptionallyFast2020}.
+It generates a large number of randomly parameterized kernels, ranging from thousands to tens of thousands.
+The kernel's parameters include length (It defines the kernel's length), weights (the entries inside the kernel), bias (valued added to the result of the convolution operation).
+Besides, padding can be applied on the input series at the start and the end such that the activation map has the same length as the input.
+The summary statistics are obtained through two pooling operations: the max and the proportion of positive values (PPV).
+Hence, for $k$ kernels, the transformed data has $2k$ features.
+The default value of $k$ is $10000$.
+There are two extensions of ROCKET.
+They are MiniRocket~\cite{MiniRocketVeryFast2021} and MultiRocket~\cite{MultiRocketMultiplePooling2022}.
+MiniRocket removes unnecessary operations and many of the random components of ROCKET.
+It speeds up Rocket by over an order of magnitude with no significant difference in accuracy, making the classifier almost deterministic.
+For example, the kernel length is fixed, and only two weight values are used.
+Only PPV is used for the summary statistics.
+MultiRocket is extended from MiniRocket.
+The main improvement of it is to extract features from first-order differences and add three new pooling operations.
+The three added operations are mean of positive values (MPV), mean of indices of positive values (MIPV) and longest stretch of positive values (LSPV).
+
+% Hydra
+The HYbrid Dictionary-ROCKET Architecture (Hydra) is a time series classification model that combines dictionary-based and convolution-based models~\cite{HydraCompetingConvolutional2023}.
+Similar to ROCKET-family classifiers, it uses random 1D convolutional kernels to extract features from the input time series.
+But it groups the kernels into $g$ groups of $k$ kernels each.
+Each time series is passed through all the groups.
+For each group of kernels, we slide them across $T$ and compute the dot product at each timestamp.
+Recall that the dot product of two input vectors has the maximum value when the two vectors align in the same direction and the minimum value when they are oriented in different directions.
+We record the kernel that best matches the subsequence of T at each timestamp.
+This results in a k-dimensional count vector for each of the $g$ groups.
+It results in a total of $g \times k$ features, with default values of $g = 64$ and $k=8$.
+In addition to recording the kernel with the maximum response, we can also record the kernel with the minimum response, with the knowledge that this kernel would be the best match with the ``inverted'' subsequence of $T$.
+Hydra is applied to both the original time series and its first-order differences.
+\cite{HydraCompetingConvolutional2023} concatenate features from Hydra with features from MultiRocket to obtain the best result.
+This classifier is called MultiROCKET-Hydra. 
+
+% Time series classification in detail, especially Rocket-based methods
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.8\columnwidth]{figures/pipeline.pptx.pdf}}
@@ -826,5 +880,32 @@ Then, a simple classifier such as a linear ridge classiﬁer determines which fe
 \label{fig:pipeline}
 \end{figure}
 
+\subsection{Evaluation metrics}
+To evaluate the performance of our time series-based classification model, we adopted five standard classification metrics.
+They are Accuracy (Acc), Specificity (Sp), Sensitivity (Sn), F1 score (F1), and Matthews Correlation Coefficient (MCC)~\cite{ComparisonPredictedObserved1975}.
+\begin{align*}
+Acc &= \frac{TP + TN}{TP + TN + FP + FN} \\
+Sp &= \frac{TN}{TN + FP} \\
+Sn &= \frac{TP}{TP + FN} \\
+F1  &= \frac{2 \times TP}{2 \times TP + FP + FN} \\
+MCC &= \frac{TP \times TN - FP \times FN}{\sqrt{(TP + FP)(TP + FN)(TN + FP)(TN + FN)}}
+\end{align*}
+Where TP, TN, FP, and FN are the number of true positives, true negatives, false positives, and false negatives, respectively. 
 
-\subsection{Evaluation}
+% 3.4.4.1. From binary to multiclass and multilabel
+% https://scikit-learn.org/stable/modules/model_evaluation.html#from-binary-to-multiclass-and-multilabel
+To extend a binary metric to multiclass problems, we can treat the data as a collection of binary problems, one for each class.
+One class is treated as positive while the other classes are treated as negative.
+Then, the multiclass metrics can be obtained by averaging binary metric calculations across the set of classes.
+There are different ways to do the averaging.
+Here, we adopted a macro-averaging approach.
+It treats each class equally and calculates the mean of the binary metrics.
+% 3.4.4.13. Matthews correlation coefficient
+% https://scikit-learn.org/stable/modules/model_evaluation.html#matthews-correlation-coefficient
+To use $MCC$ in the multiclass case, it can be defined in terms of a confusion matrix $C$ for $K$ classes, where $C_{i,j}$ is the number of observations that are actually in class $i$ and predicted to be in class $j$~\cite{ComparingTwoKcategory2004}.  
+\begin{align*}
+MCC_{multi} = \frac{c \times s - \sum_k^K p_k \times t_k}
+{\sqrt{(s^2 - \sum_k^K p_k^2) \times (s^2 - \sum_k^K t_k^2)}}
+\end{align*}
+Where $t_k = \sum_i^K C_{ik}$ (The number of times class $k$ actually occurred), $p_k = \sum_i^K C_{ki}$ (The number of times class $k$ was predicted), $c = \sum_k^K C_{kk}$ (The total number of samples correctly predicted) and $s = \sum_i^K \sum_j^K C_{ij}$ (The total number of samples).
+%%%
