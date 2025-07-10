@@ -152,30 +152,37 @@
 %%================================%%
 
 \abstract{
-%%%
-\textbf{Background:} MicroRNAs (miRNAs) are small non-coding RNAs (ncRNAs) that regulate gene expression at the post-transcriptional level and hence play essential roles in diverse biological processes such as development and differentiation.
+\textbf{Background:} 
+MicroRNAs (miRNAs) are small non-coding RNAs (ncRNAs) that regulate gene expression at the post-transcriptional level, thereby playing essential roles in diverse biological processes.
+% Such as development and differentiation.
 The biogenesis of miRNAs requires Dicer, which is an enzyme, to cleave at specific sites on the precursor miRNAs (pre-miRNAs).
 These sites are called cleavage sites.
-Several machine learning approaches, such as ReCGBM and DiCleave, have been proposed to predict human dicer cleavage sites.
-Given an input sequence, these classifiers predict whether it contains a cleavage site.
-Despite the advances made, existing studies have several limitations.
-They have ignored the probabilities of the base pairs in the secondary structure predicted by RNA secondary structure prediction tools in the classification.
-Besides, they rely heavily on complicated feature engineering or opaque deep neural models. It results in a lack of generalizability and interoperability. Also, they have a long running time.
-There is a need for alternative modeling paradigms that are simple, fast, and provide comparable accuracy while offering better model transparency.
+Several machine learning approaches have been proposed to predict whether an input sequence contains a cleavage site.
+Existing studies have several limitations.
+They rely heavily on complex feature engineering or opaque deep neural networks. 
+It results in a lack of generalizability and a long running time.
+Additionally, the probabilities of the base pairs in the predicted secondary structure have been ignored in the classification.
+There is a need for an alternative modeling paradigm that is accurate, fast, and simple.
 
-\textbf{Results:} We propose a novel approach to predict human Dicer cleavage sites by reframing the task as a multivariate time series classification problem. 
-To reframe, we have proposed different transformation schemes to convert the RNA sequence and the information about its secondary structure into time series.
+\textbf{Results:} 
+We proposed a novel approach to reframe the task as a multivariate time series classification problem. 
+For this purpose, we proposed various encoding schemes to convert the RNA sequence and the secondary structure information into time series.
 Hence, the data can be represented in the form of a multivariate time series.
-We also proposed a novel transformation scheme that involves the probabilities of the base pairs in the predicted secondary structure, which have been long ignored in the literature.
-Computational experiments show that our proposed scheme can achieve comparable results using a simpler, intuitive model and less computation time.
-Besides, we test our models with perturbation-based experiments. We found that the regions or subsequences close to the cleavage sites and hence to the center of pre-miRNAs are essential to the predictions of the human dicer cleavage sites.
-Of note, the transformation of RNA data to time series allows the use of many state-of-the-art algorithms in the time series community and can relate some novel problem definitions in time series, such as motifs, discords, and chains, to the computational study of RNA data that paves novel ways using the well-established tools in the time series community.
+We leveraged the probabilities of the base pairs in the classification, which have been long ignored in the literature.
+Computational experiments demonstrate that our proposed scheme can achieve better or comparable results using a simpler, more intuitive model and less computational time.
+Through perturbation experiments, we found that regions close to the center of pre-miRNAs are essential for predicting human dicer cleavage sites.
+Notably, the encoding of RNA data into time series enables us to utilize any well-established tools from the time series community. 
 
-\textbf{Conclusion:} Our proposed scheme allows us to study this problem in a new way. By transforming the RNA sequence and its secondary structure information into time series and using simple state-of-the-art time series classifiers, we obtain comparable or even superior performance in a simpler, faster way.
-We introduce a novel RNA transformation method that leverages the base pair probabilities.
-We also analyze the importance of the subsequences of the multivariate time series to the classification task, which hints that the regions that are close to the center are essential for this problem.
+\textbf{Conclusion:} 
+Our proposed scheme enables us to approach this problem in a novel way. 
+By transforming the RNA sequence and its secondary structure information into a time series and using simple, state-of-the-art time series classifiers, we obtained comparable or even superior performance in a simpler and faster way.
+We introduced the use of probabilities of base pairs in the classification. 
+The analysis of the importance of the subsequences suggests that the regions close to the center of the pre-miRNA are essential for this problem.
 Code is available at: \href{https://github.com/cyuab/time-series-classification-cleavage}{https://github.com/cyuab/time-series-classification-cleavage}.
 }
+%%%
+%%%
+%%%
 
 \keywords{miRNA, Dicer Cleavage Site, Genomic signal processing (GSP), (Multivariate) time Series Classification (MTSC, TSC)}
 
@@ -186,13 +193,11 @@ Code is available at: \href{https://github.com/cyuab/time-series-classification-
 \maketitle
 
 % Testing for bibliography~\cite{DiCleaveDeepLearning2024}.
-\subfile{sections/background} % 1500 words
+\subfile{sections/background} % 1500 words, 2 pages
 \subfile{sections/methods} % 1500 words
 \subfile{sections/results} % 1000 ~ 1500 words
 \subfile{sections/discussion} % 500 words
 \subfile{sections/conclusions} % 500 words
-\subfile{sections/appendix}
-\subfile{sections/test}
 
 %%===========================================================================================%%
 %% If you are submitting to one of the Nature Portfolio journals, using the eJP submission   %%

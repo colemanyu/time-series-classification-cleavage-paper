@@ -1,50 +1,43 @@
 \section{Results} \label{sec:results}
-% 5-fold cross-validation
-Our primary goal is to develop an efficient and accurate classification model that does not require complex feature engineering for human dicer cleavage sites.
-We have proposed six time series construction methods and used them with five rocket-based time series transformation methods, namely ROCKET, MiniROCKET, MultiROCKET, Hydra, and MultiROCKET-Hydra.
-The derived features from the transformation methods are then fed into a simple linear classifier to obtain the final classification result.
-We employed a Ridge classifier for this purpose.
-A Ridge classifier is suggested for small datasets, as in our case, while a logistic regression classifier is suggested for large datasets~\cite{BakeReduxReview2024}.
-
 In all experiments, the models were trained and evaluated using 5-fold cross-validation.
-Recall that we retrieved 827 empirically validated sequences of pre-miRNAs.
+We retrieved 827 empirically validated sequences of pre-miRNAs.
 There are 5p-arm and 3p-arm in each sequence.
-For each arm, we have defined a cleavage pattern and a non-cleavage pattern.
-Three datasets, namely ``5p'', ``3p'' and ``multi'' were constructed by these patterns.
-The ``5p'' dataset comprises 827 positive instances and an equal number of negative instances.
+For each arm, we define a cleavage pattern and a non-cleavage pattern.
+Three datasets, namely ``5p-arm'', ``3p-arm'', and ``multi-class'' were constructed by these patterns.
+The 5p-arm dataset comprises 827 positive instances and an equal number of negative instances.
 We refer to the cleavage patterns as positive instances and the non-cleavage patterns as negative instances.
-The same applies to the '3p' dataset.
-The "5p" and "3p" datasets are binary classification datasets.
-We used all the patterns from both the 5p-arm and the 3p-arm to form the ``multi'' dataset.
-There are 827 ``5p'' instances (cleavage patterns from the 5p-arm), 827 ``3p'' instances, and 1654 negative instances.
+The 5p-arm and 3p-arm datasets are binary-class datasets.
+The multi-class dataset comprises all patterns from both the 5p-arm and the 3p-arm.
+There are 827 ``5p'' instances (cleavage patterns from the 5p-arm), 827 ``3p'' instances, and 1654 negative instances (non-cleavage patterns).
 
-For every fold in 5-fold cross-validation, the dataset is divided into a training set and a test set with a size of 80\% and 20\% of the whole dataset, respectively.
-In each fold derived from ``5p'' and ``3p'' datasets, the training set has a size of 1323, and the test set has a size of 331.
-In each fold derived from ``multi'' dataset, the training set has a size of 2262, and the test set has a size of 662.
-We keep the class distribution approximately the same in each fold, as it is in the original dataset.
-We used the average of the five classification metrics.
+For every fold in 5-fold cross-validation, the dataset was divided into a training set and a test set with sizes of 80\% and 20\% of the whole dataset, respectively.
+We kept the class distribution approximately the same in each fold, as it is in the original dataset.
+In each fold derived from the 5p-arm and 3p-arm datasets, the training set has a size of 1323, and the test set has a size of 331.
+In each fold derived from the multi-class dataset, the training set has a size of 2262, and the test set has a size of 662.
+We reported the average of the five classification metrics.
 
-In our experiments, the ROCKET-family classifiers require all channels in the multivariate time series to have equal length. To satisfy this constraint, we apply padding to shorter channels using the constant value 100, which does not appear in the original encodings. This choice ensures that the padding does not introduce ambiguity or interfere with the semantic meaning of the encoded nucleotide signals.
+The ROCKET-based classifiers require all channels in the multivariate time series to have equal length.
+We applied padding to shorter channels using the constant value 100, which does not appear in any resulting time series from the encodings. It ensures the padding does not introduce ambiguity or interfere with the semantic meaning of the encoded nucleotide signals.
 
 \subsection{Channel ablation study}
 We utilized three types of data as the input features for each instance.
 They are (1) the RNA sequence, which consists of the primary strand and its complementary strand, (2) the secondary structure information, and (3) the base-pair probability sequence.
-To input such data into our time series-based classifiers, we converted the data into multivariate time series.
-The RNA strand and its complementary strand are strings. Each is encoded into one or two channels, depending on the encoding method used.
-For example, ``single value mapping'' encodes each of them in one channel while ``Grouped variable-length channel mapping'' employs two channels to encode each of them.
-The secondary structure information, represented in dot-bracket notation, is a string. It is also converted into a time series.
+To input the data into our time series-based classifiers, we converted the data into multivariate time series.
+The RNA strand and its complementary strand are each encoded into one or two channels.
+For example, single value mapping encodes each of them in one channel, while grouped variable-length channel mapping employs two channels to encode each of them.
+The secondary structure information is converted into a multivariate time series.
 The base-pair probability sequence is already in numerical form and does not require further transformation.
-It can either be used as a standalone channel or incorporated into the encoding of the complementary strand.
-We perform a channel ablation study to determine the most informative combination of the above channels.
+It can be used either as a standalone channel or incorporated into the encoding of the complementary strand, as described by the encoding methods in Table~\ref{tab:ts_encoding_prob}.
+We performed a channel ablation study to determine the most informative combination of the above channels.
 
-We refer to the multivariate time series that consists of the channels from the RNA sequence only as the baseline setting.
-We add the other channels based on this baseline.
-It leads to the following combinations of channels:
+We referred to the multivariate time series that consists of the channels from the RNA sequence only as the baseline setting.
+We added the other channels to this baseline.
+It leads to the following configurations (cfgs):
 \begin{itemize}
-  \item Baseline: Time series derived solely from the RNA strand.
-  \item Baseline + Secondary Structure (SS): Baseline plus the time series representation of the secondary structure.
-  \item Baseline + Base-pair probability (Standalone as a separated channel): Baseline plus the base-pair probability sequence as a separated channel.
-  \item Baseline + Base-Pair Probability (Incorporated): Baseline with the base-pair probability sequence incorporated into the encoding of the complementary strand.
+  \item (cfg 1) Baseline: Time series derived only from the RNA sequence.
+  \item (cfg 2) Baseline + Secondary Structure (SS): Baseline plus the time series representation of the secondary structure.
+  \item (cfg 3) Baseline + Base-pair probability (Standalone as a separated channel): Baseline plus the base-pair probability sequence as a separated channel.
+  \item (cfg 4) Baseline + Base-Pair Probability (Incorporated): Baseline with the base-pair probability sequence incorporated into the encoding of the complementary strand.
 \end{itemize}
 
 \begin{table}[htbp]
@@ -141,75 +134,17 @@ It leads to the following combinations of channels:
               & MultiROCKET-Hydra & 0.814 & 0.802 & 0.820 & 0.817 & 0.629  
               & 0.820 & 0.825 & 0.816 & 0.819 & 0.642  
               & 0.736 & 0.853 & 0.717 & 0.723 & 0.874 \\
-% \midrule
-% \multirow{5}{*}{\makecell{Single value mapping\\(Include Secondary Structure \\ Sequence, Base Pair Probability \\ Sequence)}} 
-%               & ROCKET  
-%               & \textcolor{red}{\textbf{0.849}} & \textcolor{red}{\textbf{0.842}} & 0.857 & \textcolor{red}{\textbf{0.851}} & \textcolor{red}{\textbf{0.699}}  
-%               & \textcolor{red}{\textbf{0.863}} & \textcolor{red}{\textbf{0.854}} & \textcolor{red}{\textbf{0.873}} & \textcolor{red}{\textbf{0.865}} & \textcolor{red}{\textbf{0.727}}  
-%               & \textcolor{red}{\textbf{0.853}} & \textcolor{red}{\textbf{0.917}} & \textcolor{red}{\textbf{0.847}} & \textcolor{red}{\textbf{0.851}} & \textcolor{red}{\textbf{0.764}} \\
-%               & MiniROCKET 
-%               & 0.823 & 0.809 & 0.837 & 0.825 & 0.647  
-%               & 0.823 & 0.828 & 0.817 & 0.822 & 0.647  
-%               & 0.835 & 0.906 & 0.828 & 0.833 & 0.735 \\
-%               & MultiROCKET 
-%               & 0.821 & 0.802 & 0.840 & 0.824 & 0.643  
-%               & 0.839 & 0.826 & 0.852 & 0.841 & 0.679  
-%               & 0.811 & 0.894 & 0.806 & 0.809 & 0.697 \\
-%               & Hydra 
-%               & 0.843 & 0.820 & 0.867 & 0.847 & 0.688  
-%               & 0.838 & 0.819 & 0.857 & 0.841 & 0.677  
-%               & 0.831 & 0.901 & 0.815 & 0.827 & 0.727 \\
-%               & MultiROCKET-Hydra 
-%               & 0.820 & 0.803 & 0.837 & 0.823 & 0.640  
-%               & 0.840 & 0.830 & 0.850 & 0.841 & 0.680  
-%               & 0.816 & 0.896 & 0.810 & 0.814 & 0.704 \\
-% \midrule
-% \multirow{5}{*}{\makecell{Single value mapping\\(Involve SS, Base Pair Probability  \\Sequence in the \\ transformation)}} 
-%               & ROCKET  
-%               & 0.846 & 0.830 & 0.857 & 0.848 & 0.692  
-%               & 0.857 & 0.844 & 0.869 & 0.858 & 0.714  
-%               & 0.844 & 0.912 & 0.836 & 0.842 & 0.749 \\
-%               & MiniROCKET & 0.820 & 0.811 & 0.830 & 0.822 & 0.642  
-%               & 0.839 & 0.828 & 0.849 & 0.840 & 0.678  
-%               & 0.823 & 0.900 & 0.813 & 0.818 & 0.715 \\
-%               & MultiROCKET & 0.819 & 0.809 & 0.828 & 0.820 & 0.638  
-%               & 0.836 & 0.833 & 0.838 & 0.835 & 0.672  
-%               & 0.810 & 0.894 & 0.804 & 0.807 & 0.694 \\
-%               & Hydra & 0.847 & 0.822 & 0.872 & 0.851 & 0.695  
-%               & 0.845 & 0.824 & 0.867 & 0.849 & 0.691  
-%               & 0.837 & 0.905 & 0.822 & 0.833 & 0.736 \\
-%               & MultiROCKET-Hydra & 0.822 & 0.809 & 0.834 & 0.824 & 0.644  
-%               & 0.843 & 0.839 & 0.846 & 0.843 & 0.686  
-%               & 0.816 & 0.897 & 0.810 & 0.813 & 0.705 \\
-% \midrule
-% \multirow{5}{*}{\makecell{Single value mapping\\(All)}} 
-%               & ROCKET  & 0.845 & 0.836 & 0.854 & 0.846 & 0.690  
-%               & 0.859 & 0.846 & 0.871 & 0.860 & 0.718  
-%               & 0.851 & 0.915 & 0.844 & 0.849 & 0.761 \\
-%               & MiniROCKET & 0.825 & 0.815 & 0.834 & 0.826 & 0.651  
-%               & 0.827 & 0.831 & 0.823 & 0.827 & 0.654  
-%               & 0.835 & 0.906 & 0.828 & 0.833 & 0.734 \\
-%               & MultiROCKET & 0.826 & 0.814 & 0.838 & 0.828 & 0.652  
-%               & 0.844 & 0.845 & 0.843 & 0.844 & 0.688  
-%               & 0.812 & 0.896 & 0.808 & 0.809 & 0.699 \\
-%               & Hydra & 0.848 & 0.839 & 0.856 & 0.849 & 0.696  
-%               & 0.842 & 0.822 & 0.862 & 0.845 & 0.685  
-%               & 0.832 & 0.902 & 0.817 & 0.828 & 0.729 \\
-%               & MultiROCKET-Hydra & 0.828 & 0.815 & 0.842 & 0.830 & 0.657  
-%               & 0.834 & 0.833 & 0.834 & 0.834 & 0.668  
-%               & 0.818 & 0.898 & 0.812 & 0.856 & 0.709 \\
 \bottomrule
 \end{tabular}}
 \caption{Channel ablation study.}
 \label{tab:channel_ablation}
 \end{table}
-We use the ``single value mapping'' as the baseline encoding method in this experiment.
+We used the single value mapping as the encoding method in this experiment.
 Table~\ref{tab:channel_ablation} shows the result.
-From the table, we can see that the addition of secondary structure, base-pair probability as a standalone channel, and base-pair probability incorporated in the encoding can improve the performance of the five classification metrics.
+From the table, we can see that the addition of secondary structure, base-pair probability as a standalone channel, and base-pair probability incorporated in the encoding can improve the performance.
 We plotted the critical difference (CD) diagram to visualize Table~\ref{tab:channel_ablation} to make the performances of different combinations more obvious.
 In CD diagrams, lower-ranked methods (toward the right) are better.
 A horizontal bar connecting combinations indicates no statistically significant difference.
-In other words, including a specific channel improves performance more if its corresponding configuration appears more to the right of the Baseline.
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.3\textwidth}
@@ -232,20 +167,19 @@ In other words, including a specific channel improves performance more if its co
         \caption{multi}
         % \label{fig:sub3}
     \end{subfigure}
-    \caption{CD diagrams of channel ablation study. Where cfg (configuration) 1: Baseline, cfg 2: Baseline + Secondary Structure, cfg 3: Baseline + Base-pair probability (Standalone), cfg 4: Baseline + Base-pair probability (Incorporated)}
+    \caption{CD diagrams of channel ablation study.}
     \label{fig:channel_ablation_cd}
 \end{figure}
-From Figure~\ref{fig:channel_ablation_cd}, we can see that including time series derived from Secondary Structure information and base-pair probability as a separate channel can significantly improve the performance of the classifiers. Incorporating the base-pair probability sequence in the time series encoding of the complementary strand can also improve the classifier, but to a minor degree compared to serving as a separate channel. In our downstream analysis, we adopt the combination of strand time series, secondary structure time series, and base-pair probability time series as our multivariate time series input.
-
-
-
+From Figure~\ref{fig:channel_ablation_cd}, we can see that including time series derived from Secondary Structure information and base-pair probability as a separate channel can significantly improve the performance of the classifiers. 
+Incorporating the base-pair probability sequence in the time series encoding of the complementary strand can also improve the classifier, but to a minor degree compared to serving as a separate channel. 
+In our downstream analysis, we adopted the combination of strand time series, secondary structure time series, and base-pair probability time series as our multivariate time series input.
 
 
 \subsection{Predictive performance}
-The experiment is conducted on three datasets: the 5p-arm, the 3p-arm, and the multi-class datasets.
-Recall that we have nine encoding methods and five ROCKET-based classifiers.
+The experiment was conducted on three datasets: the 5p-arm, the 3p-arm, and the multi-class datasets.
+Recall that we have 9 encoding methods and 5 ROCKET-based classifiers.
 It results in 45 combinations of encoding methods and classifiers.
-Based on the previous subsection, the selected input configuration consists of strand, secondary structure, base-pair probability sequence as a standalone sequence.
+
 \begin{table}[htbp]
 \centering
 \resizebox{\columnwidth}{!}{\begin{tabular}{llccccc|ccccc|ccccc}
@@ -456,10 +390,42 @@ Based on the previous subsection, the selected input configuration consists of s
               & 0.827 & 0.904 & 0.823 & 0.824 & 0.722 \\
 \bottomrule
 \end{tabular}}
-\caption{Transformation methods.}
-\label{tab:pred_res_trans_methods}
+\caption{Performance on the 45 combinations between encoding methods and the transformation methods.}
+\label{tab:results}
 \end{table}
-The result is shown in Table~\ref{tab:pred_res_trans_methods}.
+The result is shown in Table~\ref{tab:results}.
+The best combination of encoding method and classifier is shown in Table~\ref{tab:results_best_minirocket_dicleave}.
+For the 5p-arm dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
+For all five classification metrics, it outperforms the state-of-the-art (SOTA) method, DiCleave.
+For the 3p-arm dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
+Out of the five classification metrics, it outperforms DiCleave, except in specificity.
+For the multi-class dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
+For all five classification metrics, it outperforms DiCleave.
+\begin{table}[htbp]
+\centering
+\resizebox{\columnwidth}{!}{\begin{tabular}{llcccccc}
+\toprule
+Dataset & Methods & Acc & Sp & Sn & F1 & MCC & Time (s) \\
+\midrule
+5p-arm & enc 9 + MiniROCKET & \textcolor{red}{\textbf{0.857}} & \textcolor{red}{\textbf{0.845}} & \textcolor{red}{\textbf{0.870}} & \textcolor{red}{\textbf{0.859}} & \textcolor{red}{\textbf{0.715}} & \textcolor{red}{\textbf{0.787}} \\
+              & DiCleave & 0.818 & 0.790 & 0.846 & 0.822 & 0.653  & 21.249 \\
+              
+\midrule
+3p-arm & enc 9 + ROCKET  & \textcolor{red}{\textbf{0.870}} & 0.861 & \textcolor{red}{\textbf{0.879}} & \textcolor{red}{\textbf{0.871}} & \textcolor{red}{\textbf{0.741}} & 4.311 \\
+              & enc 7 + MiniROCKET & 0.848 & 0.839 & 0.857 & 0.850 & 0.697 & \textcolor{red}{\textbf{0.989}} \\
+              & DiCleave & 0.854 & \textcolor{red}{\textbf{0.891}} & 0.817 & 0.847 & 0.715  & 15.919 \\
+\midrule
+multi-class & enc 9 + ROCKET  & \textcolor{red}{\textbf{0.863}} & \textcolor{red}{\textbf{0.921}} & \textcolor{red}{\textbf{0.852}} & \textcolor{red}{\textbf{0.860}} & \textcolor{red}{\textbf{0.780}} & 12.208 \\
+              & enc 3 + MiniROCKET & 0.851 & 0.915 & 0.844 & 0.849 & 0.760 & \textcolor{red}{\textbf{4.550}} \\
+              & DiCleave & 0.820 & 0.895 & 0.804 & 0.815 & 0.710  & 131.151 \\
+\bottomrule
+\end{tabular}}
+    \caption{Comparative analysis between MTSCCleav with the best combination of the encoding method and transformation method, with the SOTA, DiCleave, on the three datasets. 
+    The best results of using MiniROCKET have also been shown to compare the computational efficiency.
+    }
+    \label{tab:results_best_minirocket_dicleave}
+\end{table}
+
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.3\textwidth}
@@ -482,7 +448,7 @@ The result is shown in Table~\ref{tab:pred_res_trans_methods}.
         \caption{multi}
         % \label{fig:sub3}
     \end{subfigure}
-    \caption{CD diagrams of best models.}
+    \caption{CD diagrams to compare different transformation methods.}
     \label{fig:best_model_cd}
 \end{figure}
 
@@ -508,103 +474,55 @@ The result is shown in Table~\ref{tab:pred_res_trans_methods}.
         \caption{multi}
         % \label{fig:sub3}
     \end{subfigure}
-    \caption{CD diagrams of best encoding.}
+    \caption{CD diagrams to compare different encoding methods.}
     \label{fig:best_encoding_cd}
 \end{figure}
-To summarize the result, we plot the CD diagrams to summarize the general best classifier, as shown in Figure~\ref{fig:best_model_cd} and the general best encoding method~\ref{fig:best_encoding_cd}.
-
-The best combination of encoding method and classifier is shown in Table~\ref{tab:best_minirocket_dicleave}.
-For 5p-arm dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
-For all five classification metrics, it outperforms the state-of-the-art method, DiCleave.
-For 3p-arm dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
-Out of the five classification metrics, it outperforms DiCleave, except in specificity.
-For multi-class dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
-For all five classification metrics, it outperforms DiCleave.
-
-\begin{table}[htbp]
-\centering
-\resizebox{\columnwidth}{!}{\begin{tabular}{llcccccc}
-\toprule
-Dataset & Methods & Acc & Sp & Sn & F1 & MCC & Time (s) \\
-\midrule
-5' prediction & enc 9 + MiniROCKET & \textcolor{red}{\textbf{0.857}} & \textcolor{red}{\textbf{0.845}} & \textcolor{red}{\textbf{0.870}} & \textcolor{red}{\textbf{0.859}} & \textcolor{red}{\textbf{0.715}} & \textcolor{red}{\textbf{0.787}} \\
-              & DiCleave & 0.818 & 0.790 & 0.846 & 0.822 & 0.653  & 21.249 \\
-              
-\midrule
-3' prediction & enc 9 + Rocket  & \textcolor{red}{\textbf{0.870}} & 0.861 & \textcolor{red}{\textbf{0.879}} & \textcolor{red}{\textbf{0.871}} & \textcolor{red}{\textbf{0.741}} & 4.311 \\
-              & enc 7 + MiniROCKET & 0.848 & 0.839 & 0.857 & 0.850 & 0.697 & \textcolor{red}{\textbf{0.989}} \\
-              & DiCleave & 0.854 & \textcolor{red}{\textbf{0.891}} & 0.817 & 0.847 & 0.715  & 15.919 \\
-\midrule
-Multi-class prediction & enc 9 + Rocket  & \textcolor{red}{\textbf{0.863}} & \textcolor{red}{\textbf{0.921}} & \textcolor{red}{\textbf{0.852}} & \textcolor{red}{\textbf{0.860}} & \textcolor{red}{\textbf{0.780}} & 12.208 \\
-              & enc 3 + MiniROCKET & 0.851 & 0.915 & 0.844 & 0.849 & 0.760 & \textcolor{red}{\textbf{4.550}} \\
-              & DiCleave & 0.820 & 0.895 & 0.804 & 0.815 & 0.710  & 131.151 \\
-\bottomrule
-\end{tabular}}
-    \caption{Comparative analysis between the best combinations of the encoding method with ROCKET and MiniROCKET, with DiCleave.}
-    \label{tab:best_minirocket_dicleave}
-\end{table}
-
-
+To summarize the result, we plot the CD diagrams to find the general best classifier, as shown in Figure~\ref{fig:best_model_cd} and the general best encoding method, as shown in Figure~\ref{fig:best_encoding_cd}.
 
 
 \subsection{Running time analysis}
-To compare the computational efficiency of MTSCCleav and the current state-of-the-art method, namely DiCleave, we conducted a comparative analysis of their running times.
+To compare the computational efficiency of MTSCCleav and DiCleave, we conducted a comparative analysis of their running times.
 For DiCleave, we employed the code from its supporting website, without any modifications.
-All experiments were conducted on the same machine (a personal laptop equipped with an Apple M1 Pro chip and 16 GB of memory) and using the same splits of the training and testing datasets under 5-fold cross-validation to ensure fairness.
+All experiments were conducted on the same machine (a personal laptop equipped with an Apple M1 Pro chip and 16 GB of memory) and using the same splits of the training and test datasets under 5-fold cross-validation to ensure fairness.
 The reported running times are the averages of the five runs.
 The timing results were measured from the training phase to the return of the five classification metrics.
-We have ignored the computation time for raw input preprocessing because it is the shared part of both methods.
-The computation time for the time series encoding of MTSCCleav is also not included because they are simple $O(n)$ algorithms where $n$ is the size of the input.
+% We have ignored the computation time for raw input preprocessing because it is the shared part of both methods.
+% The computation time for the time series encoding of MTSCCleav is also not included because they are simple $O(n)$ algorithms where $n$ is the size of the input.
+The result is shown in Table~\ref{tab:results_best_minirocket_dicleave}.
+MiniROCKET is the most computationally efficient of the five rocket-based classifiers.
+We also included its best result, along with the corresponding encoding method, even though this combination may not be the best overall.
+From Table~\ref{tab:results}, the best results on the 5p-arm, 3p-arm, and multi-class datasets are from the combinations of ``enc 9 + MiniROCKET'', ``ecv 9 + ROCKET'' and ``enc 9 + ROCKET'', respectively.
+Note that for the 3p-arm and the multi-class datasets, the combination of ``enc 6 + ROKCET'' also returns the same result.
 
-The result is shown in Table~\ref{tab:best_minirocket_dicleave}.
-We reported the best combination of encoding method and classifier.
-MiniROCKET is the most computationally efficient of the five rocket-based classifiers in this study.
-We also included its best result, along with the corresponding encoding method, even though this combination is not the best overall.
-From Table~\ref{tab:pred_res_trans_methods}, the best results for 5' prediction, 3' prediction and multi-class prediction are from the combinations of ``enc 9 + MiniROCKET'', ``ecv 9 + ROCKET'' and ``enc 9 + ROCKET'', respectively.
-Note that for 3' prediction and multi-class prediction, the combination of ``enc 6 + ROKCET'' also returns the same result.
-
-MTSCCleav demonstrates a significant advantage in computational efficiency, achieving an average 27.0X, 3.7X and 10.7X speedup over DiCleave, for 5', 3' and multi prediction, respectively.
-If we also consider using the MiniROCKET in the case of 3' and multi-class prediction, it achieves 16.1X and 28.8X speedup.
-To note, in the case of 3' prediction,  the performance of MiniROCKET is only slightly lower than DiCleave.
-In the case of multi-class prediction, the performance of MiniROCKET is better than DiCleave.
-The running time difference is because DiCleave is a deep learning-based method that requires substantial time for model inference, while MTSCleav leverages efficient ROCKET-based classifiers.
+MTSCCleav demonstrated a significant advantage in computational efficiency, achieving an average 27.0X, 3.7X, and 10.7X speedup over DiCleave, for the 5p-arm, 3p-arm, and multi-class datasets, respectively.
+If we also consider using the MiniROCKET in the case of 3p-arm and multi-class datasets, it achieves 16.1X and 28.8X speedup.
+To note, in the case of the 3p-arm dataset,  the performance of MiniROCKET is only slightly lower than DiCleave.
+In the case of the multi-class dataset, even the performance of MiniROCKET is better than DiCleave.
+DiCleave is a deep learning-based method that requires substantial time for model inference, while MTSCleav leverages efficient ROCKET-based classifiers.
 This significant reduction in runtime makes MTSCCleav more suitable for large-scale data and real-time applications.
-
-
-
-
-
-%%%
-%%%
-%%%
-
-
-
-
-
-
 
 \subsection{Subsequence importance}
 To evaluate the sensitivity of MTSCCleav to subsequences of the original input, we conducted a perturbation experiment to evaluate the importance of subsequences based on masking windows.
 The goal of this experiment is to identify which subsequences of the entire time series are critical for classification.
-The main idea is to see how various modifications to the original input affect model performance.
-It hints at which features are essential for the classification.
+The primary objective is to examine how various modifications to the original input impact model performance.
+It suggests which features are essential for classification.
 
 The model is trained on the original training dataset.
-For each instance in the testing dataset, we measure its original score and the masked score.
+For each instance in the test dataset, we measure its original score and the masked score.
 We slid a masking window $w$ with a fixed length $|w|$ over the input time series $T$.
+$|w|$ is set to 4.
 For each window position $i \in \{1, 2, ..., |T|-|w|+1\}$, we masked all entries across all the channels of $T$ within the window.
 Hence, we removed or hid that portion of information from the model during inference.
 The changes in classification performance in terms of accuracy relative to the unmasked original input of each $i$ are recorded.
 Intuitively, if the information of a subsequence is critical for the classification, the masking of this subsequence would lead to a great drop in classification performance.
-We aggregated the importance score across the testing dataset.
+We aggregated the importance score across the test dataset.
 \begin{figure}[htbp]
     \centering
     % Top subfigure
     \begin{subfigure}[b]{0.8\textwidth}
         \centering
         \includegraphics[width=\linewidth]{figures/perturbation_5p.pdf}
-        \caption{5p}
+        \caption{5p-arm}
         % \label{fig:top}
     \end{subfigure}
     \vspace{0.5cm}  % Space between the two
@@ -612,23 +530,23 @@ We aggregated the importance score across the testing dataset.
     \begin{subfigure}[b]{0.8\textwidth}
         \centering
         \includegraphics[width=\linewidth]{figures/perturbation_3p.pdf}
-        \caption{3p}
+        \caption{3p-arm}
         % \label{fig:bottom}
     \end{subfigure}
-    \caption{Perturbation.}
+    \caption{Results of the perturbation experiment on the 5p-arm and the 3p-arm datasets.}
     \label{fig:perturbation}
 \end{figure}
-The result of the perturbation experiment for the 5p and 3p datasets is shown in Figure~\ref{fig:perturbation}.
-In this experiment, we want to focus on the structural information of RNA. Hence, we only include the time series resulted from the strand information.
-Besides, we mask a subsequence in the perturbation experiment.
-Hence, for the encoding methods, we cannot use the methods derived from the ``Cumulative mapping'' as the accumulation would lead to the information from the masked region.
+The result of the perturbation experiment for the 5p-arm and 3p-arm datasets is shown in Figure~\ref{fig:perturbation}.
+For the encoding methods, we cannot use the methods derived from the cumulative mapping because the accumulation would leak information from the masked region.
 We adopted ``Grouped fixed-length channel mapping'' as the encoding method and ROCKET as the classifier. 
+``Grouped fixed-length channel mapping'' is the general best encoding, other than the methods derived from the cumulative mapping, in all datasets.
+ROCKET is the overall best classifier.
 
-In the 5p dataset, we found that masking subsequences at the end caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(a).
-In the 3p dataset, we found that masking subsequences at the beginning caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(b).
+In the 5p-arm dataset, we found that masking subsequences at the end caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(a).
+In the 3p-arm dataset, we found that masking subsequences at the beginning caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(b).
 
-
-
+%%%
+%%%
 %%%
 
 

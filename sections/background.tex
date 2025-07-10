@@ -1,47 +1,41 @@
-%%%
-
-% References
-% DiCleaveDeepLearning2024
-
-
 \section{Background} \label{sec:background}
-
-% Biological
-% Related Work
-
 % Biological background
 % DNA (a segment in DNA = a gene) -> RNA -> Protein (Functional unit)
 % miRNA
+% Related Work
 One of the most important theories in molecular biology is the central dogma. It depicts the flow of genetic information~\cite{CampbellBiology2020, MolecularBiologyCell2022}.
-Proteins are the functional units. And the information stored in DNA is used to make them up.
-This process involves transcription and translation.
-Genes (segments of DNA encoding proteins) in DNA are used as templates for messenger RNAs (mRNAs) synthesis. This synthesis process is called transcription.
-An mRNA acts as a set of instructions to assemble a chain of amino acids, which form a linear polypeptide. This construction process is called translation.
-This chain is not yet functional. To become biologically active, this chain is folded into a specific three-dimensional structure, a proper configuration to perform desired functions. This process is called protein folding.
-And this folded polypeptide is called a functional protein, or a protein in short.
+Proteins are the functional units. And the information stored in DNA is used to create them.
+This process is known as gene expression, which involves two key steps: transcription and translation.
+Genes (segments of DNA encoding proteins) in DNA are used as templates for messenger RNAs (mRNAs) synthesis. 
+This synthesis process is called transcription.
+An mRNA acts as a set of instructions to assemble a chain of amino acids, which form a linear polypeptide~\footnote{To be accurate, the mRNA of protein-encoding genes undergoes translation to produce a protein, while many genes produce non-coding RNAs (ncRNA) that function without being translated into proteins}. 
+This construction process is called translation.
+This chain is not yet functional. To become biologically active, this chain is folded into a specific three-dimensional structure, a proper configuration that enables it to perform its desired functions. 
+This process is called protein folding.
+And this folded polypeptide is called a functional protein, or simply a protein.
 
-This whole process is remarkably similar to the process of running a computer program on a computer. The source code does not function by itself. The source code turns into assembly code (less human-readable code) first, and finally into an executable that does the work. 
-In this analogy, DNA acts as the whole source code, in which genes refer to the functions in the code (segments of the code)~\cite{ComputerScientistsGuide2007}. mRNA is the assembly code. And the final product proteins are the running executables.
+This entire process closely mirrors how a computer program runs on a machine, where DNA serves as the source code, genes are the code segments, mRNA acts as the assembly code, and proteins are the executables. 
+The source code does not function by itself. 
+First, it is translated into assembly code (a lower-level, less human-readable form) and then into an executable file that can actually perform the intended tasks~\cite{ComputerScientistsGuide2007}.
 
 These mRNAs are called ``coding RNAs'' because they code for proteins.
 There are other genes in which the final product is the RNA molecule itself. 
 They are called non-coding RNAs (ncRNAs).
 They function by themselves, such as by regulating gene expression.
-Gene expression refers to the process by which the genetic information is transcribed into RNA, which may be translated into protein or ncRNAs.
 Two types of small ncRNAs are particularly important. 
 They are microRNAs (miRNAs) and small interfering RNAs (siRNAs).
 Their discovery was recognized with the 2006 Nobel Prize in Physiology or Medicine\footnote{The Nobel Prize in Physiology or Medicine 2006 - NobelPrize.org: \\\href{https://www.nobelprize.org/prizes/medicine/2006/summary/}{https://www.nobelprize.org/prizes/medicine/2006/summary/} (Accessed on: 2025-06-13).}, awarded for work completed only eight years prior~\cite{CampbellBiology2020}.
-They play essential roles in gene expression regulation.
+They play crucial roles in regulating gene expression.
 
 In this study, we focus on miRNAs. They are small RNAs with a length of about 22 nt.
 % miRNAs are important.
 They regulate gene expression post-transcriptionally~\cite{MicroRNAsGenomicsBiogenesis2004}. 
 A miRNA can regulate the expression of several proteins.
-They are essential in diverse biological processes, such as development, differentiation, and disease~\cite{MicroRNAGeneExpression2005, RoleMicroRNAGenes2005}.
-Hence, it is of great value to understand the formation or the biogenesis of miRNAs.
+% They are essential in diverse biological processes, such as development, differentiation, and disease~\cite{MicroRNAGeneExpression2005, RoleMicroRNAGenes2005}.
+Hence, understanding the biogenesis of miRNAs is of great value.
 It involves the processing of primary miRNAs (pri-miRNAs).
 RNAs are 3D molecules, but it is hard to measure the 3D structure (tertiary structure).
-However, we can understand their behavior by analyzing their 1D sequence. It is easy to obtain through sequencing.
+We can understand their behavior by analyzing their 1D sequence. It is easily obtained through sequencing.
 A predicted secondary structure of a pri-miRNA's sequence is shown in Figure~\ref{fig:hsa-let-7a-1_ss}.
 
 \begin{figure}[htbp]
@@ -50,9 +44,9 @@ A predicted secondary structure of a pri-miRNA's sequence is shown in Figure~\re
 Predicted secondary structure of the pri-miRNA ``hsa-let-7a-1''\protect\footnotemark.
 We denote the sequence as $S$.
 Experimental evidence suggests that the two deviated mature miRNAs are $UGA \cdots GUU$ and $CUA \cdots UUC$.
-They are $S[6:27]$ and $S[57:77]$.
+They are $S[6:27]$ and $S[57:77]$ (Both ends are inclusive.).
 Since $S[6:27]$ ($S[57:77]$) is near the 5' (3') end, we call it ``5p (3p) mature miRNA''. 
-The starting and ending indices of these two subsequences are indicated in \textcolor{red}{\textbf{bold and red}}.
+The starting and ending indices of these two subsequences are indicated in \textcolor{red}{\textbf{bold}}.
 It suggests that the two cleavage sites are the two bonds immediately after the 27\textsuperscript{th} nucleotide and before the 57\textsuperscript{th} nucleotide.
 The two scissors indicate the two cleavage sites.
 The color intensity of the nodes reflects their base pair probability in this predicted secondary structure configuration.
@@ -69,18 +63,19 @@ The raw figure is generated by RNAfold web server\protect\footnotemark.
 \footnotetext{Its miRBase entry: \href{https://mirbase.org/hairpin/MI0000060}{https://mirbase.org/hairpin/MI0000060}. (Accessed on: 2025-06-12).}
 \addtocounter{footnote}{1}
 \footnotetext{RNAfold web server: \href{http://rna.tbi.univie.ac.at/cgi-bin/RNAWebSuite/RNAfold.cgi}{http://rna.tbi.univie.ac.at/cgi-bin/RNAWebSuite/RNAfold.cgi}. (Accessed on: 2025-06-12).
-The figure is viewed in forna. This view option can be chosen on the previous website.}
+The figure is viewed in ``forna''. This view option can be chosen on the website.}
 
-Recall that a pri-miRNA contains a hairpin loop, also called a stem loop. It is located on the bottom left part of Figure~\ref{fig:hsa-let-7a-1_ss}.
+Recall that a pri-miRNA contains a hairpin loop, also called a stem loop. 
+% It is located on the bottom left part of Figure~\ref{fig:hsa-let-7a-1_ss}.
 A microprocessor complex comprising Drosa and DCGR8 cleaves the pri-miRNA to form a precursor miRNA (pre-miRNA) inside the nucleus. 
 The stem-loop is still preserved, but the two arms become shorter.
-The two arms refer to the two ends of the sequence.
-The sequence or strand has the end-to-end chemical orientation.
-One end is called 5' end, and the other is called 3' end.
+% The two arms refer to the two ends of the sequence.
+% The sequence or strand has the end-to-end chemical orientation.
+% One end is called 5' end, and the other is called 3' end.
 After that,  the pri-miRNA is transported by Exportin 5 from the nucleus to the cytoplasm (i.e., outside the nucleus).
 It is further cleaved by an enzyme called Dicer~\cite{MicroRNAMaturationStepwise2002}. 
 The Dicer cleaves the stem-loop from the two arms at the two cleavage sites, shown as the two scissors in figure~\ref{fig:hsa-let-7a-1_ss}.
-We call the bond between two nucleotides along the strand that is cleaved by Dicer the Dicer cleavage site.  
+We refer to the bond between two nucleotides along the strand that is cleaved by Dicer as the Dicer cleavage site.  
 The stem-loop is removed.
 It results in a short double-stranded miRNA molecule.
 % of 18-25 nucleotides.
@@ -88,7 +83,7 @@ Furthermore, these molecules may be subjected to additional trimming. Some nucle
 
 One strand of the resulting molecule is loaded into an RNA-induced silencing complex (RISC).
 This loaded strand guides the RISC to the target mRNA to silence it, and it results in gene silencing.
-This mechanism was discovered in the aforementioned Nobel Prize.
+% This mechanism was discovered in the aforementioned Nobel Prize.
 This loaded strand is called the guide strand or mature miRNA.
 The other stand, which is called the passenger strand, is usually degraded.
 Note that both miRNA single strands, resulting from the unwinding of the double-stranded miRNA molecule, can become the guide strand. 
@@ -96,61 +91,68 @@ For example, “hsa-let-7a-1” has two guide strands or mature miRNA products.
 
 Dicer plays an important role in the biogenesis of miRNAs.
 Hence, accurate cleavage of pre-miRNAs by Dicer is crucial for gene silencing.
-It is reasonable to argue that the structure of the pre-miRNAs informs Dicer about the cleavage process (i.e., where the cleavage sites are).
+It is reasonable to argue that the structure of the pre-miRNAs informs Dicer about the cleavage process.
 A recent study shows that a particular secondary RNA structure, namely 22-bulge, enhances the accuracy of miRNA biogenesis experimentally~\cite{SecondaryStructureRNA2022}.
 
-It would be of great benefit to understand how Dicer selects cleavage sites from the neighborhood information near the cleavage sites.
-The neighborhood information refers to both the sequence and the secondary structure information.
+It would be of great benefit to understand how dicer selects cleavage sites from the neighborhood information near the cleavage sites.
+% The neighborhood information refers to both the sequence and the secondary structure information.
 Studies~\cite{LoopPositionShRNAs2012, ComprehensiveAnalysisPrecursor2012, StructuralDeterminantsRNA2007} revealed that the secondary structures of the sequence are essential for cleavage site determination.
 Hence, to predict or classify whether a subsequence, extracted from pri-miRNAs, contains a cleavage site, we need to make use of both the sequence and secondary structure information.
 
-
 \subsection{Related work}
 % General cleavage problem
-Cleavage site prediction is not only defined on human dicer. Other examples include the calpain~\cite{CalpainCleavagePrediction2011} and caspasesl~\cite{SVMbasedPredictionCaspase2006}, which are proteases that cleave proteins. 
-Most of the studies about cleavage site prediction focus on protein cleavage sites. 
-A wide range of computational methods has been applied to this topic, including support vector machine~\cite{SVMbasedPredictionCaspase2006}, deep neural networks~\cite{PrecisePredictionCalpain2019}.
-% Human dicer cleavage
-In this study, we focus on human dicer cleavage sites.
-We review the studies on human dicer cleavage sites here.
+% Cleavage site prediction is not only defined on human dicer. Other examples include the calpain~\cite{CalpainCleavagePrediction2011} and caspasesl~\cite{SVMbasedPredictionCaspase2006}, which are proteases that cleave proteins. 
+% Most of the studies about cleavage site prediction focus on protein cleavage sites. 
+% A wide range of computational methods has been applied to this topic, including support vector machine~\cite{SVMbasedPredictionCaspase2006}, deep neural networks~\cite{PrecisePredictionCalpain2019}.
+% % Human dicer cleavage
+% In this study, we focus on human dicer cleavage sites.
+% We review the studies on human dicer cleavage sites here.
 PHDcleav employed support vector machines (SVM), leveraging sequence and structure-based features~\cite{PHDcleavSVMBased2013} for the prediction.
 LBSizeCleav improved upon it by considering the loop and bulge lengths~\cite{LBSizeCleavImprovedSupport2016}.
 \cite{ReCGBMGradientBoostingbased2021} proposed an ensemble learning approach, using a gradient boosting machine for better accuracy.
 \cite{DiCleaveDeepLearning2024} developed a deep learning model, namely DiCleave. This model used an autoencoder to learn the secondary structure embeddings of pre-miRNAs from all the species (not only human) presented in the miRBase database and leveraged this information in the prediction of human dicer cleavage sites.
-These methods begin with curated pre-miRNA sequences from the miRBase database. Their secondary structures are predicted using tools such as Quickfold or RNAfold. These secondary structures are stored in the dot bracket notation. They are also sequences.
-Patterns are extracted from these 2-tuple sequences. These patterns are called cleavage patterns.
-If the patterns contain a cleavage site, they are called positive patterns. If not, they are called negative patterns.
+These methods begin with curated pre-miRNA sequences from the miRBase database. 
+Their secondary structures were predicted. 
+% These secondary structures are stored in the dot bracket notation. They are also sequences.
+Patterns were extracted from the sequence, along with the secondary structure. These patterns are called cleavage patterns.
+% If the patterns contain a cleavage site, they are called positive patterns. If not, they are called negative patterns.
 They create the positive patterns by setting the cleavage sites at the middle of the patterns. 
-Details of creating cleavage patterns would be discussed in Section~\ref{sec:methods}.
+% Details of creating cleavage patterns would be discussed in Section~\ref{sec:methods}.
 One exception is the follow-up work of~\cite{DiCleaveDeepLearning2024}, which creates the cleavage pattern by allowing cleavage sites to appear at any position within the pattern, instead of the middle~\cite{DiCleavePlusTransformerbasedModel2025}.
 %% different scheme for different cleavage problem
-Then, these works use different encoding schemes to represent these patterns and use different machine learning models to perform classification on them.
+Then, these works employ different encoding schemes to represent these patterns and utilize various machine learning models for classification.
 
 % Limitation
 %% hard coding for the feature
 %% Time series release this constraint
-Despite the advances made, which mainly focus on the prediction accuracy, these models suffer several limitations.
-They rely heavily on complicated feature engineering and opaque deep learning models~\cite{DiCleaveDeepLearning2024, DiCleavePlusTransformerbasedModel2025}. It results in a lack of generalizability and interoperability. Also, they have a long
-running time. 
+% Despite the advances made, which mainly focus on the prediction accuracy.
+These models suffer several limitations.
+They rely heavily on complicated feature engineering and opaque deep learning models~\cite{DiCleaveDeepLearning2024, DiCleavePlusTransformerbasedModel2025}. It results in a lack of generalizability and a long running time. 
 There is a need to design a simpler model so that it can be easily extended to other prediction tasks on RNA data.
-The RNA data in miRBase are sequence data. And the predicted secondary structure can also be presented as sequences.
-These sequences are strings because the entries are discrete.
-One of the ways to analyze string data is to transform it into time series data where the entries are continuous.
-By doing that, it builds a strong bridge between RNA analysis and time-series data mining.
-In response to that, we introduce the transformation method of RNA data to time series. In addition, we leverage the base pair probabilities in the predicted secondary structure in the transformation. To the best of our knowledge, this information has not yet been leveraged in the transformation.
-For the resulting time series data, we employ state-of-the-art convolution based classifiers, whose superiority has been experimentally tested on data from diverse domains~\cite{BakeReduxReview2024}. 
-Besides, we also perform perturbation-based experiments of classification on the resulting time series to investigate the importance of the subsequences to the prediction. 
-
+% The RNA data in miRBase are sequence data. And the predicted secondary structure can also be presented as sequences.
+% These sequences are strings because the entries are discrete.
+One way to analyze sequence data is to transform it into time series data, where the entries are continuous.
+% By doing that, it builds a strong bridge between RNA analysis and time-series data mining.
+In response to this, we proposed a multivariate time series classification-based method.
+We introduced encoding methods to convert RNA data to time series. 
+In addition, we leveraged the base pair probabilities in the predicted secondary structure in the transformation. 
+To the best of our knowledge, this information has not yet been leveraged in the transformation.
+For the resulting time series data, we employ state-of-the-art convolution-based classifiers, whose superiority has been experimentally tested on data from diverse domains~\cite{BakeReduxReview2024}. 
+Additionally, we performed perturbation-based experiments on the classification of the resulting time series to investigate the importance of subsequences to the prediction. 
 % Contributions
 In summary, our contributions are shown as follows.
 \begin{enumerate}
-    \item To the best of our knowledge, we are the first to frame the prediction of the cleavage sites, not only Dicer cleavage sites, as a multivariate time series classification problem. Time series modeling bridges bioinformatics and time series, which allows us to use state-of-the-art time series classification algorithms. Besides, the visualization power of time series allows us to understand the data more intuitively.
-    \item We propose making use of the base-pair probabilities in the predicted secondary structure in the prediction. To our surprise, this information has been ignored in the existing works. We leverage these base-pair probabilities in our novel transformation scheme for RNA sequence and its complementary sequence.
-    \item We conduct extensive experiments on different transformation methods and convolution-based classification methods.
-    \item We test our models with perturbation-based experiments. It shows that the regions that are close to the cleavage sites, the 3' arm and 5' arm that are close to the cleavage sites, as shown in figure~\ref{fig:hsa-let-7a-1_ss}, are important for the human dicer cleavage sites prediction. It agrees with the existing study~\cite{ReCGBMGradientBoostingbased2021}.
+    \item To the best of our knowledge, we are the first to frame the prediction of the cleavage sites as a multivariate time series classification problem. 
+    % Time series modeling bridges bioinformatics and time series, which allows us to use state-of-the-art time series classification algorithms. 
+    % Besides, the visualization power of time series allows us to understand the data more intuitively.
+    \item We proposed utilizing the base-pair probabilities in the predicted secondary structure for the prediction. 
+    To our surprise, this information has been ignored in the existing works. 
+    % \item We conducted extensive experiments on different encoding methods and convolution-based classification methods.
+    \item We conducted perturbation-based experiments. It shows that regions close to the cleavage sites are important for this problem. 
+    It agrees with the existing study~\cite{ReCGBMGradientBoostingbased2021}.
 \end{enumerate}
 
-%%%
+
 
 
 
