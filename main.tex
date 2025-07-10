@@ -167,15 +167,15 @@ There is a need for an alternative modeling paradigm that is accurate, fast, and
 \textbf{Results:} 
 We proposed a novel approach to reframe the task as a multivariate time series classification problem. 
 For this purpose, we proposed various encoding schemes to convert the RNA sequence and the secondary structure information into time series.
-Hence, the data can be represented in the form of a multivariate time series.
-We leveraged the probabilities of the base pairs in the classification, which have been long ignored in the literature.
+Hence, the data can be represented as a multivariate time series.
+We leveraged the probabilities of the base pairs in the classification.
 Computational experiments demonstrate that our proposed scheme can achieve better or comparable results using a simpler, more intuitive model and less computational time.
-Through perturbation experiments, we found that regions close to the center of pre-miRNAs are essential for predicting human dicer cleavage sites.
 Notably, the encoding of RNA data into time series enables us to utilize any well-established tools from the time series community. 
+Through perturbation experiments, we found that regions close to the center of pre-miRNAs are essential for predicting human dicer cleavage sites.
 
 \textbf{Conclusion:} 
 Our proposed scheme enables us to approach this problem in a novel way. 
-By transforming the RNA sequence and its secondary structure information into a time series and using simple, state-of-the-art time series classifiers, we obtained comparable or even superior performance in a simpler and faster way.
+By transforming the RNA sequence and its secondary structure information into a time series and utilizing simple, state-of-the-art time series classifiers, we achieved comparable or even superior performance in a simpler and faster manner.
 We introduced the use of probabilities of base pairs in the classification. 
 The analysis of the importance of the subsequences suggests that the regions close to the center of the pre-miRNA are essential for this problem.
 Code is available at: \href{https://github.com/cyuab/time-series-classification-cleavage}{https://github.com/cyuab/time-series-classification-cleavage}.

@@ -2,7 +2,7 @@
 In all experiments, the models were trained and evaluated using 5-fold cross-validation.
 We retrieved 827 empirically validated sequences of pre-miRNAs.
 There are 5p-arm and 3p-arm in each sequence.
-For each arm, we define a cleavage pattern and a non-cleavage pattern.
+For each arm, we defined a cleavage pattern and a non-cleavage pattern.
 Three datasets, namely ``5p-arm'', ``3p-arm'', and ``multi-class'' were constructed by these patterns.
 The 5p-arm dataset comprises 827 positive instances and an equal number of negative instances.
 We refer to the cleavage patterns as positive instances and the non-cleavage patterns as negative instances.
@@ -17,14 +17,14 @@ In each fold derived from the multi-class dataset, the training set has a size o
 We reported the average of the five classification metrics.
 
 The ROCKET-based classifiers require all channels in the multivariate time series to have equal length.
-We applied padding to shorter channels using the constant value 100, which does not appear in any resulting time series from the encodings. It ensures the padding does not introduce ambiguity or interfere with the semantic meaning of the encoded nucleotide signals.
+We applied padding to the shorter channels using the constant value 100, which does not appear in the time series before padding. It ensures the padding does not introduce ambiguity or interfere with the semantic meaning of the encoded nucleotide signals.
 
 \subsection{Channel ablation study}
 We utilized three types of data as the input features for each instance.
 They are (1) the RNA sequence, which consists of the primary strand and its complementary strand, (2) the secondary structure information, and (3) the base-pair probability sequence.
 To input the data into our time series-based classifiers, we converted the data into multivariate time series.
-The RNA strand and its complementary strand are each encoded into one or two channels.
-For example, single value mapping encodes each of them in one channel, while grouped variable-length channel mapping employs two channels to encode each of them.
+The RNA strand and its complementary strand are each encoded into one or two channels, using the methods in Tables~\ref{tab:ts_encoding}, \ref{tab:ts_encoding_prob}.
+For example, single value mapping encodes each of them in one channel, while grouped variable-length channel mapping encodes in two channels.
 The secondary structure information is converted into a multivariate time series.
 The base-pair probability sequence is already in numerical form and does not require further transformation.
 It can be used either as a standalone channel or incorporated into the encoding of the complementary strand, as described by the encoding methods in Table~\ref{tab:ts_encoding_prob}.
@@ -139,7 +139,7 @@ It leads to the following configurations (cfgs):
 \caption{Channel ablation study.}
 \label{tab:channel_ablation}
 \end{table}
-We used the single value mapping as the encoding method in this experiment.
+We used the single value mapping as the encoding method.
 Table~\ref{tab:channel_ablation} shows the result.
 From the table, we can see that the addition of secondary structure, base-pair probability as a standalone channel, and base-pair probability incorporated in the encoding can improve the performance.
 We plotted the critical difference (CD) diagram to visualize Table~\ref{tab:channel_ablation} to make the performances of different combinations more obvious.
@@ -170,14 +170,13 @@ A horizontal bar connecting combinations indicates no statistically significant 
     \caption{CD diagrams of channel ablation study.}
     \label{fig:channel_ablation_cd}
 \end{figure}
-From Figure~\ref{fig:channel_ablation_cd}, we can see that including time series derived from Secondary Structure information and base-pair probability as a separate channel can significantly improve the performance of the classifiers. 
+From Figure~\ref{fig:channel_ablation_cd}, we can see that including time series derived from secondary structure information and base-pair probability as a separate channel can significantly improve the performance of the classifiers. 
 Incorporating the base-pair probability sequence in the time series encoding of the complementary strand can also improve the classifier, but to a minor degree compared to serving as a separate channel. 
-In our downstream analysis, we adopted the combination of strand time series, secondary structure time series, and base-pair probability time series as our multivariate time series input.
-
+In our downstream analysis, we adopted the combination of RNA sequence time series, secondary structure time series, and base-pair probability time series as our multivariate time series input.
 
 \subsection{Predictive performance}
 The experiment was conducted on three datasets: the 5p-arm, the 3p-arm, and the multi-class datasets.
-Recall that we have 9 encoding methods and 5 ROCKET-based classifiers.
+Recall that we have nine encoding methods and five ROCKET-based classifiers.
 It results in 45 combinations of encoding methods and classifiers.
 
 \begin{table}[htbp]
@@ -477,7 +476,7 @@ multi-class & enc 9 + ROCKET  & \textcolor{red}{\textbf{0.863}} & \textcolor{red
     \caption{CD diagrams to compare different encoding methods.}
     \label{fig:best_encoding_cd}
 \end{figure}
-To summarize the result, we plot the CD diagrams to find the general best classifier, as shown in Figure~\ref{fig:best_model_cd} and the general best encoding method, as shown in Figure~\ref{fig:best_encoding_cd}.
+To summarize Table~\ref{tab:results}, we plot the CD diagrams for the best classifier, as shown in Figure~\ref{fig:best_model_cd}, and the best encoding method, as shown in Figure~\ref{fig:best_encoding_cd}.
 
 
 \subsection{Running time analysis}
@@ -495,7 +494,7 @@ From Table~\ref{tab:results}, the best results on the 5p-arm, 3p-arm, and multi-
 Note that for the 3p-arm and the multi-class datasets, the combination of ``enc 6 + ROKCET'' also returns the same result.
 
 MTSCCleav demonstrated a significant advantage in computational efficiency, achieving an average 27.0X, 3.7X, and 10.7X speedup over DiCleave, for the 5p-arm, 3p-arm, and multi-class datasets, respectively.
-If we also consider using the MiniROCKET in the case of 3p-arm and multi-class datasets, it achieves 16.1X and 28.8X speedup.
+If we consider using the MiniROCKET in the case of 3p-arm and multi-class datasets, it achieves 16.1X and 28.8X speedup.
 To note, in the case of the 3p-arm dataset,  the performance of MiniROCKET is only slightly lower than DiCleave.
 In the case of the multi-class dataset, even the performance of MiniROCKET is better than DiCleave.
 DiCleave is a deep learning-based method that requires substantial time for model inference, while MTSCleav leverages efficient ROCKET-based classifiers.
@@ -507,7 +506,7 @@ The goal of this experiment is to identify which subsequences of the entire time
 The primary objective is to examine how various modifications to the original input impact model performance.
 It suggests which features are essential for classification.
 
-The model is trained on the original training dataset.
+The model was trained on the original training dataset.
 For each instance in the test dataset, we measure its original score and the masked score.
 We slid a masking window $w$ with a fixed length $|w|$ over the input time series $T$.
 $|w|$ is set to 4.
@@ -539,11 +538,11 @@ We aggregated the importance score across the test dataset.
 The result of the perturbation experiment for the 5p-arm and 3p-arm datasets is shown in Figure~\ref{fig:perturbation}.
 For the encoding methods, we cannot use the methods derived from the cumulative mapping because the accumulation would leak information from the masked region.
 We adopted ``Grouped fixed-length channel mapping'' as the encoding method and ROCKET as the classifier. 
-``Grouped fixed-length channel mapping'' is the general best encoding, other than the methods derived from the cumulative mapping, in all datasets.
-ROCKET is the overall best classifier.
+``Grouped fixed-length channel mapping'' is the best encoding, other than the methods derived from the cumulative mapping, in all datasets, as shown in Figure~\ref{fig:best_encoding_cd}.
+ROCKET is the best classifier, as shown in Figure~\ref{fig:best_model_cd}..
 
-In the 5p-arm dataset, we found that masking subsequences at the end caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(a).
-In the 3p-arm dataset, we found that masking subsequences at the beginning caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(b).
+In the 5p-arm dataset, we found that masking subsequences at the tailing part caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(a).
+In the 3p-arm dataset, we found that masking subsequences at the leading part caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(b).
 
 %%%
 %%%

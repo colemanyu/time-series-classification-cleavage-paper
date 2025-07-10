@@ -5,7 +5,7 @@
 \label{fig:pipeline}
 \end{figure}
 
-The overall pipeline of this study, including the design of MTSCCleav, is summarized in Figure~\ref{fig:pipeline}.
+The overall pipeline of this study is summarized in Figure~\ref{fig:pipeline}.
 In this session, we first discuss data preparation.
 We then briefly review the concepts of time series and propose time series encoding methods.
 After that, time series classifiers are discussed.
@@ -150,7 +150,7 @@ The entire sequence and the necessary information for our downstream analysis of
 
 \subsubsection{Argument the dataset with Secondary Structure information}
 We aim to utilize domain knowledge about pre-miRNA sequences to enhance the accuracy of our classifier. 
-We leverage the secondary structure of these sequences to achieve this.
+We leveraged the secondary structure of these sequences to achieve this.
 Recall that a specific three-dimensional (3D) structure is required for DNA, RNA, and protein to perform functions~\cite{UnderstandingBioinformatics2008}.
 However, finding these 3D structures using experimental methods such as X-ray crystallography or nuclear magnetic resonance (NMR) is costly and time-consuming.
 Hence, prediction methods for such 3D structures are necessary and helpful for downstream analysis.
@@ -475,7 +475,6 @@ We present the nine encoding methods. The relationship among them is shown in Fi
 \label{fig:encodings_relationship}
 \end{figure}
 
-
 % https://www.reddit.com/r/grammar/comments/bfuqx4/what_is_the_correct_wording_for_one_of_if_not_the/
 One of the simple, if not the simplest, transformations is to map the letters in the alphabet into integer numbers without considering any domain knowledge about the nucleotides.
 This method or approach is called the ``Single value mapping''~\cite{SearchingMiningTrillions2012, ConversionNucleotidesSequences2002, AutoregressiveModelingFeature2004, DNASequencesClassification2001, DNANumericalRepresentations2017}.
@@ -483,7 +482,7 @@ One single value is assigned to each of the letters.
 Domain knowledge can be utilized during assignments.
 For example, \cite{ATCGNucleotideFluctuation2007} employs the atomic number of each nucleotide as the transformed values, where $\{G: 78, A: 70, C: 58, T: 66\}$.
 \cite{CodingMeasureScheme2006} uses ``electron-ion'' interaction potential representation (EIIP) as such values, where $\{G:0806, A:1260, C:1340, T:1335\}$.
-Our goal is to transform the input strand and its complementary strand into two time series, aiming to capture the information contained in these sequences and their secondary structure.
+Our goal is to transform the input RNA strand and its complementary strand into time series, aiming to capture the information contained in these sequences and their secondary structure.
 So, we need to employ the complementarity property during the transformation~\cite{DNANumericalRepresentations2007}.
 Recall that in the base-pairing rules, ``A'' pairs with ``U''\footnote{In DNA, ``A'' pairs with ``T''} to form two hydrogen bonds while ``G'' pairs with ``C'' to form three hydrogen bonds. 
 Hence, ``A'' (``C'') can be regarded as the ``inverse'' of ``U'' (``G'')~\footnote{Recall that we call ``-1' as the inverse of ``1''' and vice versa under addition in Algebra.}.
@@ -499,7 +498,7 @@ Now, the only remaining question is which nucleotide on the same side we should 
 % For example, for ``A' and `'G'', which one should be assigned a larger absolute value?
 We adopted the ``A = 2 and G = 1'' assignment.
 The reasoning is as follows.
-The main goal of this manuscript is to find the two cleavage sites on the pre-miRNA.
+The main goal of this study is to find the two cleavage sites on the pre-miRNA.
 The cleavage sites are the bonds along the strands, the phosphodiester linkages.
 After the pre-miRNA is cleaved, the resulting double-stranded miRNA molecule is unwound to form the guide strand and the passenger strand.
 The stability of the double strand would affect the unwinding process.
@@ -510,20 +509,20 @@ So, we want to emphasize the existence of such less stable A-U pairs in the doub
 We assign A and U with larger absolute values than those of G and C.
 With this reasoning, we propose our first transformation method, as shown in row 1 of Table~\ref{tab:ts_encoding}. 
 
-We can also transform each RNA sequence into a multivariate time series using grouped binary encoding, where nucleotides are grouped into (A, U) and (G, C). Each time series channel indicates the presence of a nucleotide from the respective group at each time step.
+We can also transform each RNA sequence into a multivariate time series using grouped binary encoding, where nucleotides are grouped into (A, U) and (G, C). 
+Each time series channel indicates the presence of a nucleotide from the respective group at each time step.
 The kind of methods releases our assumption that A (U) has a larger absolute value than G (C).
-Noted that each channel may differ in length depending on group-specific occurrences, we propose two variations. The first one allows the output to be variable-length sequences per channel. The second one always returns two resulting sequences of fixed length.
+We proposed two variations. 
+The first one allows the output to be variable-length sequences per channel, depending on group-specific occurrences. 
+The second one always returns two resulting sequences of fixed length.
 These methods are rows 2 and 3 in Table~\ref{tab:ts_encoding}. 
-
-The ``Single value mapping'' and its two variations allow us to focus on the absolute values of the alphabet and ignore what has happened in the past.
+To conclude, the single value mapping and its two variations: grouped variable-length channel mapping and grouped fixed-length channel mapping, allow us to focus on the absolute values of the alphabet and ignore what has happened in the past.
 
 \subsubsection{Cumulative mapping}
-The ``cumulative version'' allows us to focus on analyzing the ``trend'', such as increasing and decreasing, by accumulating what has happened in the past~\cite{CurvesIntutiveTool1994, VisualizationAnalysisDNA2004}.
-We show the ``Cumulative mapping'' in row 4 in the Table~\ref{tab:ts_encoding}.
-We can also use two channels to represent the time dynamics of a nucleotide group in ``Cumulative mapping''. 
-For the output, we can allow variable-length channels or fixed-length channels.
+In contrast, the ``cumulative'' version enables us to focus on analyzing the trend, such as increasing and decreasing, by accumulating what has happened in the past~\cite{CurvesIntutiveTool1994, VisualizationAnalysisDNA2004}.
+We show the ``Cumulative mapping'' in row 4.
+We can also use two channels to represent the time dynamics of a nucleotide group in cumulative mapping, as in the case of single value mapping. 
 These two variations are illustrated in rows 5 and 6 of the table.
-
 % Of note, some our proposed transformations are lossy.
 % Lossy transformation refers to a transformation that does not allow us to restore the original string from the new time series representation.
 % Methods 2, 4, and 5 are lossy.
@@ -763,7 +762,7 @@ These two variations are illustrated in rows 5 and 6 of the table.
 \end{table}
 
 We can incorporate the base-pair probabilities in the encoding by multiplying the base-pair probability of the nucleotide with the assigned value of that nucleotide during encoding.
-They are treated as the weight or confidence of that numerical assignment of the nucleotide.
+In other words, they are treated as the weight or confidence of that numerical assignment of the nucleotide.
 Table~\ref{tab:ts_encoding_prob} incorporates the base-pair probability time series into the transformation methods listed in Table~\ref{tab:ts_encoding}.
 % Recall that RNA secondary structure prediction algorithm is a kind of RNA folding algorithm.
 % The RNA secondary structure prediction algorithm returns the predicted secondary structure of a given RNA sequence, a planar graph such as the minimum free energy structure.
@@ -777,41 +776,42 @@ Table~\ref{tab:ts_encoding_prob} incorporates the base-pair probability time ser
 % In our formulation, we deemed these small probabilities as $0$ to emphasize that these bases are deemed to be unpaired in the resulting predicted secondary structure. 
 
 \subsubsection{Accumulating from the beginning of the pre-miRNA sequence}
-In cumulative encoding, it would return a different result if we choose different starts for the accumulation.
-We can start the accumulation from the beginning of the full sequence or just from the beginning of the selected local subsequence.
+In cumulative encoding, it would return a different result if we choose a different starting point for the accumulation.
+We can start the accumulation from the beginning of the whole sequence or just from the beginning of the selected local subsequence.
 The first one preserves the global context by recording the previous counts of the nucleotide up to the selected subsequence.
-It can be useful when early elements (those before the selected subsequence) influence later interpretation. 
-In other words, the previous nucleotides may affect the chemical property of the selected subsequence.
-The second one only focuses on the local history by ignoring the global history.
+It can be useful when previous nucleotides (those before the selected subsequence) influence later interpretation. 
+% In other words, the previous nucleotides may affect the chemical property of the selected subsequence.
+The second one focuses solely on local history, ignoring global history.
 % The time series encoded in this way is more consistent.
 It is useful if the previous nucleotides do not affect the chemical property of the selected subsequence.
 
-Considering the time series representation of the running example $s = GAGAUAACUA$ in ``Cumulative mapping'' in Table~\ref{tab:ts_encoding} $t = 0, 1, 3, 4, 6, 4, 6, 8, 7, 5, 7$, it accumulates from zero.
+Considering the time series representation of the running example $s$ in ``Cumulative mapping'' in Table~\ref{tab:ts_encoding} $t = 0, 1, 3, 4, 6, 4, 6, 8, 7, 5, 7$, it starts from zero.
 % $s$ is the first ten nucleotides of the non-cleavage pattern on the 3p-arm of “hsa-let-7a-1”.
 According to Figure~\ref{fig:hsa-let-7a-1_ss}, $s = S[50:60]$
-In other words, it begins at the 50\textsuperscript{th} position of the whole pre-miRNA sequence, as shown in Table~\ref{tab:hsa-let-7a-1}.
-If we start the accumulation from the first entry $S[1]$ of the whole pre-miRNA sequence instead, it will yield a different result.
-Suppose the last entry of the resulting time series of S[1:49] with Cumulative mapping encoding is 2, the resulting time series of $s$ would be $2, 3, 5, 6, 8, 6, 8, 10, 9, 7, 9]$ if we start the ``Cumulative'' at the beginning at S[1]. 
-Note that these two time series have the same trend, but they start at different values. The first one starts at $2$ while the latter one starts at $0$. 
-We name the first approach as ``Global Cumulative'' and the latter one as ``Local Cumulative'' or simply ``Cumulative''.
+In other words, $s$ begins at the 50\textsuperscript{th} position of the whole pre-miRNA sequence $S$, as shown in Table~\ref{tab:hsa-let-7a-1}.
+If we start the accumulation from the first entry of the whole pre-miRNA sequence $S$ instead, it will yield a different result.
+Suppose the last entry of the resulting time series of $S[1:49]$ with cumulative mapping encoding is 2 and we start the accumulation at the the beginning of $S$, the resulting time series of $s$ would be $2, 3, 5, 6, 8, 6, 8, 10, 9, 7, 9]$.
+Note that these two time series have the same trend, but they start at different values. 
+The first one starts at $2$ while the latter one starts at $0$. 
+We refer to the first approach as ``Global Cumulative'' and the latter as ``Local Cumulative'' or simply "Cumulative".
 % After Z-normalization, these two time series will have similar trends but not the same trends as they have different means and variances.
-We can apply the ``Global'' notion to every cumulative method in the Table~\ref{tab:ts_encoding}
+The ``Global'' notion can be applied to every cumulative-based method.
 
 \subsubsection{Transforming the secondary string into time series}
 We can apply a similar idea to transform the secondary string in the dot-bracket notation into a time series by ``Single value mapping'', where ``('' maps to 1, ``.'' maps to 0, and ``)'' maps to -1.
 
 \subsection{Time series classification}
-% In this study, we propose a novel approach to predict human dicer cleavage sites by reframing this task as a multivariate time series classification problem.
 In univariate time series classification, an instance in the dataset consists of a time series $x = x_1, x_2, ..., x_m$ with $m$ observations and a discrete class label $y$, which takes $c$ possible values.
 If $c = 2$, we refer to these problems as binary classification problems.
 If $c > 2$, we refer to these problems as multiclass classification problems.
-In multivariate time series classification, the time series is not a single sequence but a list of vectors over $d$ dimensions and $m$ observations.
-$x = <x_1, x_2, ..., x_d>$, where $x_k = x_{1,k}, x_{2,k}, ..., x_{m,k}$.
-We also denote the $j$\textsuperscript{th} of the $i$\textsuperscript{th} case of dimension $k$ as a scalar number $x_{i,j,k}$.
+In multivariate time series classification, the time series is not a single sequence but a list of sequences.
+Each sequence is called a channel.
+% over $d$ dimensions and $m$ observations.
+% $x = <x_1, x_2, ..., x_d>$, where $x_k = x_{1,k}, x_{2,k}, ..., x_{m,k}$.
+% We also denote the $j$\textsuperscript{th} of the $i$\textsuperscript{th} case of dimension $k$ as a scalar number $x_{i,j,k}$.
 
-There are many classifiers defined for time series data, including distance-based, feature-based, interval-based, shapelet-based, dictionary-based, convolution-based, and deep learning-based classifiers. Additionally, two or more of the above approaches can be combined, resulting in hybrid approaches~\cite{BakeReduxReview2024}.
-For a complete review of time series classification, we would like to direct the readers to~\cite{BakeReduxReview2024, GreatMultivariateTime2021, GreatTimeSeries2017} for details.
-As our downstream classifier, we employ convolution-based classifiers due to their simplicity and accuracy.
+There are many classifiers defined for time series data, including distance-based, feature-based, interval-based, shapelet-based, dictionary-based, convolution-based, and deep learning-based classifiers. Additionally, two or more of the above approaches can be combined, resulting in hybrid approaches~\cite{BakeReduxReview2024, GreatMultivariateTime2021, GreatTimeSeries2017}.
+We employed convolution-based classifiers as our downstream classifier due to their simplicity and accuracy.
 
 \subsubsection{Convolution-based classification}
 Convolution-based classifiers first use randomly parameterized kernels to perform convolutions on the original time series.
@@ -830,7 +830,7 @@ Then, the summary features are derived from the activation map, such as the maxi
 The most popular convolution-based approach is the Random Convolutional Kernel Transform (ROCKET)~\cite{ROCKETExceptionallyFast2020}.
 It generates a large number of randomly parameterized kernels, ranging from thousands to tens of thousands.
 The kernel's parameters include length (It defines the kernel's length), weights (the entries inside the kernel), bias (valued added to the result of the convolution operation).
-Besides, padding can be applied on the input series at the start and the end, such that the activation map has the same length as the input.
+Additionally, padding can be applied to the input series at the start and end, ensuring the activation map has the same length as the input.
 The summary statistics are obtained through two pooling operations: the max and the proportion of positive values (PPV).
 Hence, for $k$ kernels, the transformed data has $2k$ features.
 The default value of $k$ is $10000$.
@@ -851,11 +851,13 @@ But it groups the kernels into $g$ groups of $k$ kernels each.
 Each time series is passed through all the groups.
 For each group of kernels, we slide them across $T$ and compute the dot product at each timestamp.
 Recall that the dot product of two input vectors has the maximum value when the two vectors align in the same direction and the minimum value when they are oriented in different directions.
-We record the kernel that best matches the subsequence of T at each timestamp.
-This results in a k-dimensional count vector for each of the $g$ groups.
+We record the kernel that best matches the subsequence of $T$ at each timestamp.
+This results in a $k$-dimensional count vector for each of the $g$ groups.
 It results in a total of $g \times k$ features, with default values of $g = 64$ and $k=8$.
 In addition to recording the kernel with the maximum response, we can also record the kernel with the minimum response, with the knowledge that this kernel would be the best match with the ``inverted'' subsequence of $T$.
 Hydra is applied to both the original time series and its first-order differences.
+Hydra generated approximately 1,000 features for each instance in our dataset.
+
 \cite{HydraCompetingConvolutional2023} concatenate features from Hydra with features from MultiRocket to obtain the best result.
 This classifier is called MultiROCKET-Hydra. 
 
@@ -899,4 +901,6 @@ MCC_{multi} = \frac{c \times s - \sum_k^K p_k \times t_k}
 {\sqrt{(s^2 - \sum_k^K p_k^2) \times (s^2 - \sum_k^K t_k^2)}}
 \end{align*}
 Where $t_k = \sum_i^K C_{ik}$ (The number of times class $k$ actually occurred), $p_k = \sum_i^K C_{ki}$ (The number of times class $k$ was predicted), $c = \sum_k^K C_{kk}$ (The total number of samples correctly predicted) and $s = \sum_i^K \sum_j^K C_{ij}$ (The total number of samples).
+%%%
+%%%
 %%%
