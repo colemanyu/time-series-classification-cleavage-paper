@@ -1,4 +1,240 @@
 \section{Appendix} \label{sec:appendix}
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+\renewcommand{\thetable}{\thesection.\arabic{table}}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\begin{table}[htbp]
+    \centering
+    \resizebox{\columnwidth}{!}{\begin{tabular}{c | c | c | c}
+         \hline
+         & Name & Numeric representation & 
+         \makecell{
+            Example for \\
+            $s = C, \_, C, U, G, U, U, G, A, U$ \\
+            $s^P = 0.843, 0.000, 0.807, 0.807, 0.793,$\\
+            $0.914, 0.982, 1.000, 0.999, 0.999$
+         } \\
+         \hline
+         1 & 
+         % Name
+         \makecell{Single value mapping \\ \cite{SearchingMiningTrillions2012, ConversionNucleotidesSequences2002, AutoregressiveModelingFeature2004, DNASequencesClassification2001, DNANumericalRepresentations2017}}
+         % \makecell{Single value mapping \\ with \\ domain knowledge} 
+         &
+         % Numeric representation
+         \makecell[l]{
+         for $i = 1$ to $|s|$: \\ 
+         \(\displaystyle
+         t_i= 
+            \begin{cases}
+                2 \cdot s^P_i & \text{if } s_i = A\\
+                1 \cdot s^P_i & \text{if } s_i = G\\
+                -1 \cdot s^P_i & \text{if } s_i = C\\
+                -2 \cdot s^P_i & \text{if } s_i = U\\
+                0 & \text{if } s_i = \_\\
+            \end{cases}
+         \) \\
+         return $t$
+         } &
+         % Example
+         \makecell{
+         Without base-pair probability: \\
+         $t = -1, 0, -1, -2, 1, -2, -2, 1, 2, -2$ \\
+         \\
+         With base-pair probability: \\
+         $t = -0.843, 0.000, -0.807, -1.614, $\\
+         $0.793, -1.829, -1.963,$ \\ 
+         $1.000, 1.999, -1.998$ 
+         } \\
+         \hline
+         2 & 
+         % Name
+         \makecell{Grouped \\ variable-length \\ channel mapping} &
+         % Numeric representation
+         \makecell[l]{
+         $ j=1, k=1 $ \\
+         for $i = 1$ to $|s|$: \\ 
+        \(\displaystyle
+         t^1_j= 
+            \begin{cases}
+                1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = A\\
+                - 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = U\\
+                0, \quad j=j+1 & \text{if } s_i = \_\\
+            \end{cases}
+         \) \\
+         \(\displaystyle
+         t^2_k= 
+            \begin{cases}
+                1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = G\\
+                -1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = C\\
+            \end{cases}
+         \) \\
+         return $t^1[1:j], t^2[1:k]$
+         } &
+         % Example
+         \makecell{
+         Without base-pair probability: \\
+         $t^1 = 0, -1, -1, -1, 1, -1$ \\
+         $t^2 = -1, -1, 1, 1$ \\
+         \\
+         With base-pair probability: \\
+         $t^1 = 0.000, -0.807, -0.914, -0.982, 0.999, -0.999$ \\
+         $t^2 = -0.843, -0.807, 0.793, 1.000$ 
+         } \\
+         \hline
+         3 & 
+         % Name
+         \makecell{Grouped \\ fixed-length \\ channel mapping} &
+         % Numeric representation
+         \makecell[l]{
+         for $i = 1$ to $|s|$: \\ 
+        \(\displaystyle
+         t^1_i= 
+            \begin{cases}
+                1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = A\\
+                - 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = U\\
+                0 & \text{otherwise } \\
+            \end{cases}
+         \) \\
+         \(\displaystyle
+         t^2_i= 
+            \begin{cases}
+                1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = G\\
+                -1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = C\\
+                0 & \text{otherwise } \\
+            \end{cases}
+         \) \\
+         return $t^1, t^2$
+         } &
+         % Example
+         \makecell{
+         Without base-pair probability: \\
+         $t^1 = 0, 0, 0, -1, 0, -1, -1, 0, 1, -1$ \\
+         $t^2 = -1, 0, -1, 0, 1, 0, 0, 1, 0, 0$ \\
+         \\
+         With base-pair probability: \\
+         $t^1 = 0.000, 0.000, 0.000, -0.807, $\\
+         $0.000, -0.914, -0.982, $ \\
+         $0.000, 0.999, -0.9999$ \\
+         $t^2 = -0.843, 0.000, -0.807, 0.000, $\\
+         $0.793, 0.000, 0.000, $ \\
+         $1.000, 0.000, 0.000$ 
+         } \\
+         \hline
+         4 & 
+         % Name
+         \makecell{Cumulative mapping \\~\cite{CurvesIntutiveTool1994, VisualizationAnalysisDNA2004} } &
+         % Numeric representation
+         % https://www.overleaf.com/learn/latex/Spacing_in_math_mode
+         % Not used
+         \makecell[l]{
+         $t_1 = 0$ \\
+         for $i = 1$ to $|s|$: \\ 
+         \(\displaystyle
+         t_{i+1}= 
+            \begin{cases}
+                t_i + 2 \cdot s^P_i & \text{if } s_i = A\\
+                t_i + 1 \cdot s^P_i & \text{if } s_i = G\\
+                t_i - 1 \cdot s^P_i & \text{if } s_i = C\\
+                t_i - 2 \cdot s^P_i & \text{if } s_i = U\\
+                t_i & \text{if } s_i = \_\\
+            \end{cases}
+         \) \\
+         return $t$
+         } &
+         % Example
+         \makecell{
+         Without base-pair probability: \\
+         $t = 0, -1, -1, -2, -4, -3, -5, -7, -6, -4, -6$ \\
+         \\
+         With base-pair probability: \\
+         $t = 0.000, -0.843, -0.843, -1.650, $\\
+         $-3.265, -2.471, -4.300, -6.263, $ \\ 
+         $-5.264, -3.265, -5.263$ 
+         } \\
+         \hline
+         5 & 
+         % Name
+         \makecell{Cumulative grouped \\ variable-length \\ channel mapping} &
+         % Numeric representation
+         \makecell[l]{
+         $t^1_1 = 0, t^2_1 = 0$ \\
+         $j = 1, k = 1$ \\
+         for $i = 1$ to $|s|$: \\ 
+         \(\displaystyle
+         t^1_{j+1}= 
+            \begin{cases}
+                t^1_j + 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = A\\
+                t^1_j - 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = U\\
+                t^1_j, \quad j=j+1 & \text{if } s_i = \_\\
+            \end{cases}
+         \) \\
+         \(\displaystyle
+         t^2_{k+1}= 
+            \begin{cases}
+                t^2_k + 1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = G\\
+                t^2_k -1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = C\\
+            \end{cases}
+         \) \\
+         return $t^1[1:j], t^2[1:k]$
+         } &
+         % Example
+         \makecell{
+         Without base-pair probability: \\
+         $t^1 = 0, -1, -2, -3, -2, -3$ \\
+         $t^2 = 0, -1, -2, -1, 0$ \\
+         \\
+         With base-pair probability: \\
+         $t^1 = 0.000, -0.807, -1.722, $ \\
+         $-2.703, -1.704, -2.703$ \\ 
+         $t^2 = 0.000, -0.843, -1.650, $ \\
+         $-0.857, 0.143$ \\ 
+         } \\
+         \hline
+         6 & 
+         % Name
+         \makecell{Cumulative grouped \\ fixed-length \\ channel mapping} &
+         % Numeric representation
+         \makecell[l]{
+         $t^1_0 = 0, t^2_0 = 0$ \\
+         for $i = 1$ to $|s|$: \\ 
+         \(\displaystyle
+         t^1_{i+1}= 
+            \begin{cases}
+                t^1_i + 1 \cdot s^P_i & \text{if } s_i = A\\
+                t^1_i - 1 \cdot s^P_i & \text{if } s_i = U\\
+                t^1_i & \text{otherwise } \\
+            \end{cases}
+         \) \\
+         \(\displaystyle
+         t^2_{i+1}= 
+            \begin{cases}
+                t^2_i + 1 \cdot s^P_i & \text{if } s_i = G\\
+                t^2_i -1 \cdot s^P_i & \text{if } s_i = C\\
+                t^2_i & \text{otherwise } \\
+            \end{cases}
+         \) \\
+         return $t^1, t^2$
+         } &
+         % Example
+         \makecell{
+         Without base-pair probability: \\
+         $t^1 = 0, 0, 0, 0, -1, -1, -2, -3, -3, -2, -3$ \\
+         $t^2 = 0, -1, -1, -2, -2, -1, -1, -1, 0, 0, 0$ \\
+         \\
+         With base-pair probability: \\
+         $t^1 = 0.000, 0.000, 0.000, 0.000, $ \\
+         $-0.807, -0.807, -1.722, -2.703,$ \\ 
+         $-2.703, -1.704, -2.703$ \\
+         $t^2 = 0.000, -0.843, -0.843, -1.650, $ \\
+         $-1.650, -0.857, -0.857, -0.857,$ \\ 
+         $0.143, 0.143, 0.143$ \\
+         } \\
+         \hline
+    \end{tabular}}
+    \caption{Time series transformation for RNA complementary string $s$ with its probability time series $s^p$. The ending index in indexing is exclusive.}
+    \label{tab:ts_encoding_prob}
+\end{table}
 
 \begin{table}[htbp]
 \centering
