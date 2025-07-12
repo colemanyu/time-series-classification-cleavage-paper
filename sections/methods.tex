@@ -108,7 +108,7 @@ Table~\ref{tab:miRBase_representative} shows its four representative records.
 % The rows are records.
 We first selected the records from humans (Homo sapiens).
 It resulted in 1917 records.
-To identify the actual locations of the two cleavage sites in the pri-miRNA sequence supported by experimental evidence, we selected records that have two mature miRNAs resulting from cleavage at the 5p-arm and the 3p-arm, both of which have experimental support.
+To identify the actual locations of the two cleavage sites in the pri-miRNA sequence supported by experimental evidence, we selected records that have two mature miRNAs resulting from cleavage at the 5p arm and the 3p arm, both of which have experimental support.
 Hence, only ``MI0000060'' (``hsa-let-7a-1'') would be selected in the table.
 It would serve as our running example.
 The whole sequence of it is listed in Table~\ref{tab:hsa-let-7a-1}.
@@ -171,7 +171,7 @@ The local structures of the 3D structures, the secondary structures, only focus 
 Hence, predicting secondary structures is easier and faster.
 % It facilitates the prediction of secondary structure more easily and effectively than predicting the 3D structure.
 % Secondary structure can still shed light on some of these functions in the structure-function relationships.
-We employed RNAfold from the ViennaRNA Package\footnote{The latest stable release is Version 2.7.0 (Accessed on 2025-06-22).} to predict the secondary structure for a given pri-miRNA~\cite{ViennaRNAPackage202011} $S$.
+We employed RNAfold from the ViennaRNA Package\footnote{The latest stable release is Version 2.7.0 (Accessed on 2025-06-22).} to predict the secondary structure for a given pri-miRNA  $S$~\cite{ViennaRNAPackage202011}.
 RNAfold returns the secondary structure in the dot-bracket notation and a matrix of base-pair probabilities.
 The matrix is a square matrix with the side length $|S|$, where each entry $m_{ij}$ is the probability of base $s_i$ paired up with base $s_j$.
 Dot-bracket notation is a way of representing the secondary structure of $S$. Open parentheses ``$($'' (Close parentheses ``$)$'') indicates that the base is paired with a complementary base further (earlier) along in $S$. Dot ``$.$'' indicates that the base is unpaired.
@@ -202,14 +202,14 @@ The 3p non-cleavage pattern would be ``\textcolor{red}{\textbf{ACUAUAC}}AAUCUAC'
 In conclusion, for a given pri-miRNA sequence, we can generate two cleavage patterns and two non-cleavage patterns.
 We call these four patterns simply the ``four strings'' of a given pri-miRNA.
 We also call each string a strand.
-The four strings of our running example are listed in Table~\ref{tab:hsa-let-7a-1_eight_strings}.
+The ``four strings'' of our running example are listed in Table~\ref{tab:hsa-let-7a-1_eight_strings}.
 % https://tex.stackexchange.com/questions/48632/underscores-in-words-text
 % https://tex.stackexchange.com/questions/534381/underscore-is-shorter-for-ttfamily
 \begin{table}[ht]
     \centering
     \resizebox{\columnwidth}{!}{\begin{tabular}{c | c | c | c | c}
          \hline
-          & 5p-cleav & non-5p-cleav & 3p-cleav & 3p-non-cleav \\
+          & 5p cleav & 5p non-cleav & 3p cleav & 3p non-cleav \\
          \hline  
          Input strand & 
          \texttt{\textcolor{red}{UAUAGUU}UUAGGGU} & 
@@ -224,7 +224,7 @@ The four strings of our running example are listed in Table~\ref{tab:hsa-let-7a-
          \hline
     \end{tabular}}
     \caption{The first row shows the ``four strings'' of ``hsa-let-7a-1''. Their complementary strands are shown in the second row.
-    In total, they are referred to as the ``eight strings''.}
+    As a whole, they are referred to as the ``eight strings''.}
     \label{tab:hsa-let-7a-1_eight_strings}
 \end{table}
 
@@ -243,72 +243,125 @@ It is also shown in Table~\ref{tab:hsa-let-7a-1_eight_strings}.
 % Of note, we also have the base pair probability sequences that are of the same length as these strings. 
 
 \subsection{Time Series Encoding}
-A time series $T = t_1, t_2, ..., t_n$ is a sequence of real-valued numbers with length = $n$. A short contiguous region of $T$ is called a subsequence. 
-A subsequence $T(i:j)$ of a time series $T$ is a shorter time series that starts from position $i$ and ends at position $j$.
+A time series $T = t_1, t_2, ..., t_n$ is a sequence of real-valued numbers\footnote{We use the small letter (e.g., $t$) of the variable name of time series (e.g., $T$) for the entries.}. A short contiguous region of $T$ is called a subsequence. 
+A subsequence $T(i:j) = t_i, t_{i+1}, ..., t_j$ of a time series $T$ is a shorter time series that starts from position $i$ and ends at position $j$, where $i < j$.
 % Formally, $T(i:j) = t_i, t_{i+1}, ..., t_j$, where $1 \leq i \leq j \leq n$.
-\subsubsection{Transform strings into time series}
+
 % https://tex.stackexchange.com/questions/47170/how-to-write-conditional-equations-with-one-sided-curly-brackets
 % https://tex.stackexchange.com/questions/76189/how-to-put-a-formula-into-a-table-cell
-
-
 % They are the values on the x-axis if we plot them on an x-y plane.
 Strings and time series are temporal sequences. 
 % The order in a sequence usually represents time ordering. 
-The primary difference between strings and time series lies in their behavioral attributes~\cite{DataMiningTextbook2015}. 
+The difference between strings and time series lies in their behavioral attributes~\cite{DataMiningTextbook2015}. 
 % They are the values on the y-axis.
-For strings, also known as words, a y-value is a symbol from a predefined set called the alphabet. 
-Thus, we also refer to the symbols as letters.
+For strings, 
+% also known as words, 
+an entry is a letter from a predefined set called the alphabet. 
+% Thus, we also refer to the symbols as letters.
 For example, the alphabet is $\{A, C, G, T\}$ in the DNA string, while $\{A, C, G, U\}$ in the RNA string.
-For time series, a y-value is a scalar number. The number can be an integer or a real number. 
+For time series, an entry is a real number. 
+% The number can be an integer or a real number.
 Unlike real numbers, there is no ordering in the alphabet unless some external domain knowledge is introduced.
 
-In the bioinformatics community, the study of applying signal processing techniques to genomic data, which includes DNA and RNA strings, is called ``Genomic Signal Processing'' (GSP)~\cite{DNANumericalRepresentations2017}.
-In the field of GSP, the time series representations of DNA strings are called DNA numeric representations (DNR).
-Many DNRs have been proposed in the field of GSP.
+% In the bioinformatics community, 
+The study of applying signal processing techniques to genomic data
+% which includes DNA and RNA strings, 
+is called ``Genomic Signal Processing'' (GSP)~\cite{DNANumericalRepresentations2017, GenomicSignalProcessing2001}.
+In the field of GSP, the time series representations of DNA strings are referred to as DNA numeric representations (DNR).
+Many DNRs have been proposed.
 % with applications including identifying protein-coding regions in DNA sequences~\cite{IdentificationProteinCodingRegions2011}, biological sequence querying~\cite{TimefrequencyBasedBiological2010}, and finding similarities between DNA sequences~\cite{NovelMethodComparative2014}.
 We noted that DNA strings and RNA strings are equivalent from a computational standpoint. 
 % They are simply strings with different alphabets.
-Many transformation methods designed for DNA are applicable to RNA by simply substituting $T$ for $U$.
-We present the nine encoding methods. The relationship among them is shown in Figure~\ref{fig:encodings_relationship}.
+Many transformation methods designed for DNA can be applied to RNA by simply substituting $T$ with $U$.
+We present nine encoding methods. The relationship among them is shown in Fig.~\ref{fig:encodings_relationship}.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/encodings_relationship.pptx.pdf}
-\caption{Relationship of the proposed transformation methods.}
+\caption{Relationship of the proposed encoding methods.}
 \label{fig:encodings_relationship}
 \end{figure}
+
+\subsubsection{Single value versus Cumulative}
+% https://www.reddit.com/r/grammar/comments/bfuqx4/what_is_the_correct_wording_for_one_of_if_not_the/
+One of the simple, if not the simplest, encoding is to map the letters into numbers without considering any domain knowledge.
+This approach is called the ``Single value mapping''~\cite{SearchingMiningTrillions2012, ConversionNucleotidesSequences2002, AutoregressiveModelingFeature2004, DNASequencesClassification2001, DNANumericalRepresentations2017}.
+One single value is assigned to each of the letters.
+Domain knowledge can be utilized.
+\cite{ATCGNucleotideFluctuation2007} employed the atomic number of each nucleotide as the transformed values, where $\{G = 78, A= 70, C = 58, T = 66\}$.
+\cite{CodingMeasureScheme2006} used electron-ion interaction potential representation (EIIP) as such value, where $\{G = 0.0806, A = 0.1260, C = 0.1340, T = 0.1335\}$.
+Our goal is to transform the input strand and its complementary strand into time series, aiming to capture the information contained in these sequences and the secondary structure implied by them.
+We employed the following reasoning to assign the value:
+\begin{enumerate}
+  \item We employ the complementary property~\cite{DNANumericalRepresentations2007, AutoregressiveModelingFeature2004} during encoding.
+Recall that in the base-pairing rules, $G$ pairs with $C$ to form three hydrogen bonds while $A$ pairs with $U$\footnote{In DNA, $A$ pairs with $T$.} to form two hydrogen bonds.
+$G$-$C$ pairs are more stable than $A$-$U$ pairs.
+$G$ ($U$) can be regarded as the ``inverse'' of $C$ ($A$).
+% ~\footnote{Recall that we call ``-1' as the inverse of ``1''' and vice versa under addition in Algebra.}.
+We can preserve these base-pairing rules in the encoding by assigning $G$ ($A$) and $C$ ($U$)  opposite values.
+% The time series of the complementary strand would then be a flipped version along the y-axis of the original strand. 
+  \item $G$ and $A$ have a two-ring structure. They are purines.
+$C$ and $U$ have a single-ring structure. They are pyrimidines.
+Hence, we put $G$ and $A$ ($C$ and $U$) on the same side of the number line with zero in the middle.
+  \item % Now, the only remaining question is which nucleotide on the same side we should assign a larger absolute value to.
+% For example, for ``A' and `'G'', which one should be assigned a larger absolute value?
+% We adopted the ``A = 2 and G = 1'' assignment.
+The lower stability of $A$-$U$ pairs promotes strand separation, thereby facilitating the unwinding of the miRNA duplex during RISC loading.
+Regions rich in $A$ and $U$ are thus more likely to undergo strand selection and cleavage events.
+We assigned $A$ ($U$) with a larger absolute value than $G$ ($C$) to reflect this functional relevance.
+It aims to highlight sequence regions with higher cleavage potential.
+% The dicer cleavage sites are the bonds along the strands, the phosphodiester linkages.
+% Dicer cleaves the pre-miRNA.
+% The resulting double-stranded miRNA molecule is unwound to form the guide strand and the passenger strand.
+% The stability of the double strand would affect the unwinding process.
+% Since $G$-$C$ pairs are more stable than $A$-$U$ pairs, the unwinding process is less likely to occur in the regions with more $G$-$C$ pairs
+% This means that in regions with more C-G pairs, the double strands hold more tightly, and the unwinding process is less likely to occur than in regions with more A-U pairs. 
+% So, we want to emphasize the existence of such less stable A-U pairs in the double strands in our time series representations. 
+% We assign A and U with larger absolute values than those of G and C.
+\end{enumerate}
+It results in our baseline transformation method, namely ``Single value mapping'' , shown in row 1 of Table~\ref{tab:ts_encoding}. 
 
 \begin{table}[htbp]
     \centering
     \resizebox{\columnwidth}{!}{\begin{tabular}{c | c | c | c}
          \hline
-         & Name & Numeric representation & 
+         & Encoding & Algorithm & 
          \makecell{
-            Example for \\
-            $s = G, A, G, A, U, A, A, C, U, A$
+            Example \\
+            $S = C, \_, C, U, G, U, U, G, A, U$ \\
+            $P = 0.843, 0.000, 0.807, 0.807, 0.793,$\\
+            $0.914, 0.982, 1.000, 0.999, 0.999$
          } \\
          \hline
          1 & 
          % Name
-         Single value mapping
+         \makecell{Single value mapping \\ \cite{SearchingMiningTrillions2012, ConversionNucleotidesSequences2002, AutoregressiveModelingFeature2004, DNASequencesClassification2001, DNANumericalRepresentations2017}}
          % \makecell{Single value mapping \\ with \\ domain knowledge} 
          &
          % Numeric representation
          \makecell[l]{
-         for $i = 1$ to $|s|$: \\ 
+         for $i = 1$ to $|S|$: \\ 
          \(\displaystyle
          t_i= 
             \begin{cases}
-                2 \cdot s^P_i & \text{if } s_i = A\\
-                1 \cdot s^P_i & \text{if } s_i = G\\
-                -1 \cdot s^P_i & \text{if } s_i = C\\
-                -2 \cdot s^P_i & \text{if } s_i = U\\
-                0 & \text{if } s_i = \_\\
+                2 \cdot p_i & \text{if } s_i = A\\
+                1 \cdot p_i & \text{if } s_i = G\\
+                -1 \cdot p_i & \text{if } s_i = C\\
+                -2 \cdot p_i & \text{if } s_i = U\\
+                0 & \text{otherwise}\\
             \end{cases}
          \) \\
-         return $t$
+         return $T$
          } &
          % Example
-         $t = 1, 2, 1, 2, -2, 2, 2, -1, -2, 2$ \\
+         \makecell{
+         Without base-pair probability sequence: \\
+         $T = -1, 0, -1, -2, 1, -2, -2, 1, 2, -2$ \\
+         \\
+         With base-pair probability sequence: \\
+         $T = -0.843, 0.000, -0.807, -1.614, $\\
+         $0.793, -1.829, -1.963,$ \\ 
+         $1.000, 1.999, -1.998$ 
+         } \\
          \hline
          2 & 
          % Name
@@ -316,28 +369,33 @@ We present the nine encoding methods. The relationship among them is shown in Fi
          % Numeric representation
          \makecell[l]{
          $ j=1, k=1 $ \\
-         for $i = 1$ to $|s|$: \\ 
+         for $i = 1$ to $|S|$: \\ 
         \(\displaystyle
          t^1_j= 
             \begin{cases}
-                1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = A\\
-                - 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = U\\
-                0, \quad j=j+1 & \text{if } s_i = \_\\
+                1 \cdot p_i, \quad j=j+1 & \text{if } s_i = A\\
+                - 1 \cdot p_i, \quad j=j+1 & \text{if } s_i = U\\
+                0, \quad j=j+1 & \text{otherwise}\\
             \end{cases}
          \) \\
          \(\displaystyle
          t^2_k= 
             \begin{cases}
-                1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = G\\
-                -1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = C\\
+                1 \cdot p_i, \quad k=k+1 & \text{if } s_i = G\\
+                -1 \cdot p_i, \quad k=k+1 & \text{if } s_i = C\\
             \end{cases}
          \) \\
-         return $t^1[1:j], t^2[1:k]$
+         return $T^1, T^2$ \textcolor{teal}{// Only consist of assigned $t^1_j$, $t^2_k$}
          } &
          % Example
-        \makecell{
-            $t^1 = 1, 1, -1, 1, 1, -1, 1$ \\
-            $t^2 = 1, 1, -1$
+         \makecell{
+         Without base-pair probability sequence: \\
+         $T^1 = 0, -1, -1, -1, 1, -1$ \\
+         $T^2 = -1, -1, 1, 1$ \\
+         \\
+         With base-pair probability sequence: \\
+         $T^1 = 0.000, -0.807, -0.914, -0.982, 0.999, -0.999$ \\
+         $T^2 = -0.843, -0.807, 0.793, 1.000$ 
          } \\
          \hline
          3 & 
@@ -345,54 +403,71 @@ We present the nine encoding methods. The relationship among them is shown in Fi
          \makecell{Grouped \\ fixed-length \\ channel mapping} &
          % Numeric representation
          \makecell[l]{
-         for $i = 1$ to $|s|$: \\ 
+         for $i = 1$ to $|S|$: \\ 
         \(\displaystyle
          t^1_i= 
             \begin{cases}
-                1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = A\\
-                - 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = U\\
+                1 \cdot p_i, \quad j=j+1 & \text{if } s_i = A\\
+                - 1 \cdot p_i, \quad j=j+1 & \text{if } s_i = U\\
                 0 & \text{otherwise } \\
             \end{cases}
          \) \\
          \(\displaystyle
          t^2_i= 
             \begin{cases}
-                1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = G\\
-                -1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = C\\
-                0 & \text{otherwise } \\
+                1 \cdot p_i, \quad k=k+1 & \text{if } s_i = G\\
+                -1 \cdot p_i, \quad k=k+1 & \text{if } s_i = C\\
+                0 & \text{otherwise} \\
             \end{cases}
          \) \\
-         return $t^1, t^2$
+         return $T^1, T^2$
          } &
          % Example
-        \makecell{
-            $t^1 = 0, 1, 0, 1, -1, 1, 1, 0, -1, 1$ \\
-            $t^2 = 1, 0, 1, 0, 0, 0, 0, -1, 0, 0$
+         \makecell{
+         Without base-pair probability sequence: \\
+         $T^1 = 0, 0, 0, -1, 0, -1, -1, 0, 1, -1$ \\
+         $T^2 = -1, 0, -1, 0, 1, 0, 0, 1, 0, 0$ \\
+         \\
+         With base-pair probability sequence: \\
+         $T^1 = 0.000, 0.000, 0.000, -0.807, $\\
+         $0.000, -0.914, -0.982, $ \\
+         $0.000, 0.999, -0.9999$ \\
+         $T^2 = -0.843, 0.000, -0.807, 0.000, $\\
+         $0.793, 0.000, 0.000, $ \\
+         $1.000, 0.000, 0.000$ 
          } \\
          \hline
          4 & 
          % Name
-         Cumulative mapping &
+         \makecell{Cumulative mapping \\~\cite{CurvesIntutiveTool1994, VisualizationAnalysisDNA2004} } &
          % Numeric representation
          % https://www.overleaf.com/learn/latex/Spacing_in_math_mode
          % Not used
          \makecell[l]{
          $t_1 = 0$ \\
-         for $i = 1$ to $|s|$: \\ 
+         for $i = 1$ to $|S|$: \\ 
          \(\displaystyle
          t_{i+1}= 
             \begin{cases}
-                t_i + 2 \cdot s^P_i & \text{if } s_i = A\\
-                t_i + 1 \cdot s^P_i & \text{if } s_i = G\\
-                t_i - 1 \cdot s^P_i & \text{if } s_i = C\\
-                t_i - 2 \cdot s^P_i & \text{if } s_i = U\\
-                t_i & \text{if } s_i = \_\\
+                t_i + 2 \cdot p_i & \text{if } s_i = A\\
+                t_i + 1 \cdot p_i & \text{if } s_i = G\\
+                t_i - 1 \cdot p_i & \text{if } s_i = C\\
+                t_i - 2 \cdot p_i & \text{if } s_i = U\\
+                t_i & \text{otherwise}\\
             \end{cases}
          \) \\
-         return $t$
+         return $T$ \textcolor{teal}{// $|T| = |S| + 1$}
          } &
          % Example
-         $t = 0, 1, 3, 4, 6, 4, 6, 8, 7, 5, 7$ \\
+         \makecell{
+         Without base-pair probability sequence: \\
+         $T = 0, -1, -1, -2, -4, -3, -5, -7, -6, -4, -6$ \\
+         \\
+         With base-pair probability sequence: \\
+         $T = 0.000, -0.843, -0.843, -1.650, $\\
+         $-3.265, -2.471, -4.300, -6.263, $ \\ 
+         $-5.264, -3.265, -5.263$ 
+         } \\
          \hline
          5 & 
          % Name
@@ -401,28 +476,35 @@ We present the nine encoding methods. The relationship among them is shown in Fi
          \makecell[l]{
          $t^1_1 = 0, t^2_1 = 0$ \\
          $j = 1, k = 1$ \\
-         for $i = 1$ to $|s|$: \\ 
+         for $i = 1$ to $|S|$: \\ 
          \(\displaystyle
          t^1_{j+1}= 
             \begin{cases}
-                t^1_j + 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = A\\
-                t^1_j - 1 \cdot s^P_i, \quad j=j+1 & \text{if } s_i = U\\
+                t^1_j + 1 \cdot p_i, \quad j=j+1 & \text{if } s_i = A\\
+                t^1_j - 1 \cdot p_i, \quad j=j+1 & \text{if } s_i = U\\
                 t^1_j, \quad j=j+1 & \text{if } s_i = \_\\
             \end{cases}
          \) \\
          \(\displaystyle
          t^2_{k+1}= 
             \begin{cases}
-                t^2_k + 1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = G\\
-                t^2_k -1 \cdot s^P_i, \quad k=k+1 & \text{if } s_i = C\\
+                t^2_k + 1 \cdot p_i, \quad k=k+1 & \text{if } s_i = G\\
+                t^2_k -1 \cdot p_i, \quad k=k+1 & \text{if } s_i = C\\
             \end{cases}
          \) \\
-         return $t^1[1:j], t^2[1:k]$
+         return $T^1$, $T^2$ \textcolor{teal}{// Only consist of assigned $t^1_j$, $t^2_k$}
          } &
          % Example
          \makecell{
-            $t^1 = 0, 1, 2, 1, 2, 3, 2, 3$ \\
-            $t^2 = 0, 1, 2, 1$
+         Without base-pair probability sequence: \\
+         $T^1 = 0, -1, -2, -3, -2, -3$ \\
+         $T^2 = 0, -1, -2, -1, 0$ \\
+         \\
+         With base-pair probability sequence: \\
+         $T^1 = 0.000, -0.807, -1.722, $ \\
+         $-2.703, -1.704, -2.703$ \\ 
+         $T^2 = 0.000, -0.843, -1.650, $ \\
+         $-0.857, 0.143$ \\ 
          } \\
          \hline
          6 & 
@@ -430,209 +512,177 @@ We present the nine encoding methods. The relationship among them is shown in Fi
          \makecell{Cumulative grouped \\ fixed-length \\ channel mapping} &
          % Numeric representation
          \makecell[l]{
-         $t^1_0 = 0, t^2_0 = 0$ \\
-         for $i = 1$ to $|s|$: \\ 
+         $t^1_1 = 0, t^2_1 = 0$ \\
+         for $i = 1$ to $|S|$: \\ 
          \(\displaystyle
          t^1_{i+1}= 
             \begin{cases}
-                t^1_i + 1 \cdot s^P_i & \text{if } s_i = A\\
-                t^1_i - 1 \cdot s^P_i & \text{if } s_i = U\\
+                t^1_i + 1 \cdot p_i & \text{if } s_i = A\\
+                t^1_i - 1 \cdot p_i & \text{if } s_i = U\\
                 t^1_i & \text{otherwise } \\
             \end{cases}
          \) \\
          \(\displaystyle
          t^2_{i+1}= 
             \begin{cases}
-                t^2_i + 1 \cdot s^P_i & \text{if } s_i = G\\
-                t^2_i -1 \cdot s^P_i & \text{if } s_i = C\\
+                t^2_i + 1 \cdot p_i & \text{if } s_i = G\\
+                t^2_i -1 \cdot p_i & \text{if } s_i = C\\
                 t^2_i & \text{otherwise } \\
             \end{cases}
          \) \\
-         return $t^1, t^2$
+         return $T^1, T^2$ \textcolor{teal}{// $|T^1| = |T^2| = |S| + 1$}
          } &
          % Example
          \makecell{
-            $t^1 = 0, 0, 1, 1, 2, 1, 2, 3, 3, 2, 3$ \\
-            $t^2 = 0, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1$
+         Without base-pair probability sequence: \\
+         $T^1 = 0, 0, 0, 0, -1, -1, -2, -3, -3, -2, -3$ \\
+         $T^2 = 0, -1, -1, -2, -2, -1, -1, -1, 0, 0, 0$ \\
+         \\
+         With base-pair probability sequence: \\
+         $T^1 = 0.000, 0.000, 0.000, 0.000, $ \\
+         $-0.807, -0.807, -1.722, -2.703,$ \\ 
+         $-2.703, -1.704, -2.703$ \\
+         $T^2 = 0.000, -0.843, -0.843, -1.650, $ \\
+         $-1.650, -0.857, -0.857, -0.857,$ \\ 
+         $0.143, 0.143, 0.143$ \\
          } \\
          \hline
     \end{tabular}}
-    \caption{Time series transformation for RNA string $s$. The ending index in indexing is exclusive.
-    $s$ is the first ten nucleotides of the non-cleavage pattern on the 3p-arm of ``hsa-let-7a-1''}
+    \caption{Time series encoding. 
+    % The ending index in indexing is exclusive.
+    $S$ is the first ten nucleotides of the complementary strand of the 3p cleav of ``hsa-let-7a-1'', as shown in Table~\ref{tab:hsa-let-7a-1_eight_strings}. $P$ is the corresponding base-pair probability sequence. $p_i = 1$ if we encode $S$ without base-pair probability sequence.}
     \label{tab:ts_encoding}
 \end{table}
 
-% https://www.reddit.com/r/grammar/comments/bfuqx4/what_is_the_correct_wording_for_one_of_if_not_the/
-One of the simple, if not the simplest, transformations is to map the letters in the alphabet into integer numbers without considering any domain knowledge about the nucleotides.
-This method or approach is called the ``Single value mapping''~\cite{SearchingMiningTrillions2012, ConversionNucleotidesSequences2002, AutoregressiveModelingFeature2004, DNASequencesClassification2001, DNANumericalRepresentations2017}.
-One single value is assigned to each of the letters.
-Domain knowledge can be utilized during assignments.
-For example, \cite{ATCGNucleotideFluctuation2007} employs the atomic number of each nucleotide as the transformed values, where $\{G: 78, A: 70, C: 58, T: 66\}$.
-\cite{CodingMeasureScheme2006} uses ``electron-ion'' interaction potential representation (EIIP) as such values, where $\{G:0806, A:1260, C:1340, T:1335\}$.
-Our goal is to transform the input RNA strand and its complementary strand into time series, aiming to capture the information contained in these sequences and their secondary structure.
-So, we need to employ the complementarity property during the transformation~\cite{DNANumericalRepresentations2007}.
-Recall that in the base-pairing rules, ``A'' pairs with ``U''\footnote{In DNA, ``A'' pairs with ``T''} to form two hydrogen bonds while ``G'' pairs with ``C'' to form three hydrogen bonds. 
-Hence, ``A'' (``C'') can be regarded as the ``inverse'' of ``U'' (``G'')
-% ~\footnote{Recall that we call ``-1' as the inverse of ``1''' and vice versa under addition in Algebra.}.
-We can preserve these base-pairing rules in the time series 
-representation by assigning A (G) and U (C)  opposite values.
-% The time series of the complementary strand would then be a flipped version along the y-axis of the original strand. 
-% We grouped the four nucleotides by their chemical structures.
-`A' and `G' have a two-ring structure. They are purines.
-`U' and `C' have a one-ring structure. They are pyrimidines.
-We put `A' and `G' (`U' and `C') on the same side of the number line with zero in the middle.
-% Now, the only remaining question is which nucleotide on the same side we should assign a larger absolute value to.
-% For example, for ``A' and `'G'', which one should be assigned a larger absolute value?
-We adopted the ``A = 2 and G = 1'' assignment.
-The reasoning is as follows.
-% The main goal of this study is to find the two cleavage sites on the pre-miRNA.
-The cleavage sites are the bonds along the strands, the phosphodiester linkages.
-After the pre-miRNA is cleaved, the resulting double-stranded miRNA molecule is unwound to form the guide strand and the passenger strand.
-The stability of the double strand would affect the unwinding process.
-There are three hydrogen bonds in C-G pairs and two in A-U pairs. 
-Hence, C-G pairs are more stable than A-U pairs.
-This means that in regions with more C-G pairs, the double strands hold more tightly, and the unwinding process is less likely to occur than in regions with more A-U pairs. 
-So, we want to emphasize the existence of such less stable A-U pairs in the double strands in our time series representations. 
-We assign A and U with larger absolute values than those of G and C.
-With this reasoning, we propose our first transformation method, as shown in row 1 of Table~\ref{tab:ts_encoding}. 
+With the assigned value to each nucleotide defined in single-value mapping, we can compute a cumulative sum of those values over time.
+It captures the aggregated signal by accumulating past events, allowing us to focus on the trend~\cite{CurvesIntutiveTool1994, VisualizationAnalysisDNA2004}.
+We named this method as ``Cumulative mapping'', shown in row 4 of Table~\ref{tab:ts_encoding}.
 
-We can also transform each RNA sequence into a multivariate time series with two channels using grouped binary encoding, where nucleotides are grouped into (A, U) and (G, C). 
-Each channel indicates the presence of a nucleotide from the respective group at each time step.
-The kind of methods releases our assumption that A (U) has a larger absolute value than G (C).
+\subsubsection{Grouped variable-length channel versus Grouped local-length channel}
+We can transform the input strand into a multivariate time series with two channels using grouped binary encoding, where nucleotides are grouped into ($A$, $U$) and ($G$, $C$). 
+It releases our third assumption that $A$ ($U$) has a larger absolute value than $G$ ($C$).
 We proposed two variations. 
 The first one allows the output to be variable-length sequences per channel, depending on group-specific occurrences. 
 The second one always returns two resulting sequences of fixed length.
-These methods are rows 2 and 3 in Table~\ref{tab:ts_encoding}. 
+Two variations extended from single value mapping are shown in rows 2 and 3, while those extended from cumulative mapping are shown in rows 5 and 6 in Table~\ref{tab:ts_encoding}. 
 % To conclude, the single value mapping and its two variations: grouped variable-length channel mapping and grouped fixed-length channel mapping, 
-They allow us to focus on the absolute values of the alphabet and ignore what has happened in the past.
-
-\subsubsection{Cumulative mapping}
-In contrast, the ``cumulative'' version enables us to focus on analyzing the trend, such as increasing and decreasing, by accumulating what has happened in the past~\cite{CurvesIntutiveTool1994, VisualizationAnalysisDNA2004}.
-We show the ``Cumulative mapping'' in row 4.
-We can also use two channels to represent the time dynamics of a nucleotide group in cumulative mapping, as in the case of single value mapping. 
-These two variations are illustrated in rows 5 and 6 of the table.
 % Of note, some our proposed transformations are lossy.
 % Lossy transformation refers to a transformation that does not allow us to restore the original string from the new time series representation.
 % Methods 2, 4, and 5 are lossy.
 % It does not guarantee that lossless transformation performs better than lossy transformation for the downstream analysis because lossy transformation may provide better generalization.
 
+\subsubsection{Global cumulative versus Local Cumulative}
+In cumulative mapping and its variations, we can choose where to start the accumulation.
+For a given subsequence $S'$ of the whole sequence $S$, accumulation can start from the beginning of $S$ even if only $S'$ is used downstream.
+Or it can begin just at the start of the $S'$.
+The first one preserves the global context.
+% by recording the previous counts of the nucleotide up to $S'$.
+It can be useful when previous nucleotides (those before $S'$) influence later interpretation. 
+The second one focuses solely on local history in $S'$, ignoring global history.
+It is helpful if the previous nucleotides do not affect the chemical property of $S'$.
+
+Consider $T = 0, -1, ..., -6$ of the input string $S$ in ``Cumulative mapping'' in Table~\ref{tab:ts_encoding}, which accumulates from 0.
+$S$ is the suffix with length $= 10$ of the constructed complementary strand of $S(1:63)$ in Fig.~\ref{fig:hsa-let-7a-1_ss}.
+If we start the accumulation from the first entry of the constructed complementary strand instead, it will yield a different result.
+Suppose the last entry of the time series encoded in the cumulative mapping of the constructed complementary strand is 2, the time series encoded in the ``Global cumulative mapping'' for $S$ would accumulate from 2 instead of 0.
+The result is $T = 2, 1, ..., -4$.
+Note that it has the same trend as the original $T$. 
+This ``Global cumulative'' concept can be applied to every cumulative-based method, as shown in Fig.~\ref{fig:encodings_relationship}.
+% We refer to the first approach as ``Global Cumulative'' and the latter as ``Local Cumulative'' or simply "Cumulative".
+% After Z-normalization, these two time series will have similar trends but not the same trends as they have different means and variances.
+
 \subsubsection{Incorporating base-pair probabilities}
-
-
-We can incorporate the base-pair probabilities in the encoding by multiplying the base-pair probability of the nucleotide with the assigned value of that nucleotide during encoding.
-In other words, they are treated as the weight or confidence of that numerical assignment of the nucleotide.
-Table~\ref{tab:ts_encoding_prob} incorporates the base-pair probability time series into the transformation methods listed in Table~\ref{tab:ts_encoding}.
+We can incorporate the base-pair probabilities in the encoding by
+thinking of it as the weight or confidence in the value assignment of each nucleotide.
+It is implemented by multiplying the base-pair probability $p_i$ of the nucleotide $s_i$ with the assigned value of the kind of nucleotide of $s_i$ during encoding, as shown in Table~\ref{tab:ts_encoding}.
 % Recall that RNA secondary structure prediction algorithm is a kind of RNA folding algorithm.
 % The RNA secondary structure prediction algorithm returns the predicted secondary structure of a given RNA sequence, a planar graph such as the minimum free energy structure.
 % It also returns a probability matrix for the base-pair probabilities, which denote the probabilities of pairing one nucleotide with the other nucleotide.
 % In our case, the bases in an RNA sequence will either be paired with another base in the same sequence or remain unpaired.
-% For example in Figure~\ref{fig:hsa-let-7a-1_ss}, the 1\textsuperscript{st} base `U' is paired up with the 80\textsuperscript{th} base `A'.
+% For example in Fig.~\ref{fig:hsa-let-7a-1_ss}, the 1\textsuperscript{st} base `U' is paired up with the 80\textsuperscript{th} base `A'.
 % The 6\textsuperscript{th} base `U' is unpaired.
 % The width and height of the probability matrix correspond to the length of the RNA sequence, as it is a pairwise matrix.
 % From this matrix, we can construct the base-pair probability time series $s^P$ of the whole sequence $s$.
 % The unpaired base will have very small probabilities in any base-pair.
 % In our formulation, we deemed these small probabilities as $0$ to emphasize that these bases are deemed to be unpaired in the resulting predicted secondary structure. 
 
-\subsubsection{Accumulating from the beginning of the pre-miRNA sequence}
-In cumulative encoding, it would return a different result if we choose a different starting point for the accumulation.
-We can start the accumulation from the beginning of the whole sequence or just from the beginning of the selected local subsequence.
-The first one preserves the global context by recording the previous counts of the nucleotide up to the selected subsequence.
-It can be useful when previous nucleotides (those before the selected subsequence) influence later interpretation. 
-% In other words, the previous nucleotides may affect the chemical property of the selected subsequence.
-The second one focuses solely on local history, ignoring global history.
-% The time series encoded in this way is more consistent.
-It is useful if the previous nucleotides do not affect the chemical property of the selected subsequence.
-
-Considering the time series representation of the running example $s$ in ``Cumulative mapping'' in Table~\ref{tab:ts_encoding} $t = 0, 1, 3, 4, 6, 4, 6, 8, 7, 5, 7$, it starts from zero.
-% $s$ is the first ten nucleotides of the non-cleavage pattern on the 3p-arm of “hsa-let-7a-1”.
-According to Figure~\ref{fig:hsa-let-7a-1_ss}, $s = S[50:60]$
-In other words, $s$ begins at the 50\textsuperscript{th} position of the whole pre-miRNA sequence $S$, as shown in Table~\ref{tab:hsa-let-7a-1}.
-If we start the accumulation from the first entry of the whole pre-miRNA sequence $S$ instead, it will yield a different result.
-Suppose the last entry of the resulting time series of $S[1:49]$ with cumulative mapping encoding is 2 and we start the accumulation at the the beginning of $S$, the resulting time series of $s$ would be $2, 3, 5, 6, 8, 6, 8, 10, 9, 7, 9]$.
-Note that these two time series have the same trend, but they start at different values. 
-The first one starts at $2$ while the latter one starts at $0$. 
-We refer to the first approach as ``Global Cumulative'' and the latter as ``Local Cumulative'' or simply "Cumulative".
-% After Z-normalization, these two time series will have similar trends but not the same trends as they have different means and variances.
-The ``Global'' notion can be applied to every cumulative-based method.
-
-\subsubsection{Transforming the secondary string into time series}
-We can apply a similar idea to transform the secondary string in the dot-bracket notation into a time series by ``Single value mapping'', where ``('' maps to 1, ``.'' maps to 0, and ``)'' maps to -1.
+\subsubsection{Transforming the secondary structure into time series}
+We can transform the secondary structure in the dot-bracket notation into a time series by ``Single value mapping'', where ``('' maps to 1, ``.'' maps to 0, and ``)'' maps to -1.
 
 \subsection{Time series classification}
-In univariate time series classification, an instance in the dataset consists of a time series $x = x_1, x_2, ..., x_m$ with $m$ observations and a discrete class label $y$, which takes $c$ possible values.
-If $c = 2$, we refer to these problems as binary classification problems.
-If $c > 2$, we refer to these problems as multiclass classification problems.
+In univariate time series classification, an instance in the dataset consists of a time series $x = x_1, x_2, ..., x_m$ with $m$ observations and a discrete class label $y$, which takes $c$ possible values~\cite{GreatTimeSeries2017, GreatMultivariateTime2021}.
+If $c = 2$, we refer to binary classification.
+If $c > 2$, we refer to multi-class classification.
 In multivariate time series classification, the time series is not a single sequence but a list of sequences.
 Each sequence is called a channel.
 % over $d$ dimensions and $m$ observations.
 % $x = <x_1, x_2, ..., x_d>$, where $x_k = x_{1,k}, x_{2,k}, ..., x_{m,k}$.
 % We also denote the $j$\textsuperscript{th} of the $i$\textsuperscript{th} case of dimension $k$ as a scalar number $x_{i,j,k}$.
-
 There are many classifiers defined for time series data, including distance-based, feature-based, interval-based, shapelet-based, dictionary-based, convolution-based, and deep learning-based classifiers. Additionally, two or more of the above approaches can be combined, resulting in hybrid approaches~\cite{BakeReduxReview2024, GreatMultivariateTime2021, GreatTimeSeries2017}.
-We employed convolution-based classifiers as our downstream classifier due to their simplicity and accuracy.
+We employed convolution-based classifiers due to their simplicity and accuracy.
 
-\subsubsection{Convolution-based classification}
-Convolution-based classifiers first use randomly parameterized kernels to perform convolutions on the original time series.
-Each convolution is performed by sliding a kernel across the original time series and computing a dot product.
-The output of this process is another time series, namely an activation map.
+\subsubsection{Convolution-based classifiers}
+Convolution-based classifiers first use randomly parameterized kernels to perform convolutions on the original time series $T$.
+Each convolution is performed by sliding a kernel $\omega$ across $T$ and computing a dot product.
+The output of this process is a time series, namely an activation map.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.8\columnwidth]{figures/rocket_convolution.pptx.pdf}}
 \caption{Features generation in the transformation}
 \label{fig:rocket_convolution}
 \end{figure}
-Figure~\ref{fig:rocket_convolution} shows two kernels $\omega_1$ and $\omega_2$ , each of which performs convolution with $T$.
+Fig.~\ref{fig:rocket_convolution} shows two kernels $\omega_1$ and $\omega_2$ , each of which performs convolution with $T$.
 For example, $\omega_1$ performs dot product with $T(1:3)$ and result $3$ as the first entry of the activation map.
 By sliding the kernel one time stamp at a time, an activation map is produced for each kernel.
-Then, the summary features are derived from the activation map, such as the maximum and proportion of positive values.
+Then, pooling operations, such as the maximum (MAX) and proportion of positive values (PPV), are applied on the activation map to derive the summary features.
+
 The most popular convolution-based approach is the Random Convolutional Kernel Transform (ROCKET)~\cite{ROCKETExceptionallyFast2020}.
 It generates a large number of randomly parameterized kernels, ranging from thousands to tens of thousands.
-The kernel's parameters include length (It defines the kernel's length), weights (the entries inside the kernel), bias (valued added to the result of the convolution operation).
+The kernel's parameters include length, weights (the entries inside the kernel, which are used for the dot product), bias (the value added to the result of the convolution operation), and dilation.
 Additionally, padding can be applied to the input series at the start and end, ensuring the activation map has the same length as the input.
-The summary statistics are obtained through two pooling operations: the max and the proportion of positive values (PPV).
+The summary statistics of the activation map are obtained through two pooling operations: MAX and PPV.
 Hence, for $k$ kernels, the transformed data has $2k$ features.
 The default value of $k$ is $10000$.
+
 There are two extensions of ROCKET.
-They are MiniRocket~\cite{MiniRocketVeryFast2021} and MultiRocket~\cite{MultiRocketMultiplePooling2022}.
-MiniRocket removes unnecessary operations and many of the random components of ROCKET.
+They are MiniROCKET~\cite{MiniRocketVeryFast2021} and MultiROCKET~\cite{MultiRocketMultiplePooling2022}.
+MiniROCKET removes unnecessary operations and many of the random components of ROCKET.
 It speeds up Rocket by over an order of magnitude with no significant difference in accuracy, making the classifier almost deterministic.
 For example, the kernel length is fixed, and only two weight values are used.
 Only PPV is used for the summary statistics.
-MultiRocket is extended from MiniRocket.
+MultiROCKET is extended from MiniROCKET.
 The main improvement of it is to extract features from first-order differences and add three new pooling operations.
 The three added operations are mean of positive values (MPV), mean of indices of positive values (MIPV) and longest stretch of positive values (LSPV).
 
 % Hydra
-The HYbrid Dictionary-ROCKET Architecture (Hydra) is a time series classification model that combines dictionary-based and convolution-based models~\cite{HydraCompetingConvolutional2023}.
-Similar to ROCKET-family classifiers, it uses random 1D convolutional kernels to extract features from the input time series.
+The HYbrid Dictionary-ROCKET Architecture (Hydra) combines dictionary-based and convolution-based models~\cite{HydraCompetingConvolutional2023}.
+Similar to ROCKET-based classifiers, it uses random kernels to extract features from the input time series.
 But it groups the kernels into $g$ groups of $k$ kernels each.
 Each time series is passed through all the groups.
 For each group of kernels, we slide them across $T$ and compute the dot product at each timestamp.
-Recall that the dot product of two input vectors has the maximum value when the two vectors align in the same direction and the minimum value when they are oriented in different directions.
-We record the kernel that best matches the subsequence of $T$ at each timestamp.
+Recall that the dot product of two input vectors has the maximum value when the two vectors align in the same direction and the minimum value when they are oriented in opposite directions.
+We record the kernel that best matches the subsequence of $T$ at each timestamp in each group.
 This results in a $k$-dimensional count vector for each of the $g$ groups.
-It results in a total of $g \times k$ features, with default values of $g = 64$ and $k=8$.
-In addition to recording the kernel with the maximum response, we can also record the kernel with the minimum response, with the knowledge that this kernel would be the best match with the ``inverted'' subsequence of $T$.
+This results in a total of $g \times k$ features, with default values of $g = 64$ and $k=8$.
+In addition to recording the kernel with the maximum response, we can also record the kernel with the minimum response, knowing that this kernel will be the best match with the ``inverted'' subsequence of $T$.
 Hydra is applied to both the original time series and its first-order differences.
-Hydra generated approximately 1,000 features for each instance in our dataset.
+In conclusion, Hydra generated approximately 1000 features for each instance in our dataset.
+\cite{HydraCompetingConvolutional2023} found that it can improve the accuracy by concatenating features from Hydra with features from MultiRocket.
+This classifier is called MultiROCKET-Hydra.
 
-\cite{HydraCompetingConvolutional2023} concatenate features from Hydra with features from MultiRocket to obtain the best result.
-This classifier is called MultiROCKET-Hydra. 
-
-Typically, convolution-based approaches employ a simple design pattern, which involves the overproduction of features followed by a selection strategy.
-A large number of features are generated for each instance. 
-The derived features from the transformation methods are then fed into a simple linear classifier to obtain the final classification result.
-Then, a simple classifier such as a linear ridge classifier determines which features are most useful.
+These five classifiers share the same simple design pattern.
+It involves the overproduction of features followed by a selection strategy.
+A large number of features (1000 $\sim$ 50000) are generated for each instance. 
+The features are then fed into a simple linear classifier.
+It determines which features are most useful and returns the final classification result.
 A ridge classifier is used in this study.
 It is a linear classifier that extends ridge regression to classification tasks by applying a threshold to the predicted values.
 It uses L2 regularization to prevent overfitting.
 The regularization strength is selected by internal cross-validation.
 A Ridge classifier is suggested for small datasets, as in our case, while a logistic regression classifier is suggested for large datasets~\cite{BakeReduxReview2024}.
 
-% Time series classification in detail, especially Rocket-based methods
-
 \subsection{Evaluation metrics}
-To evaluate the performance of our time series-based classification model, we adopted five standard classification metrics.
+To evaluate the performance of our time series-based classification (MTSC) model, we adopted five standard classification metrics.
 They are Accuracy (Acc), Specificity (Sp), Sensitivity (Sn), F1 score (F1), and Matthews Correlation Coefficient (MCC)~\cite{ComparisonPredictedObserved1975}.
 \begin{align*}
 Acc &= \frac{TP + TN}{TP + TN + FP + FN} \\
@@ -645,9 +695,9 @@ Where TP, TN, FP, and FN are the number of true positives, true negatives, false
 
 % 3.4.4.1. From binary to multiclass and multilabel
 % https://scikit-learn.org/stable/modules/model_evaluation.html#from-binary-to-multiclass-and-multilabel
-To extend a binary metric to multiclass problems, we can treat the data as a collection of binary problems, one for each class.
+To extend a binary metric to multi-class problems, we can treat the data as a collection of binary problems, one for each class.
 One class is treated as positive while the other classes are treated as negative.
-Then, the multiclass metrics can be obtained by averaging binary metric calculations across the set of classes.
+Then, the multi-class metrics can be obtained by averaging binary metric calculations across the set of classes.
 There are different ways to do the averaging.
 Here, we adopted a macro-averaging approach.
 It treats each class equally and calculates the mean of the binary metrics.

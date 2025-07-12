@@ -150,7 +150,6 @@
 %%================================%%
 %% Sample for structured abstract %%
 %%================================%%
-
 \abstract{
 \textbf{Background:} 
 MicroRNAs (miRNAs) are small non-coding RNAs (ncRNAs) that regulate gene expression at the post-transcriptional level, thereby playing essential roles in diverse biological processes.
@@ -166,6 +165,7 @@ We proposed a novel approach to frame the task as a multivariate time series cla
 Various encoding methods have been proposed to convert the sequence and the predicted secondary structure into a time series.
 We also leveraged the probabilities of the base pairs in the predicted secondary structure.
 Computational experiments demonstrate that our proposed method can achieve better or comparable results using a simpler, more intuitive model and less computational time.
+It achieves 3.7X $\sim$ 28.8X speedup.
 Through perturbation experiments, we found that regions close to the center of pre-miRNAs are essential for predicting human dicer cleavage sites.
 
 \textbf{Conclusion:} 
@@ -193,7 +193,7 @@ Code is available at: \href{https://github.com/cyuab/time-series-classification-
 \subfile{sections/discussion} % 500 words
 \subfile{sections/conclusions} % 500 words
 \appendix
-\subfile{sections/appendix}
+% \subfile{sections/appendix}
 
 %%===========================================================================================%%
 %% If you are submitting to one of the Nature Portfolio journals, using the eJP submission   %%
