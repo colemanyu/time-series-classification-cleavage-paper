@@ -4,7 +4,8 @@
 % miRNA
 % Related Work
 One of the most important theories in molecular biology is the central dogma. It depicts the flow of genetic information~\cite{CampbellBiology2020, MolecularBiologyCell2022}.
-Proteins are the functional units. And the information stored in DNA is used to create them.
+Proteins are the functional units. 
+The information stored in DNA is used to create them.
 % This process is known as gene expression, which involves two key steps: transcription and translation.
 Genes (segments) in DNA are used as templates for messenger RNAs (mRNAs) synthesis. 
 % This synthesis process is called transcription.
@@ -14,11 +15,11 @@ An mRNA acts as a set of instructions to assemble a chain of amino acids, which 
 % This chain is not yet functional.
 To become biologically active, this chain is folded into a specific 3D structure, a proper configuration that enables it to perform its desired functions. 
 % This process is called protein folding.
-And this folded polypeptide is called a functional protein, or simply a protein.
+This folded polypeptide is called a functional protein, or simply a protein.
 This entire process closely resembles how a computer program runs on a machine.
 % where DNA serves as the source code, genes are the code segments, mRNA acts as the assembly code, and proteins are the executables.
 The source code does not function by itself. 
-First, it is translated into assembly code (a lower-level, less human-readable form) and then into an executable file that can actually perform the intended tasks~\cite{ComputerScientistsGuide2007}.
+First, it is translated into an assembly code (a lower-level, less human-readable form) and then into an executable file that can actually perform the intended tasks~\cite{ComputerScientistsGuide2007}.
 
 These mRNAs are called ``coding RNAs'' because they code for proteins.
 There are other genes in which the final product is the RNA molecule itself. 
@@ -119,7 +120,7 @@ Hence, to predict or classify whether a subsequence, extracted from the sequence
 % % Human dicer cleavage
 % In this study, we focus on human dicer cleavage sites.
 % We review the studies on human dicer cleavage sites here.
-PHDcleav employed support vector machines (SVM), leveraging sequence and structure-based features~\cite{PHDcleavSVMBased2013} for the classification.
+PHDcleav employed support vector machines (SVM), leveraging sequence and structure-based features for the classification~\cite{PHDcleavSVMBased2013}.
 LBSizeCleav improved upon it by considering the loop and bulge lengths~\cite{LBSizeCleavImprovedSupport2016}.
 \cite{ReCGBMGradientBoostingbased2021} proposed an ensemble learning approach, using a gradient boosting machine for better accuracy.
 \cite{DiCleaveDeepLearning2024} developed a deep learning model, namely DiCleave. This model used an autoencoder to learn the secondary structure embeddings of pre-miRNAs from all the species in the miRBase database and leveraged this information.
@@ -160,10 +161,11 @@ Our contributions are shown as follows.
     % Time series modeling bridges bioinformatics and time series, which allows us to use state-of-the-art time series classification algorithms. 
     % Besides, the visualization power of time series allows us to understand the data more intuitively.
     \item We proposed utilizing the base-pair probabilities in the predicted secondary structure for the prediction. 
-    To our surprise, this information has been ignored in the existing works. 
+    To our surprise, this information has been ignored in the existing studies. 
     % \item We conducted extensive experiments on different encoding methods and convolution-based classification methods.
+    \item For computational efficiency, our method achieves a 3.7X to 28.8X speedup compared to the state-of-the-art (SOTA).
     \item We conducted perturbation-based experiments. It shows that regions close to the cleavage sites are important for this problem. 
-    It agrees with the existing study~\cite{ReCGBMGradientBoostingbased2021}.
+    It is consistent with the existing study~\cite{ReCGBMGradientBoostingbased2021}.
 \end{enumerate}
 %%%
 %%%

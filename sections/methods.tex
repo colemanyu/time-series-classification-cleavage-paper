@@ -111,7 +111,7 @@ It resulted in 1917 records.
 To identify the actual locations of the two cleavage sites in the pri-miRNA sequence supported by experimental evidence, we selected records that have two mature miRNAs resulting from cleavage at the 5p arm and the 3p arm, both of which have experimental support.
 Hence, only ``MI0000060'' (``hsa-let-7a-1'') would be selected in the table.
 It would serve as our running example.
-The whole sequence of it is listed in Table~\ref{tab:hsa-let-7a-1}.
+Its whole sequence is listed in Table~\ref{tab:hsa-let-7a-1}.
 After the selection process, we selected 827 experimental validated pre-miRNA sequences, each with its two mature miRNA products.
 This formed our dataset.
 
@@ -241,7 +241,7 @@ It is also shown in Table~\ref{tab:hsa-let-7a-1_eight_strings}.
 
 \subsection{Time Series Encoding}
 A time series $T = t_1, t_2, ..., t_n$ is a sequence of real-valued numbers\footnote{Unless otherwise specified, we denote entries of a time series (e.g., $T$) using the corresponding lowercase letter (e.g., $t$).}. A short contiguous region of $T$ is called a subsequence. 
-A subsequence $T(i:j) = t_i, t_{i+1}, ..., t_j$ of a time series $T$ is a shorter time series that starts from position $i$ and ends at position $j$, where $i < j$.
+A \textit{subsequence} $T(i:j) = t_i, t_{i+1}, ..., t_j$ of a time series $T$ is a shorter time series that starts from position $i$ and ends at position $j$, where $i < j$.
 % Formally, $T(i:j) = t_i, t_{i+1}, ..., t_j$, where $1 \leq i \leq j \leq n$.
 
 % https://tex.stackexchange.com/questions/47170/how-to-write-conditional-equations-with-one-sided-curly-brackets
@@ -253,7 +253,7 @@ The difference between strings and time series lies in their behavioral attribut
 % They are the values on the y-axis.
 For strings, 
 % also known as words, 
-an entry is a letter from a predefined set called the alphabet. 
+an entry is a letter from a predefined set called the \textit{alphabet}. 
 % Thus, we also refer to the symbols as letters.
 For example, the alphabet is $\{A, C, G, T\}$ in the DNA string, while $\{A, C, G, U\}$ in the RNA string.
 For time series, an entry is a real number. 
@@ -316,7 +316,7 @@ It aims to highlight sequence regions with higher cleavage potential.
 % So, we want to emphasize the existence of such less stable A-U pairs in the double strands in our time series representations. 
 % We assign A and U with larger absolute values than those of G and C.
 \end{enumerate}
-It results in our baseline transformation method, namely ``Single value mapping'' , shown in row 1 of Table~\ref{tab:ts_encoding}. 
+It results in our baseline transformation method, namely ``Single value mapping'' as shown in row 1 of Table~\ref{tab:ts_encoding}. 
 $S$ is the input strand.
 When we encode $S$ without incorporating the corresponding base-pair probability sequence $P$, we set $p_i$ = 1 for all the entries of $P$. 
 We use the first ten nucleotides of the complementary strand of the 3p cleav of ``hsa-let-7a-1'', as shown in Table~\ref{tab:hsa-let-7a-1_eight_strings} as $S$ in the examples in Table~\ref{tab:ts_encoding}.
@@ -563,7 +563,7 @@ We use the first ten nucleotides of the complementary strand of the 3p cleav of 
     \end{tabular}}
     \caption{Time series encoding. 
     % The ending index in indexing is exclusive.
-    $P$ is the corresponding base-pair probability sequence of $S$. $p_i = 1$ if we encode $S$ without base-pair probability sequence.}
+    $P$ is the corresponding base-pair probability sequence of $S$. $p_i = 1$ if we encode $S$ without incorporating base-pair probability sequence.}
     \label{tab:ts_encoding}
 \end{table}
 
@@ -576,7 +576,7 @@ We can transform the input strand into a multivariate time series with two chann
 It releases our third assumption that $A$ ($U$) has a larger absolute value than $G$ ($C$).
 We proposed two variations. 
 The first one allows the output to be variable-length sequences per channel, depending on group-specific occurrences. 
-The second one always returns two resulting sequences of fixed length.
+The second one always returns two resulting sequences of a fixed length.
 Two variations extended from single value mapping are shown in rows 2 and 3, while those extended from cumulative mapping are shown in rows 5 and 6 in Table~\ref{tab:ts_encoding}. 
 % To conclude, the single value mapping and its two variations: grouped variable-length channel mapping and grouped fixed-length channel mapping, 
 % Of note, some our proposed transformations are lossy.
@@ -587,7 +587,7 @@ Two variations extended from single value mapping are shown in rows 2 and 3, whi
 \subsubsection{Global cumulative versus Local Cumulative}
 In cumulative mapping and its variations, we can choose where to start the accumulation.
 For a given subsequence $S'$ of the whole sequence $S$, accumulation can start from the beginning of $S$ even if only $S'$ is used downstream.
-Or it can begin just at the start of the $S'$.
+It can also begin just at the start of the $S'$.
 The first one preserves the global context.
 % by recording the previous counts of the nucleotide up to $S'$.
 It can be useful when previous nucleotides (those before $S'$) influence later interpretation. 
@@ -597,7 +597,7 @@ It is helpful if the previous nucleotides do not affect the chemical property of
 Consider $T = 0, -1, ..., -6$ of the input string $S$ in ``Cumulative mapping'' in Table~\ref{tab:ts_encoding}, which accumulates from 0.
 $S$ is the suffix with length $= 10$ of the constructed complementary strand of $S(1:63)$ in Fig.~\ref{fig:hsa-let-7a-1_ss}.
 If we start the accumulation from the first entry of the constructed complementary strand instead, it will yield a different result.
-Suppose the last entry of the time series encoded in the cumulative mapping of the constructed complementary strand is 2, the time series encoded in the ``Global cumulative mapping'' for $S$ would accumulate from 2 instead of 0.
+Suppose that the last entry of the time series encoded in the cumulative mapping of the constructed complementary strand is 2, the time series encoded in the ``Global cumulative mapping'' for $S$ would accumulate from 2 instead of 0.
 The result is $T = 2, 1, ..., -4$.
 Note that it has the same trend as the original $T$. 
 This ``Global cumulative'' concept can be applied to every cumulative-based method, as shown in Fig.~\ref{fig:encodings_relationship}.
@@ -644,7 +644,7 @@ M_i = A(i:i+l-1) * \omega = \sum_{j=0}^{l-1} A_{i+j}\cdot \omega_{1+j}
 \end{align*}
 To note, $|A(i:i+l-1)| = |\omega| = l$.
 Entries $M_i$'s are calculated by sliding $\omega$ across $T$ and computing a dot product.
-Additionally, although the original paper used the term ``convolution'' to refer to the above operation, ``cross-correlation'' may be a more suitable term for this operation.
+Additionally, although the original paper~\cite{ROCKETExceptionallyFast2020} used the term ``convolution'' to refer to the above operation, ``cross-correlation'' may be a more suitable term for this operation.
 Recall $T$ with length $m$ has $(m-l+1)$ sliding windows of length $l$, given that the increment is 1\footnote{One step to the right per time}, which defines the length of $M$.
 
 \begin{figure}[htbp]
@@ -670,8 +670,7 @@ Additionally, padding can be applied to $T$ at the start and end, ensuring $M$ h
 To note, $T$, $M_1$, and $M_2$ in Fig.~\ref{fig:rocket_convolution} have different lengths.
 The summary statistics of the activation map are obtained through two pooling operations: MAX and PPV.
 Hence, for $k$ kernels, the transformed data has $2k$ features.
-The default value of $k$ is 10000.
-The feature vector size is then 20000.
+The default value of $k$ is 10,000.
 
 There are two extensions of ROCKET.
 They are MiniROCKET~\cite{MiniRocketVeryFast2021} and MultiROCKET~\cite{MultiRocketMultiplePooling2022}.
@@ -707,7 +706,7 @@ This classifier is called MultiROCKET-Hydra.
 
 These five classifiers share the same simple design pattern.
 It involves the overproduction of features followed by a selection strategy.
-A large number of features (1000 $\sim$ 50000) are generated for each instance. 
+A large number of features (1,000 $\sim$ 50,000) are generated for each instance. 
 The features are then fed into a simple linear classifier.
 It determines which features are most useful and returns the final classification result.
 A ridge classifier is used in this study.
@@ -716,9 +715,9 @@ It uses L2 regularization to prevent overfitting.
 The regularization strength is selected by internal cross-validation.
 A Ridge classifier is suggested for small datasets, as in our case, while a logistic regression classifier is suggested for large datasets~\cite{BakeReduxReview2024}.
 
-While these five classifiers are often referred to as classifiers, they are technically time series transformation methods for generating features that are then fed to a downstream classifier. The comparison of them is shown in Table~\ref{tab:rockets_comparison}.
+While these five classifiers are often referred to as classifiers~\cite{BakeReduxReview2024}, they are technically time series transformation methods for generating features that are then fed to a downstream classifier. The comparison of them is shown in Table~\ref{tab:rockets_comparison}.
 % The first five rows are the parameters of $\omega$.
-For MiniROCKET and MultiROCKET, the bias is determined from the convolution output, and the dilation depends on the length of the input time series~\cite{MiniRocketVeryFast2021}.
+For MiniROCKET and MultiROCKET, the bias is determined from the convolution output, and the dilation depends on the length of the input time series~\cite{MiniRocketVeryFast2021, MultiRocketMultiplePooling2022}.
 The main differences among ROCKET-based classifiers lie in how the summary features are generated.
 The generation of the summary features depends on:
 \begin{enumerate}
@@ -770,14 +769,14 @@ Sn &= \frac{TP}{TP + FN} \\
 F1  &= \frac{2 \times TP}{2 \times TP + FP + FN} \\
 MCC &= \frac{TP \times TN - FP \times FN}{\sqrt{(TP + FP)(TP + FN)(TN + FP)(TN + FN)}}
 \end{align*}
-Where TP, TN, FP, and FN are the number of true positives, true negatives, false positives, and false negatives, respectively. 
+where TP, TN, FP, and FN are the number of true positives, true negatives, false positives, and false negatives, respectively. 
 
 % 3.4.4.1. From binary to multiclass and multilabel
 % https://scikit-learn.org/stable/modules/model_evaluation.html#from-binary-to-multiclass-and-multilabel
 To extend a binary metric to multi-class problems, we can treat the data as a collection of binary problems, one for each class.
 One class is treated as positive while the other classes are treated as negative.
 Then, the multi-class metrics can be obtained by averaging binary metric calculations across the set of classes.
-There are different ways to do the averaging.
+There are different ways of doing the averaging.
 Here, we adopted a macro-averaging approach.
 It treats each class equally and calculates the mean of the binary metrics.
 % 3.4.4.13. Matthews correlation coefficient
@@ -787,7 +786,7 @@ To use $MCC$ in the multiclass case, it can be defined in terms of a confusion m
 MCC_{multi} = \frac{c \times s - \sum_k^K p_k \times t_k}
 {\sqrt{(s^2 - \sum_k^K p_k^2) \times (s^2 - \sum_k^K t_k^2)}}
 \end{align*}
-Where $t_k = \sum_i^K C_{i, k}$ (The number of times class $k$ actually occurred), $p_k = \sum_i^K C_{k, i}$ (The number of times class $k$ was predicted), $c = \sum_k^K C_{k, k}$ (The total number of samples correctly predicted) and $s = \sum_i^K \sum_j^K C_{i, j}$ (The total number of samples).
+where $t_k = \sum_i^K C_{i, k}$ (denoting the number of times class $k$ actually occurred), $p_k = \sum_i^K C_{k, i}$ (denoting the number of times class $k$ was predicted), $c = \sum_k^K C_{k, k}$ (denoting the total number of samples correctly predicted) and $s = \sum_i^K \sum_j^K C_{i, j}$ (denoting the total number of samples).
 %%%
 %%%
 %%%
