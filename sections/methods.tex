@@ -98,7 +98,7 @@ We used miRBase database~\cite{MiRBaseToolsMicroRNA2008}\footnote{The website is
 The database comprises miRNA data from various organisms~\cite{MiRBaseConverterBioconductorPackage2018}.
 % , including humans, mice, and C. elegans~\cite{MiRBaseConverterBioconductorPackage2018}.
 The database contains 38589 miRNA records.
-Each record refers to a miRNA sequence, along with other properties such as name, accession, organism, and information on its derivative miRNA products.
+Each record refers to an miRNA sequence, along with other properties such as name, accession, organism, and information on its derivative miRNA products.
 We are interested in pri-miRNA in humans.
 The derivative miRNA products are the mature miRNAs. 
 The database also annotates the location of the mature miRNA within the original sequence and indicates whether its existence has experimental evidence.
@@ -158,15 +158,12 @@ This formed our dataset.
 We leveraged the predicted secondary structure of these sequences to enhance the accuracy of the classification. 
 Recall that a specific three-dimensional (3D) structure is required for DNA, RNA, and protein to perform functions~\cite{UnderstandingBioinformatics2008}.
 However, finding these 3D structures using experimental methods
-% such as X-ray crystallography or nuclear magnetic resonance (NMR)
+such as X-ray crystallography or nuclear magnetic resonance (NMR)
 is costly and time-consuming.
 Hence, prediction methods for such 3D structures are necessary and helpful for downstream analysis.
 However, predicting the 3D structures is challenging. 
-One of the reasons is that there are some ``nonconventional'' base-pair interactions 
-% (e.g., noncanonical and rare A-G) 
-that allow an RNA sequence to fold into a 3D structure. 
-% in addition to the (G, U) wobble pair, which are common and functionally important in RNA secondary structures. 
-% It makes the search space for prediction much larger than, in the 2D case, the secondary structure.
+One of the reasons is that there are some ``nonconventional'' base-pair interactions (e.g., noncanonical and rare A-G) that allow an RNA sequence to fold into a 3D structure, in addition to the (G, U) wobble pair, which is common and functionally important in RNA secondary structures. 
+It makes the search space for prediction much larger than, in the 2D case, the secondary structure.
 The local structures of the 3D structures, the secondary structures, only focus on the conventional base-pair interactions~\cite{MolecularBiologyCell2022}.
 Hence, predicting secondary structures is easier and faster.
 % It facilitates the prediction of secondary structure more easily and effectively than predicting the 3D structure.
@@ -243,7 +240,7 @@ It is also shown in Table~\ref{tab:hsa-let-7a-1_eight_strings}.
 % Of note, we also have the base pair probability sequences that are of the same length as these strings. 
 
 \subsection{Time Series Encoding}
-A time series $T = t_1, t_2, ..., t_n$ is a sequence of real-valued numbers\footnote{We use the small letter (e.g., $t$) of the variable name of time series (e.g., $T$) for the entries.}. A short contiguous region of $T$ is called a subsequence. 
+A time series $T = t_1, t_2, ..., t_n$ is a sequence of real-valued numbers\footnote{Unless otherwise specified, we denote entries of a time series (e.g., $T$) using the corresponding lowercase letter (e.g., $t$).}. A short contiguous region of $T$ is called a subsequence. 
 A subsequence $T(i:j) = t_i, t_{i+1}, ..., t_j$ of a time series $T$ is a shorter time series that starts from position $i$ and ends at position $j$, where $i < j$.
 % Formally, $T(i:j) = t_i, t_{i+1}, ..., t_j$, where $1 \leq i \leq j \leq n$.
 
@@ -283,10 +280,11 @@ We present nine encoding methods. The relationship among them is shown in Fig.~\
 
 \subsubsection{Single value versus Cumulative}
 % https://www.reddit.com/r/grammar/comments/bfuqx4/what_is_the_correct_wording_for_one_of_if_not_the/
-One of the simple, if not the simplest, encoding is to map the letters into numbers without considering any domain knowledge.
+One of the simple, if not the simplest, encoding is to map the letters into numbers.
+% without considering any domain knowledge.
+Domain knowledge can be utilized.
 This approach is called the ``Single value mapping''~\cite{SearchingMiningTrillions2012, ConversionNucleotidesSequences2002, AutoregressiveModelingFeature2004, DNASequencesClassification2001, DNANumericalRepresentations2017}.
 One single value is assigned to each of the letters.
-Domain knowledge can be utilized.
 \cite{ATCGNucleotideFluctuation2007} employed the atomic number of each nucleotide as the transformed values, where $\{G = 78, A= 70, C = 58, T = 66\}$.
 \cite{CodingMeasureScheme2006} used electron-ion interaction potential representation (EIIP) as such value, where $\{G = 0.0806, A = 0.1260, C = 0.1340, T = 0.1335\}$.
 Our goal is to transform the input strand and its complementary strand into time series, aiming to capture the information contained in these sequences and the secondary structure implied by them.
@@ -319,9 +317,13 @@ It aims to highlight sequence regions with higher cleavage potential.
 % We assign A and U with larger absolute values than those of G and C.
 \end{enumerate}
 It results in our baseline transformation method, namely ``Single value mapping'' , shown in row 1 of Table~\ref{tab:ts_encoding}. 
+$S$ is the input strand.
+When we encode $S$ without incorporating the corresponding base-pair probability sequence $P$, we set $p_i$ = 1 for all the entries of $P$. 
+We use the first ten nucleotides of the complementary strand of the 3p cleav of ``hsa-let-7a-1'', as shown in Table~\ref{tab:hsa-let-7a-1_eight_strings} as $S$ in the examples in Table~\ref{tab:ts_encoding}.
 
 \begin{table}[htbp]
     \centering
+    \footnotesize % Float too large for page by 35.9162pt on input line 568.
     \resizebox{\columnwidth}{!}{\begin{tabular}{c | c | c | c}
          \hline
          & Encoding & Algorithm & 
@@ -340,7 +342,7 @@ It results in our baseline transformation method, namely ``Single value mapping'
          % Numeric representation
          \makecell[l]{
          for $i = 1$ to $|S|$: \\ 
-         \(\displaystyle
+         \quad \(\displaystyle
          t_i= 
             \begin{cases}
                 2 \cdot p_i & \text{if } s_i = A\\
@@ -370,22 +372,27 @@ It results in our baseline transformation method, namely ``Single value mapping'
          \makecell[l]{
          $ j=1, k=1 $ \\
          for $i = 1$ to $|S|$: \\ 
-        \(\displaystyle
+        \quad \(\displaystyle
          t^1_j= 
             \begin{cases}
-                1 \cdot p_i, \quad j=j+1 & \text{if } s_i = A\\
-                - 1 \cdot p_i, \quad j=j+1 & \text{if } s_i = U\\
-                0, \quad j=j+1 & \text{otherwise}\\
+                1 \cdot p_i & \text{if } s_i = A\\
+                - 1 \cdot p_i & \text{if } s_i = U\\
+                0 & \text{otherwise}\\
             \end{cases}
          \) \\
-         \(\displaystyle
+          \quad \(\displaystyle
          t^2_k= 
             \begin{cases}
-                1 \cdot p_i, \quad k=k+1 & \text{if } s_i = G\\
-                -1 \cdot p_i, \quad k=k+1 & \text{if } s_i = C\\
+                1 \cdot p_i & \text{if } s_i = G\\
+                -1 \cdot p_i & \text{if } s_i = C\\
             \end{cases}
          \) \\
-         return $T^1, T^2$ \textcolor{teal}{// Only consist of assigned $t^1_j$, $t^2_k$}
+         \quad if ($s_i = G$) or ($s_i = C$): \\
+         \quad \quad \quad increment $k$ by 1 \\
+         \quad else: \\
+         \quad \quad \quad increment $j$ by 1 \\
+         return $T^1, T^2$ 
+         % \textcolor{teal}{// Only consist of assigned $t^1_j$, $t^2_k$}
          } &
          % Example
          \makecell{
@@ -404,22 +411,23 @@ It results in our baseline transformation method, namely ``Single value mapping'
          % Numeric representation
          \makecell[l]{
          for $i = 1$ to $|S|$: \\ 
-        \(\displaystyle
+        \quad  \(\displaystyle
          t^1_i= 
             \begin{cases}
-                1 \cdot p_i, \quad j=j+1 & \text{if } s_i = A\\
-                - 1 \cdot p_i, \quad j=j+1 & \text{if } s_i = U\\
+                1 \cdot p_i & \text{if } s_i = A\\
+                - 1 \cdot p_i & \text{if } s_i = U\\
                 0 & \text{otherwise } \\
             \end{cases}
          \) \\
-         \(\displaystyle
+         \quad  \(\displaystyle
          t^2_i= 
             \begin{cases}
-                1 \cdot p_i, \quad k=k+1 & \text{if } s_i = G\\
-                -1 \cdot p_i, \quad k=k+1 & \text{if } s_i = C\\
+                1 \cdot p_i & \text{if } s_i = G\\
+                -1 \cdot p_i & \text{if } s_i = C\\
                 0 & \text{otherwise} \\
             \end{cases}
          \) \\
+         % \quad increment $j$ and $k$ by 1 \\
          return $T^1, T^2$
          } &
          % Example
@@ -446,7 +454,7 @@ It results in our baseline transformation method, namely ``Single value mapping'
          \makecell[l]{
          $t_1 = 0$ \\
          for $i = 1$ to $|S|$: \\ 
-         \(\displaystyle
+         \quad \(\displaystyle
          t_{i+1}= 
             \begin{cases}
                 t_i + 2 \cdot p_i & \text{if } s_i = A\\
@@ -477,22 +485,27 @@ It results in our baseline transformation method, namely ``Single value mapping'
          $t^1_1 = 0, t^2_1 = 0$ \\
          $j = 1, k = 1$ \\
          for $i = 1$ to $|S|$: \\ 
-         \(\displaystyle
+         \quad \(\displaystyle
          t^1_{j+1}= 
             \begin{cases}
-                t^1_j + 1 \cdot p_i, \quad j=j+1 & \text{if } s_i = A\\
-                t^1_j - 1 \cdot p_i, \quad j=j+1 & \text{if } s_i = U\\
-                t^1_j, \quad j=j+1 & \text{if } s_i = \_\\
+                t^1_j + 1 \cdot p_i & \text{if } s_i = A\\
+                t^1_j - 1 \cdot p_i & \text{if } s_i = U\\
+                t^1_j & \text{if } s_i = \_\\
             \end{cases}
          \) \\
-         \(\displaystyle
+         \quad \(\displaystyle
          t^2_{k+1}= 
             \begin{cases}
-                t^2_k + 1 \cdot p_i, \quad k=k+1 & \text{if } s_i = G\\
-                t^2_k -1 \cdot p_i, \quad k=k+1 & \text{if } s_i = C\\
+                t^2_k + 1 \cdot p_i & \text{if } s_i = G\\
+                t^2_k -1 \cdot p_i & \text{if } s_i = C\\
             \end{cases}
          \) \\
-         return $T^1$, $T^2$ \textcolor{teal}{// Only consist of assigned $t^1_j$, $t^2_k$}
+         \quad if ($s_i = G$) or ($s_i = C$): \\
+         \quad \quad \quad increment $k$ by 1 \\
+         \quad else: \\
+         \quad \quad \quad increment $j$ by 1 \\
+         return $T^1$, $T^2$ 
+         % \textcolor{teal}{// Only consist of assigned $t^1_j$, $t^2_k$}
          } &
          % Example
          \makecell{
@@ -514,7 +527,7 @@ It results in our baseline transformation method, namely ``Single value mapping'
          \makecell[l]{
          $t^1_1 = 0, t^2_1 = 0$ \\
          for $i = 1$ to $|S|$: \\ 
-         \(\displaystyle
+         \quad \(\displaystyle
          t^1_{i+1}= 
             \begin{cases}
                 t^1_i + 1 \cdot p_i & \text{if } s_i = A\\
@@ -522,7 +535,7 @@ It results in our baseline transformation method, namely ``Single value mapping'
                 t^1_i & \text{otherwise } \\
             \end{cases}
          \) \\
-         \(\displaystyle
+         \quad \(\displaystyle
          t^2_{i+1}= 
             \begin{cases}
                 t^2_i + 1 \cdot p_i & \text{if } s_i = G\\
@@ -550,7 +563,7 @@ It results in our baseline transformation method, namely ``Single value mapping'
     \end{tabular}}
     \caption{Time series encoding. 
     % The ending index in indexing is exclusive.
-    $S$ is the first ten nucleotides of the complementary strand of the 3p cleav of ``hsa-let-7a-1'', as shown in Table~\ref{tab:hsa-let-7a-1_eight_strings}. $P$ is the corresponding base-pair probability sequence. $p_i = 1$ if we encode $S$ without base-pair probability sequence.}
+    $P$ is the corresponding base-pair probability sequence of $S$. $p_i = 1$ if we encode $S$ without base-pair probability sequence.}
     \label{tab:ts_encoding}
 \end{table}
 
@@ -592,8 +605,8 @@ This ``Global cumulative'' concept can be applied to every cumulative-based meth
 % After Z-normalization, these two time series will have similar trends but not the same trends as they have different means and variances.
 
 \subsubsection{Incorporating base-pair probabilities}
-We can incorporate the base-pair probabilities in the encoding by
-thinking of it as the weight or confidence in the value assignment of each nucleotide.
+We can incorporate the base-pair probabilities $P$ in the encoding by
+thinking of it as the weight or confidence $p_i$ in the value assignment of each nucleotide $s_i$.
 It is implemented by multiplying the base-pair probability $p_i$ of the nucleotide $s_i$ with the assigned value of the kind of nucleotide of $s_i$ during encoding, as shown in Table~\ref{tab:ts_encoding}.
 % Recall that RNA secondary structure prediction algorithm is a kind of RNA folding algorithm.
 % The RNA secondary structure prediction algorithm returns the predicted secondary structure of a given RNA sequence, a planar graph such as the minimum free energy structure.
@@ -623,51 +636,73 @@ We employed convolution-based classifiers due to their simplicity and accuracy.
 
 \subsubsection{Convolution-based classifiers}
 Convolution-based classifiers first use randomly parameterized kernels to perform convolutions on the original time series $T$.
-Each convolution is performed by sliding a kernel $\omega$ across $T$ and computing a dot product.
-The output of this process is a time series, namely an activation map.
+A kernel is referred to as parameterized because its behavior is governed by a set of parameters, which will be discussed in detail later.
+Convolution is an operation to transform $T$ to another time series $M$, where $M$ is called the activation map.
+Its entry $M_i$ is calculated by applying a kernel $\omega$ with length $l$ to $T$ at position $i$, defined as follows:
+\begin{align*}
+M_i = A(i:i+l-1) * \omega = \sum_{j=0}^{l-1} A_{i+j}\cdot \omega_{1+j}
+\end{align*}
+To note, $|A(i:i+l-1)| = |\omega| = l$.
+Entries $M_i$'s are calculated by sliding $\omega$ across $T$ and computing a dot product.
+Additionally, although the original paper used the term ``convolution'' to refer to the above operation, ``cross-correlation'' may be a more suitable term for this operation.
+Recall $T$ with length $m$ has $(m-l+1)$ sliding windows of length $l$, given that the increment is 1\footnote{One step to the right per time}, which defines the length of $M$.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.8\columnwidth]{figures/rocket_convolution.pptx.pdf}}
 \caption{Features generation in the transformation}
 \label{fig:rocket_convolution}
 \end{figure}
-Fig.~\ref{fig:rocket_convolution} shows two kernels $\omega_1$ and $\omega_2$ , each of which performs convolution with $T$.
-For example, $\omega_1$ performs dot product with $T(1:3)$ and result $3$ as the first entry of the activation map.
-By sliding the kernel one time stamp at a time, an activation map is produced for each kernel.
-Then, pooling operations, such as the maximum (MAX) and proportion of positive values (PPV), are applied on the activation map to derive the summary features.
+Fig.~\ref{fig:rocket_convolution} shows two kernels $\omega_1$ and $\omega_2$ with lengths 3 and 5, respectively.
+Each of which performs a convolution with $T$ and returns two activation maps, $M^1$ and $M^2$, respectively.
+For example, $M^1_1 = T(1:3) * \omega_1 = 3$.
+% For example, $\omega_1$ performs dot product with $T(1:3)$ and result $3$ as the first entry of the activation map.
+By sliding $\omega_1$ one time stamp at a time, an activation map $M^1$ with length $= (m-l+1) = 11-3+1=9$ is obtained.
+Then, pooling operations, such as the maximum (MAX) and proportion of positive values (PPV), are applied on $M^1$ to derive the summary features.
+In Fig.~\ref{fig:rocket_convolution}, MAX and PPV are applied on $M^1$ and $M^2$.
+The summary features of $M^1$ are 4 and 5/9, which correspond to MAX and PPV, respectively.
+Dilation refers to a method that enables a kernel to cover a larger portion by creating empty spaces between entries in the kernel.
+The dilation $d$ of $\omega_2$ is 2. It introduces a gap of 1 in every two values of  $\omega_2$.
 
 The most popular convolution-based approach is the Random Convolutional Kernel Transform (ROCKET)~\cite{ROCKETExceptionallyFast2020}.
 It generates a large number of randomly parameterized kernels, ranging from thousands to tens of thousands.
-The kernel's parameters include length, weights (the entries inside the kernel, which are used for the dot product), bias (the value added to the result of the convolution operation), and dilation.
-Additionally, padding can be applied to the input series at the start and end, ensuring the activation map has the same length as the input.
+The kernel's parameters include length, weights (the entries inside the kernel), bias (the value added to the result of the convolution operation), and dilation.
+Additionally, padding can be applied to $T$ at the start and end, ensuring $M$ has the same length as the input.
+To note, $T$, $M_1$, and $M_2$ in Fig.~\ref{fig:rocket_convolution} have different lengths.
 The summary statistics of the activation map are obtained through two pooling operations: MAX and PPV.
 Hence, for $k$ kernels, the transformed data has $2k$ features.
-The default value of $k$ is $10000$.
+The default value of $k$ is 10000.
+The feature vector size is then 20000.
 
 There are two extensions of ROCKET.
 They are MiniROCKET~\cite{MiniRocketVeryFast2021} and MultiROCKET~\cite{MultiRocketMultiplePooling2022}.
-MiniROCKET removes unnecessary operations and many of the random components of ROCKET.
+MiniROCKET removes unnecessary operations and many of the random components in the definition of kernels used by ROCKET.
 It speeds up Rocket by over an order of magnitude with no significant difference in accuracy, making the classifier almost deterministic.
 For example, the kernel length is fixed, and only two weight values are used.
 Only PPV is used for the summary statistics.
 MultiROCKET is extended from MiniROCKET.
-The main improvement of it is to extract features from first-order differences and add three new pooling operations.
+The main improvement of it is to extract features from first-order differences as defined in Table~\ref{tab:rockets_comparison} and add three new pooling operations~\cite{MultiRocketMultiplePooling2022}.
 The three added operations are mean of positive values (MPV), mean of indices of positive values (MIPV) and longest stretch of positive values (LSPV).
 
 % Hydra
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.8\columnwidth]{figures/hydra_convolution.pptx.pdf}}
+\caption{Convolutions of HYDRA for each input time series with a set of random kernels $w$, organized into $g$ groups with $k$ kernels each.}
+\label{fig:hydra_convolution}
+\end{figure}
 The HYbrid Dictionary-ROCKET Architecture (Hydra) combines dictionary-based and convolution-based models~\cite{HydraCompetingConvolutional2023}.
 Similar to ROCKET-based classifiers, it uses random kernels to extract features from the input time series.
-But it groups the kernels into $g$ groups of $k$ kernels each.
+But it groups the kernels into $g$ groups of $k$ kernels each, as shown in Fig.~\ref{fig:hydra_convolution}.
 Each time series is passed through all the groups.
 For each group of kernels, we slide them across $T$ and compute the dot product at each timestamp.
-Recall that the dot product of two input vectors has the maximum value when the two vectors align in the same direction and the minimum value when they are oriented in opposite directions.
-We record the kernel that best matches the subsequence of $T$ at each timestamp in each group.
-This results in a $k$-dimensional count vector for each of the $g$ groups.
-This results in a total of $g \times k$ features, with default values of $g = 64$ and $k=8$.
+Recall that the dot product of two input vectors ($x$ and $w_i$) has the maximum value when the two vectors align in the same direction and the minimum value when they are oriented in opposite directions.
+We record the kernel that best matches the subsequence of $T$ at each timestamp in each group (i.e., argmax). We refer to these kernels as the winning kernels.
+This results in a $k$-dimensional count vector for each of the $g$ groups, where $k=3$ in Fig.~\ref{fig:hydra_convolution}.
+This results in a total of $g \times k$ features, with default values of $g = 64$ and $k=8$
+It uses a total of $k \times g = 512$ kernels per dilation.
 In addition to recording the kernel with the maximum response, we can also record the kernel with the minimum response, knowing that this kernel will be the best match with the ``inverted'' subsequence of $T$.
 Hydra is applied to both the original time series and its first-order differences.
-In conclusion, Hydra generated approximately 1000 features for each instance in our dataset.
-\cite{HydraCompetingConvolutional2023} found that it can improve the accuracy by concatenating features from Hydra with features from MultiRocket.
+Hydra generated approximately 1000 features for each instance in our dataset.
+\cite{HydraCompetingConvolutional2023} found that it can improve the accuracy by concatenating features generated from Hydra with those from MultiRocket.
 This classifier is called MultiROCKET-Hydra.
 
 These five classifiers share the same simple design pattern.
@@ -680,6 +715,50 @@ It is a linear classifier that extends ridge regression to classification tasks 
 It uses L2 regularization to prevent overfitting.
 The regularization strength is selected by internal cross-validation.
 A Ridge classifier is suggested for small datasets, as in our case, while a logistic regression classifier is suggested for large datasets~\cite{BakeReduxReview2024}.
+
+While these five classifiers are often referred to as classifiers, they are technically time series transformation methods for generating features that are then fed to a downstream classifier. The comparison of them is shown in Table~\ref{tab:rockets_comparison}.
+% The first five rows are the parameters of $\omega$.
+For MiniROCKET and MultiROCKET, the bias is determined from the convolution output, and the dilation depends on the length of the input time series~\cite{MiniRocketVeryFast2021}.
+The main differences among ROCKET-based classifiers lie in how the summary features are generated.
+The generation of the summary features depends on:
+\begin{enumerate}
+    \item Kernels, which are defined based on the parameters, which consist of kernel length, kernel weights, bias, and dilation. 
+    % It is related to rows 1 to 4 in the table.
+    \item The way that padding applies to $T$, which leads to activation maps with different lengths.
+    \item The pooling operations, which are used in extracting features on the activation map.
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering
+\resizebox{\columnwidth}{!}{\begin{tabular}{l|c|c|c|c}
+\hline
+& ROCKET & MiniROCKET & MultiROCKET & Hydra \\
+\hline
+kernel length & \{7, 9, 11\} & 9 & 9 & 9 \\
+\hline
+kernel weights & $\mathcal{N}(0,1)$ & \{-1, 2\} & \{-1, 2\} & $\mathcal{N}(0,1)$ \\
+\hline
+bias & $\mathcal{U}(0,1)$ & from output & from output & none \\
+\hline
+dilation & random & fixed (input-relative) & fixed (input-relative) & random \\
+\hline
+padding & random & fixed & fixed & always\\
+\hline
+pooling operations & MAX, PPV & PPV & PPV, MPV, MIPV, LSPV & Response per Kernel/Group \\
+\hline
+1\textsuperscript{st} order difference & no & no & yes & yes \\
+\hline
+feature vector size & 20k & 10k & 50k & relative to input \\
+\hline
+\end{tabular}}
+\caption{Comparison of rocket-based classifiers~\cite{BakeReduxReview2024}. 
+$\mathcal{N}(0,1)$: a standard normal distribution, $U(0,1)$: a uniform distribution between 0 and 1,
+1\textsuperscript{st} order difference: $\Delta T = t_2-t_1, t_3-t_2, ..., t_{n}-t_{n-1}$
+.
+}
+\label{tab:rockets_comparison}
+\end{table}
+
 
 \subsection{Evaluation metrics}
 To evaluate the performance of our time series-based classification (MTSC) model, we adopted five standard classification metrics.
@@ -708,7 +787,7 @@ To use $MCC$ in the multiclass case, it can be defined in terms of a confusion m
 MCC_{multi} = \frac{c \times s - \sum_k^K p_k \times t_k}
 {\sqrt{(s^2 - \sum_k^K p_k^2) \times (s^2 - \sum_k^K t_k^2)}}
 \end{align*}
-Where $t_k = \sum_i^K C_{ik}$ (The number of times class $k$ actually occurred), $p_k = \sum_i^K C_{ki}$ (The number of times class $k$ was predicted), $c = \sum_k^K C_{kk}$ (The total number of samples correctly predicted) and $s = \sum_i^K \sum_j^K C_{ij}$ (The total number of samples).
+Where $t_k = \sum_i^K C_{i, k}$ (The number of times class $k$ actually occurred), $p_k = \sum_i^K C_{k, i}$ (The number of times class $k$ was predicted), $c = \sum_k^K C_{k, k}$ (The total number of samples correctly predicted) and $s = \sum_i^K \sum_j^K C_{i, j}$ (The total number of samples).
 %%%
 %%%
 %%%
