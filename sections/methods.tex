@@ -97,7 +97,7 @@ The overall pipeline of this study is summarized in Fig.~\ref{fig:pipeline}.
 We used miRBase database~\cite{MiRBaseToolsMicroRNA2008}\footnote{The website is \url{www.mirbase.org}, and the newest version of the database is Release 22.1 (Accessed on 2025-06-22).}. 
 The database comprises miRNA data from various organisms~\cite{MiRBaseConverterBioconductorPackage2018}.
 % , including humans, mice, and C. elegans~\cite{MiRBaseConverterBioconductorPackage2018}.
-The database contains 38589 miRNA records.
+The database contains 38,589 miRNA records.
 Each record refers to an miRNA sequence, along with other properties such as name, accession, organism, and information on its derivative miRNA products.
 We are interested in pri-miRNA in humans.
 The derivative miRNA products are the mature miRNAs. 
@@ -107,7 +107,7 @@ Table~\ref{tab:miRBase_representative} shows its four representative records.
 % We use it to elucidate our selection criteria. 
 % The rows are records.
 We first selected the records from humans (Homo sapiens).
-It resulted in 1917 records.
+It resulted in 1,917 records.
 To identify the actual locations of the two cleavage sites in the pri-miRNA sequence supported by experimental evidence, we selected records that have two mature miRNAs resulting from cleavage at the 5p arm and the 3p arm, both of which have experimental support.
 Hence, only ``MI0000060'' (``hsa-let-7a-1'') would be selected in the table.
 It would serve as our running example.
@@ -597,8 +597,8 @@ It is helpful if the previous nucleotides do not affect the chemical property of
 Consider $T = 0, -1, ..., -6$ of the input string $S$ in ``Cumulative mapping'' in Table~\ref{tab:ts_encoding}, which accumulates from 0.
 $S$ is the suffix with length $= 10$ of the constructed complementary strand of $S(1:63)$ in Fig.~\ref{fig:hsa-let-7a-1_ss}.
 If we start the accumulation from the first entry of the constructed complementary strand instead, it will yield a different result.
-Suppose that the last entry of the time series encoded in the cumulative mapping of the constructed complementary strand is 2, the time series encoded in the ``Global cumulative mapping'' for $S$ would accumulate from 2 instead of 0.
-The result is $T = 2, 1, ..., -4$.
+Suppose that the last entry of the time series encoded in the cumulative mapping of the constructed complementary strand is -8, the time series encoded in the ``Global cumulative mapping'' for $S$ would accumulate from -8 instead of 0.
+The result is $T = -8, -9, ..., -14$.
 Note that it has the same trend as the original $T$. 
 This ``Global cumulative'' concept can be applied to every cumulative-based method, as shown in Fig.~\ref{fig:encodings_relationship}.
 % We refer to the first approach as ``Global Cumulative'' and the latter as ``Local Cumulative'' or simply "Cumulative".
