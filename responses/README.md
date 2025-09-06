@@ -1,0 +1,1 @@
+- This template is downloaded at [Journal Revision or Resubmission Review Response Letter (template)](https://www.overleaf.com/latex/templates/journal-revision-or-resubmission-review-response-letter-template/tdybttqkppfn).
