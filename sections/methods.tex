@@ -645,7 +645,7 @@ M_i = T(i:i+l-1) * \omega = \sum_{j=0}^{l-1} t_{i+j}\cdot \omega_{1+j}
 To note, $|T(i:i+l-1)| = |\omega| = l$.
 Entries $M_i$'s are calculated by sliding $\omega$ across $T$ and computing a dot product.
 Additionally, although the original paper~\cite{ROCKETExceptionallyFast2020} used the term ``convolution'' to refer to the above operation, ``cross-correlation'' may be a more suitable term for this operation.
-Recall $T$ with length $m$ has $(m-l+1)$ sliding windows of length $l$, given that the increment is 1\footnote{One step to the right per time}, which defines the length of $M$.
+Recall $T$ with length $m$ has $(m-l+1)$ sliding windows of length $l$, given that the increment is 1\footnote{One step to the right per time.}, which defines the length of $M$.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.8\columnwidth]{figures/rocket_convolution.pptx.pdf}}

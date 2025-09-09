@@ -8,7 +8,7 @@ We refer to the cleavage patterns as positive instances and the non-cleavage pat
 The 5p arm dataset comprises 827 positive instances and an equal number of negative instances.
 The 5p arm and 3p arm datasets are binary-class datasets.
 The multi-class dataset comprises all patterns from both the 5p arm and the 3p arm.
-There are 827 ``5p'' instances\footnote{cleavage patterns from the 5p arm}, 827 ``3p'' instances, and 1,654 negative instances.
+There are 827 ``5p'' instances\footnote{Cleavage patterns from the 5p arm.}, 827 ``3p'' instances, and 1,654 negative instances.
 
 For every fold in 5-fold cross-validation, the dataset was divided into a training set and a test set with sizes of 80\% and 20\% of the whole dataset, respectively.
 We kept the class distribution approximately the same in each fold, since it is in the original dataset.
@@ -77,8 +77,8 @@ It leads to the following configurations (cfgs):
 \multirow{5}{*}{\makecell{\, \, Baseline + \\Secondary \\ Structre \\ (cfg 2)}} 
               & ROCKET  
               & \textcolor{red}{\textbf{0.847}} & \textcolor{red}{\textbf{0.832}} & 0.862 & \textcolor{red}{\textbf{0.849}} & \textcolor{red}{\textbf{0.695}}  
-              & \textcolor{red}{\textbf{0.855}} & 0.842 & \textcolor{red}{\textbf{0.868}} & \textcolor{red}{\textbf{0.857}} & \textcolor{red}{\textbf{0.711}}  
-              & \textcolor{red}{\textbf{0.836}} & \textcolor{red}{\textbf{0.907}} & \textcolor{red}{\textbf{0.828}} & \textcolor{red}{\textbf{0.833}} & \textcolor{red}{\textbf{0.736}} \\
+              & \textcolor{red}{\textbf{0.855}} & 0.842 & 0.868 & \textcolor{red}{\textbf{0.857}} & \textcolor{red}{\textbf{0.711}}  
+              & \textcolor{red}{\textbf{0.836}} & \textcolor{red}{\textbf{0.907}} & \textcolor{red}{\textbf{0.828}} & \textcolor{red}{\textbf{0.833}} & 0.736 \\
               & MiniROCKET 
               & 0.825 & 0.807 & 0.843 & 0.827 & 0.652  
               & 0.822 & 0.802 & 0.843 & 0.826 & 0.646 
@@ -89,7 +89,7 @@ It leads to the following configurations (cfgs):
               & 0.796 & 0.888 & 0.791 & 0.792 & 0.673 \\
               & Hydra 
               & 0.845 & 0.816 & \textcolor{red}{\textbf{0.873}} & \textcolor{red}{\textbf{0.849}} & 0.691  
-              & 0.846 & 0.817 & 0.874 & 0.850 & 0.693  
+              & 0.846 & 0.817 & \textcolor{red}{\textbf{0.874}} & 0.850 & 0.693  
               & 0.830 & 0.901 & 0.814 & 0.826 & 0.724 \\
               & MultiROCKET-Hydra 
               & 0.817 & 0.809 & 0.826 & 0.819 & 0.635  
@@ -134,7 +134,7 @@ It leads to the following configurations (cfgs):
               & 0.759 & 0.862 & 0.734 & 0.746 & 0.608 \\
               & MultiROCKET-Hydra & 0.814 & 0.802 & 0.820 & 0.817 & 0.629  
               & 0.820 & 0.825 & 0.816 & 0.819 & 0.642  
-              & 0.736 & 0.853 & 0.717 & 0.723 & 0.874 \\
+              & 0.736 & 0.853 & 0.717 & 0.723 & \textcolor{red}{\textbf{0.874}} \\
 \bottomrule
 \end{tabular}}
 \caption{Channel ablation study. The best results are highlighted in \textcolor{red}{\textbf{bold}}.}
@@ -250,7 +250,7 @@ It results in 45 combinations of encoding methods and classifiers.
               & 0.811 & 0.896 & 0.808 & 0.808 & 0.698 \\
               & Hydra
               & 0.848 & 0.816 & 0.880 & 0.853 & 0.699  
-              & 0.862 & 0.839 & 0.884 & 0.864 & 0.724  
+              & 0.862 & 0.839 & \textcolor{red}{\textbf{0.884}} & 0.864 & 0.724  
               & 0.843 & 0.908 & 0.837 & 0.839 & 0.746 \\
               & MultiROCKET-Hydra
               & 0.836 & 0.813 & 0.859 & 0.839 & 0.672  
@@ -293,7 +293,7 @@ It results in 45 combinations of encoding methods and classifiers.
               & 0.815 & 0.820 & 0.810 & 0.814 & 0.631  
               & 0.826 & 0.902 & 0.820 & 0.824 & 0.721 \\
               & Hydra
-              & 0.850 & 0.819 & \textcolor{red}{\textbf{0.880}} & 0.854 & 0.701  
+              & 0.850 & 0.819 & 0.880 & 0.854 & 0.701  
               & 0.834 & 0.807 & 0.861 & 0.838 & 0.669  
               & 0.833 & 0.903 & 0.818 & 0.829 & 0.731 \\
               & MultiROCKET-Hydra
@@ -304,8 +304,8 @@ It results in 45 combinations of encoding methods and classifiers.
 \multirow{5}{*}{\makecell{Cumulative grouped \\ fixed-length \\ channel mapping \\ (enc 6)}} 
               & ROCKET  
               & 0.856 & 0.836 & 0.876 & 0.858 & 0.712  
-              & \textcolor{red}{\textbf{0.870}} & \textcolor{red}{\textbf{0.861}} & \textcolor{red}{\textbf{0.879}} & \textcolor{red}{\textbf{0.871}} & \textcolor{red}{\textbf{0.741}}  
-              & 0.863 & \textcolor{red}{\textbf{0.921}} & \textcolor{red}{\textbf{0.852}} & \textcolor{red}{\textbf{0.860}} & \textcolor{red}{\textbf{0.780}} \\
+              & \textcolor{red}{\textbf{0.870}} & \textcolor{red}{\textbf{0.861}} & 0.879 & \textcolor{red}{\textbf{0.871}} & \textcolor{red}{\textbf{0.741}}  
+              & 0.863 & \textcolor{red}{\textbf{0.921}} & 0.852 & \textcolor{red}{\textbf{0.860}} & \textcolor{red}{\textbf{0.780}} \\
               & MiniROCKET 
               & 0.856 & 0.837 & 0.874 & 0.858 & 0.712  
               & 0.842 & 0.839 & 0.845 & 0.843 & 0.685  
@@ -353,13 +353,13 @@ It results in 45 combinations of encoding methods and classifiers.
               & MiniROCKET 
               & 0.848 & 0.834 & 0.862 & 0.850 & 0.697  
               & 0.841 & 0.824 & 0.859 & 0.844 & 0.683  
-              & 0.844 & 0.911 & 0.856 & 0.842 & 0.748 \\
+              & 0.844 & 0.911 & \textcolor{red}{\textbf{0.856}} & 0.842 & 0.748 \\
               & MultiROCKET
               & 0.834 & 0.828 & 0.839 & 0.834 & 0.668  
               & 0.831 & 0.821 & 0.842 & 0.833 & 0.663  
               & 0.828 & 0.904 & 0.823 & 0.826 & 0.724 \\
               & Hydra
-              & 0.857 & 0.821 & 0.894 & 0.862 & \textcolor{red}{\textbf{0.717}}  
+              & \textcolor{red}{\textbf{0.857}} & 0.821 & \textcolor{red}{\textbf{0.894}} & 0.862 & \textcolor{red}{\textbf{0.717}}  
               & 0.822 & 0.786 & 0.857 & 0.828 & 0.645  
               & 0.826 & 0.898 & 0.806 & 0.820 & 0.717 \\
               & MultiROCKET-Hydra
@@ -370,8 +370,8 @@ It results in 45 combinations of encoding methods and classifiers.
 \multirow{5}{*}{\makecell{Global \\ Cumulative grouped \\ fixed-length \\ channel mapping \\ (enc 9)}} 
               & ROCKET  
               & 0.856 & 0.836 & 0.876 & 0.858 & 0.712  
-              & \textcolor{red}{\textbf{0.870}} & \textcolor{red}{\textbf{0.861}} & \textcolor{red}{\textbf{0.879}} & \textcolor{red}{\textbf{0.871}} & \textcolor{red}{\textbf{0.741}}  
-              & 0.863 & \textcolor{red}{\textbf{0.921}} & \textcolor{red}{\textbf{0.852}} & \textcolor{red}{\textbf{0.860}} & \textcolor{red}{\textbf{0.780}} \\
+              & \textcolor{red}{\textbf{0.870}} & \textcolor{red}{\textbf{0.861}} & 0.879 & \textcolor{red}{\textbf{0.871}} & \textcolor{red}{\textbf{0.741}}  
+              & 0.863 & \textcolor{red}{\textbf{0.921}} & 0.852 & \textcolor{red}{\textbf{0.860}} & \textcolor{red}{\textbf{0.780}} \\
               & MiniROCKET 
               & \textcolor{red}{\textbf{0.857}} & \textcolor{red}{\textbf{0.845}} & 0.870 & \textcolor{red}{\textbf{0.859}} & 0.715  
               & 0.840 & 0.821 & 0.859 & 0.843 & 0.681  
@@ -381,7 +381,7 @@ It results in 45 combinations of encoding methods and classifiers.
               & 0.820 & 0.816 & 0.823 & 0.820 & 0.640  
               & 0.819 & 0.900 & 0.816 & 0.817 & 0.710 \\
               & Hydra
-              & 0.856 & 0.817 & 0.894 & 0.861 & 0.713  
+              & 0.856 & 0.817 & \textcolor{red}{\textbf{0.894}} & 0.861 & 0.713  
               & 0.859 & 0.838 & 0.880 & 0.862 & 0.719  
               & 0.846 & 0.911 & 0.832 & 0.843 & 0.752 \\
               & MultiROCKET-Hydra
