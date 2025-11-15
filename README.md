@@ -1,5 +1,3 @@
-test for update
-
 # MTSCCleave: a Multivariate Time Series Classification (MTSC)-based method for predicting human Dicer cleavage sites
 
 This repository contains the LaTeX source code for the manuscript of this project.
