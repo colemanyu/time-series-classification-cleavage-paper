@@ -1,20 +1,21 @@
 \section{Methods} \label{sec:methods}
-\begin{figure}[htbp]
-\centerline{\includegraphics[width=0.8\columnwidth]{figures/pipeline.pptx.pdf}}
+\begin{figure*}[htbp]
+\centerline{\includegraphics[width=1.2\columnwidth]{figures/pipeline.pptx.pdf}}
 \caption{The overall pipeline of this study. Symbol notations: Cylinder - Dataset, Rectangle - Process, Parallelogram - Input / Output, Rounded Rectangle - Component.}
 \label{fig:pipeline}
-\end{figure}
+\end{figure*}
 
-The overall pipeline of this study is summarized in Fig.~\ref{fig:pipeline}.
+The overall pipeline of this study is summarized in Figure~\ref{fig:pipeline}.
 % In this session, we first discuss data preparation.
 % We then briefly review the concepts of time series and propose time series encoding methods.
 % After that, time series classifiers are discussed.
 % Finally, we discuss the evaluation metrics.
 
 \subsection{Data Preparation}
-\begin{table}[htbp]
+\begin{table*}[htbp]
     \centering
-    \resizebox{\columnwidth}{!}{\begin{tabular}{c | c | c | c | c | c}
+    % \resizebox{\textwidth}{!}{
+    \begin{tabular}{c | c | c | c | c | c}
          \hline
          Accession & Name & Organism & Sequence & Mature miRNA 1 & Mature miRNA 2 \\
          \hline
@@ -88,11 +89,12 @@ The overall pipeline of this study is summarized in Fig.~\ref{fig:pipeline}.
          not experimental
          } \\
          \hline
-    \end{tabular}}
+    \end{tabular}
+    % }
     \caption{Selected representative records from miRBase. For the last two columns, the first line shows the name, the second line shows its location in the original sequence, and the third line indicates whether its existence has experimental evidence. 
     The selected one is highlighted in \textcolor{red}{\textbf{bold}}.}
     \label{tab:miRBase_representative}
-\end{table}
+\end{table*}
 
 We used miRBase database~\cite{MiRBaseToolsMicroRNA2008}\footnote{The website is \url{www.mirbase.org}, and the newest version of the database is Release 22.1 (Accessed on 2025-06-22).}. 
 The database comprises miRNA data from various organisms~\cite{MiRBaseConverterBioconductorPackage2018}.
@@ -115,11 +117,12 @@ Its whole sequence is listed in Table~\ref{tab:hsa-let-7a-1}.
 After the selection process, we selected 827 experimental validated pre-miRNA sequences, each with its two mature miRNA products.
 This formed our dataset.
 
-\begin{table}[htbp]
+\begin{table*}[htbp]
     \centering
       % Overfull \hbox (x pt too wide) 
       % https://blog.csdn.net/weixin_46777569/article/details/126260667
-      \resizebox{\columnwidth}{!}{\begin{tabular}{c | c}
+      % \resizebox{\columnwidth}{!}{
+      \begin{tabular}{c | c}
          \hline
          Sequence & \makecell{
          Secondary Structure \\ 
@@ -144,13 +147,14 @@ This formed our dataset.
          6 (\textcolor{red}{\textbf{0.000}}, 0.841, 0.974, 0.981, 0.890) 10
          } & \\
          \hline
-    \end{tabular}}
+    \end{tabular}
+    % }
     % https://tex.stackexchange.com/questions/531/what-is-the-best-way-to-use-quotation-mark-glyphs
     \caption{The whole sequence of ``hsa-let-7a-1'' and its predicted secondary structure by RNAfold.
     % We have numbered each line with the starting and ending positions.
     The corresponding positions of the two mature miRNAs and the probability of the unpaired ``U'' are highlighted in \textcolor{red}{\textbf{bold}}.}
     \label{tab:hsa-let-7a-1}
-\end{table}
+\end{table*}
 
 
 \subsubsection{Argument the dataset with Secondary Structure information}
@@ -202,9 +206,10 @@ We also call each string a strand.
 The ``four strings'' of our running example are listed in Table~\ref{tab:hsa-let-7a-1_eight_strings}.
 % https://tex.stackexchange.com/questions/48632/underscores-in-words-text
 % https://tex.stackexchange.com/questions/534381/underscore-is-shorter-for-ttfamily
-\begin{table}[ht]
+\begin{table*}[ht]
     \centering
-    \resizebox{\columnwidth}{!}{\begin{tabular}{c | c | c | c | c}
+    % \resizebox{\columnwidth}{!}{
+    \begin{tabular}{c | c | c | c | c}
          \hline
           & 5p cleav & 5p non-cleav & 3p cleav & 3p non-cleav \\
          \hline  
@@ -219,16 +224,17 @@ The ``four strings'' of our running example are listed in Table~\ref{tab:hsa-let
          \texttt{C\char`_CUGUUGAUAUGU} & 
          \texttt{UGAUAUGUUGGAUG} \\
          \hline
-    \end{tabular}}
+    \end{tabular}
+    % }
     \caption{The first row shows the ``four strings'' of ``hsa-let-7a-1''. Their complementary strands are shown in the second row.
     As a whole, they are referred to as the ``eight strings''.}
     \label{tab:hsa-let-7a-1_eight_strings}
-\end{table}
+\end{table*}
 
 We can construct the complementary strand of each of the strands in the ``four strings'' by finding the corresponding paired base for each of the bases in the input strand by considering the secondary structure information. 
 % Bases refer to the nucleotides. These two terms are used interchangeably.
 We use ``\_'' to denote the unpaired base in the complementary strand.
-For example, in Fig.~\ref{fig:hsa-let-7a-1_ss}, ``UUAGG'' in the 5p cleavage pattern 
+For example, in Figure~\ref{fig:hsa-let-7a-1_ss}, ``UUAGG'' in the 5p cleavage pattern 
 % ``UAUAGUUUUAGGGU'' 
 is unpaired, while other bases pair with some bases, the resulting complementary strand is ``AUAUCAA\_\_\_\_\_UA''. 
 % Note that the five underscores indicate that ``UUAGG'' is unpaired. 
@@ -270,13 +276,13 @@ Many DNRs have been proposed.
 We noted that DNA strings and RNA strings are equivalent from a computational standpoint. 
 % They are simply strings with different alphabets.
 Many transformation methods designed for DNA can be applied to RNA by simply substituting $T$ with $U$.
-We present nine encoding methods. The relationship among them is shown in Fig.~\ref{fig:encodings_relationship}.
-\begin{figure}[htbp]
+We present nine encoding methods. The relationship among them is shown in Figure~\ref{fig:encodings_relationship}.
+\begin{figure*}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/encodings_relationship.pptx.pdf}
 \caption{Relationship of the proposed encoding methods.}
 \label{fig:encodings_relationship}
-\end{figure}
+\end{figure*}
 
 \subsubsection{Single value versus Cumulative}
 % https://www.reddit.com/r/grammar/comments/bfuqx4/what_is_the_correct_wording_for_one_of_if_not_the/
@@ -321,10 +327,11 @@ $S$ is the input strand.
 When we encode $S$ without incorporating the corresponding base-pair probability sequence $P$, we set $p_i$ = 1 for all the entries of $P$. 
 We use the first ten nucleotides of the complementary strand of the 3p cleav of ``hsa-let-7a-1'', as shown in Table~\ref{tab:hsa-let-7a-1_eight_strings} as $S$ in the examples in Table~\ref{tab:ts_encoding}.
 
-\begin{table}[htbp]
+\begin{table*}[htbp]
     \centering
     \footnotesize % Float too large for page by 35.9162pt on input line 568.
-    \resizebox{\columnwidth}{!}{\begin{tabular}{c | c | c | c}
+    \resizebox{1.5\columnwidth}{!}{
+    \begin{tabular}{c | c | c | c}
          \hline
          & Encoding & Algorithm & 
          \makecell{
@@ -565,7 +572,7 @@ We use the first ten nucleotides of the complementary strand of the 3p cleav of 
     % The ending index in indexing is exclusive.
     $P$ is the corresponding base-pair probability sequence of $S$. $p_i = 1$ if we encode $S$ without incorporating base-pair probability sequence.}
     \label{tab:ts_encoding}
-\end{table}
+\end{table*}
 
 With the assigned value to each nucleotide defined in single-value mapping, we can compute a cumulative sum of those values over time.
 It captures the aggregated signal by accumulating past events, allowing us to focus on the trend~\cite{CurvesIntutiveTool1994, VisualizationAnalysisDNA2004}.
@@ -595,12 +602,12 @@ The second one focuses solely on local history in $S'$, ignoring global history.
 It is helpful if the previous nucleotides do not affect the chemical property of $S'$.
 
 Consider $T = 0, -1, ..., -6$ of the input string $S$ in ``Cumulative mapping'' in Table~\ref{tab:ts_encoding}, which accumulates from 0.
-$S$ is the suffix with length $= 10$ of the constructed complementary strand of $S(1:63)$ in Fig.~\ref{fig:hsa-let-7a-1_ss}.
+$S$ is the suffix with length $= 10$ of the constructed complementary strand of $S(1:63)$ in Figure~\ref{fig:hsa-let-7a-1_ss}.
 If we start the accumulation from the first entry of the constructed complementary strand instead, it will yield a different result.
 Suppose that the last entry of the time series encoded in the cumulative mapping of the constructed complementary strand is -8, the time series encoded in the ``Global cumulative mapping'' for $S$ would accumulate from -8 instead of 0.
 The result is $T = -8, -9, ..., -14$.
 Note that it has the same trend as the original $T$. 
-This ``Global cumulative'' concept can be applied to every cumulative-based method, as shown in Fig.~\ref{fig:encodings_relationship}.
+This ``Global cumulative'' concept can be applied to every cumulative-based method, as shown in Figure~\ref{fig:encodings_relationship}.
 % We refer to the first approach as ``Global Cumulative'' and the latter as ``Local Cumulative'' or simply "Cumulative".
 % After Z-normalization, these two time series will have similar trends but not the same trends as they have different means and variances.
 
@@ -612,7 +619,7 @@ It is implemented by multiplying the base-pair probability $p_i$ of the nucleoti
 % The RNA secondary structure prediction algorithm returns the predicted secondary structure of a given RNA sequence, a planar graph such as the minimum free energy structure.
 % It also returns a probability matrix for the base-pair probabilities, which denote the probabilities of pairing one nucleotide with the other nucleotide.
 % In our case, the bases in an RNA sequence will either be paired with another base in the same sequence or remain unpaired.
-% For example in Fig.~\ref{fig:hsa-let-7a-1_ss}, the 1\textsuperscript{st} base `U' is paired up with the 80\textsuperscript{th} base `A'.
+% For example in Figure~\ref{fig:hsa-let-7a-1_ss}, the 1\textsuperscript{st} base `U' is paired up with the 80\textsuperscript{th} base `A'.
 % The 6\textsuperscript{th} base `U' is unpaired.
 % The width and height of the probability matrix correspond to the length of the RNA sequence, as it is a pairwise matrix.
 % From this matrix, we can construct the base-pair probability time series $s^P$ of the whole sequence $s$.
@@ -647,18 +654,18 @@ Entries $M_i$'s are calculated by sliding $\omega$ across $T$ and computing a do
 Additionally, although the original paper~\cite{ROCKETExceptionallyFast2020} used the term ``convolution'' to refer to the above operation, ``cross-correlation'' may be a more suitable term for this operation.
 Recall $T$ with length $m$ has $(m-l+1)$ sliding windows of length $l$, given that the increment is 1\footnote{One step to the right per time.}, which defines the length of $M$.
 
-\begin{figure}[htbp]
-\centerline{\includegraphics[width=0.8\columnwidth]{figures/rocket_convolution.pptx.pdf}}
+\begin{figure*}[htbp]
+\centerline{\includegraphics[width=1.2\columnwidth]{figures/rocket_convolution.pptx.pdf}}
 \caption{Features generation in the transformation}
 \label{fig:rocket_convolution}
-\end{figure}
-Fig.~\ref{fig:rocket_convolution} shows two kernels $\omega^1$ and $\omega^2$ with lengths 3 and 5, respectively.
+\end{figure*}
+Figure~\ref{fig:rocket_convolution} shows two kernels $\omega^1$ and $\omega^2$ with lengths 3 and 5, respectively.
 Each of which performs a convolution with $T$ and returns two activation maps, $M^1$ and $M^2$, respectively.
 For example, $M^1_1 = T(1:3) * \omega^1 = 3$.
 % For example, $\omega_1$ performs dot product with $T(1:3)$ and result $3$ as the first entry of the activation map.
 By sliding $\omega^1$ one time stamp at a time, an activation map $M^1$ with length $= (m-l+1) = 11-3+1=9$ is obtained.
 Then, pooling operations, such as the maximum (MAX) and proportion of positive values (PPV), are applied on $M^1$ to derive the summary features.
-In Fig.~\ref{fig:rocket_convolution}, MAX and PPV are applied on $M^1$ and $M^2$.
+In Figure~\ref{fig:rocket_convolution}, MAX and PPV are applied on $M^1$ and $M^2$.
 The summary features of $M^1$ are 4 and 5/9, which correspond to MAX and PPV, respectively.
 Dilation refers to a method that enables a kernel to cover a larger portion by creating empty spaces between entries in the kernel.
 The dilation $d$ of $\omega^2$ is 2. It introduces a gap of 1 in every two values of  $\omega^2$.
@@ -667,7 +674,7 @@ The most popular convolution-based approach is the Random Convolutional Kernel T
 It generates a large number of randomly parameterized kernels, ranging from thousands to tens of thousands.
 The kernel's parameters include length, weights (the entries inside the kernel), bias (the value added to the result of the convolution operation), and dilation.
 Additionally, padding can be applied to $T$ at the start and end, ensuring $M$ has the same length as the input.
-To note, $T$, $M_1$, and $M_2$ in Fig.~\ref{fig:rocket_convolution} have different lengths.
+To note, $T$, $M_1$, and $M_2$ in Figure~\ref{fig:rocket_convolution} have different lengths.
 The summary statistics of the activation map are obtained through two pooling operations: MAX and PPV.
 Hence, for $k$ kernels, the transformed data has $2k$ features.
 The default value of $k$ is 10,000.
@@ -683,19 +690,19 @@ The main improvement of it is to extract features from first-order differences a
 The three added operations are mean of positive values (MPV), mean of indices of positive values (MIPV) and longest stretch of positive values (LSPV).
 
 % Hydra
-\begin{figure}[htbp]
-\centerline{\includegraphics[width=0.8\columnwidth]{figures/hydra_convolution.pptx.pdf}}
+\begin{figure*}[htbp]
+\centerline{\includegraphics[width=1.4\columnwidth]{figures/hydra_convolution.pptx.pdf}}
 \caption{Convolutions of HYDRA for each input time series with a set of random kernels $w$, organized into $g$ groups with $k$ kernels each.}
 \label{fig:hydra_convolution}
-\end{figure}
+\end{figure*}
 The HYbrid Dictionary-ROCKET Architecture (Hydra) combines dictionary-based and convolution-based models~\cite{HydraCompetingConvolutional2023}.
 Similar to ROCKET-based classifiers, it uses random kernels to extract features from the input time series.
-But it groups the kernels into $g$ groups of $k$ kernels each, as shown in Fig.~\ref{fig:hydra_convolution}.
+But it groups the kernels into $g$ groups of $k$ kernels each, as shown in Figure~\ref{fig:hydra_convolution}.
 Each time series is passed through all the groups.
 For each group of kernels, we slide them across $T$ and compute the dot product at each timestamp.
 Recall that the dot product of two input vectors ($x$ and $w_i$) has the maximum value when the two vectors align in the same direction and the minimum value when they are oriented in opposite directions.
 We record the kernel that best matches the subsequence of $T$ at each timestamp in each group (i.e., argmax). We refer to these kernels as the winning kernels.
-This results in a $k$-dimensional count vector for each of the $g$ groups, where $k=3$ in Fig.~\ref{fig:hydra_convolution}.
+This results in a $k$-dimensional count vector for each of the $g$ groups, where $k=3$ in Figure~\ref{fig:hydra_convolution}.
 This results in a total of $g \times k$ features, with default values of $g = 64$ and $k=8$
 It uses a total of $k \times g = 512$ kernels per dilation.
 In addition to recording the kernel with the maximum response, we can also record the kernel with the minimum response, knowing that this kernel will be the best match with the ``inverted'' subsequence of $T$.
@@ -727,9 +734,10 @@ The generation of the summary features depends on:
     \item The pooling operations, which are used in extracting features on the activation map.
 \end{enumerate}
 
-\begin{table}[htbp]
+\begin{table*}[htbp]
 \centering
-\resizebox{\columnwidth}{!}{\begin{tabular}{l|c|c|c|c}
+% \resizebox{\columnwidth}{!}{
+\begin{tabular}{l|c|c|c|c}
 \hline
 & ROCKET & MiniROCKET & MultiROCKET & Hydra \\
 \hline
@@ -749,14 +757,15 @@ pooling operations & MAX, PPV & PPV & PPV, MPV, MIPV, LSPV & Response per Kernel
 \hline
 feature vector size & 20k & 10k & 50k & relative to input \\
 \hline
-\end{tabular}}
+\end{tabular}
+% }
 \caption{Comparison of rocket-based classifiers~\cite{BakeReduxReview2024}. 
 $\mathcal{N}(0,1)$: a standard normal distribution, $U(0,1)$: a uniform distribution between 0 and 1,
 1\textsuperscript{st} order difference: $\Delta T = t_2-t_1, t_3-t_2, ..., t_{n}-t_{n-1}$
 .
 }
 \label{tab:rockets_comparison}
-\end{table}
+\end{table*}
 
 
 \subsection{Evaluation metrics}

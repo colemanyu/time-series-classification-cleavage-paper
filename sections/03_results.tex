@@ -1,4 +1,9 @@
 \section{Results} \label{sec:results}
+The code implementing our method is available at 
+\href{https://github.com/cyuab/time-series-classification-cleavage}{https://github.com/cyuab/time-series-classification-cleavage}. 
+The dataset of this study is available at 
+\href{https://www.mirbase.org}{https://www.mirbase.org}. 
+
 In all experiments, the models were trained and tested using 5-fold cross-validation.
 We retrieved 827 empirically validated sequences of pre-miRNAs.
 There are 5p arm and 3p arm in each sequence.
@@ -41,9 +46,10 @@ It leads to the following configurations (cfgs):
   \item (cfg 4) Baseline + Base-Pair probability (Incorporated): Baseline with the base-pair probability sequence incorporated into the encoding of the complementary strand.
 \end{enumerate}
 
-\begin{table}[htbp]
+\begin{table*}[htbp]
 \centering
-\resizebox{\columnwidth}{!}{\begin{tabular}{llccccc|ccccc|ccccc}
+\resizebox{2.0\columnwidth}{!}{
+\begin{tabular}{llccccc|ccccc|ccccc}
 \toprule
 \multirow{2}{*}{} & \multirow{2}{*}{Classifier} 
 & \multicolumn{5}{c|}{5p arm} 
@@ -139,38 +145,60 @@ It leads to the following configurations (cfgs):
 \end{tabular}}
 \caption{Channel ablation study. The best results are highlighted in \textcolor{red}{\textbf{bold}}.}
 \label{tab:channel_ablation}
-\end{table}
+\end{table*}
 We used single value mapping as the encoding method.
 Table~\ref{tab:channel_ablation} shows the result.
 From the table, we can see that the addition of secondary structure, base-pair probability as a standalone channel, and base-pair probability incorporated in the encoding of the complementary strand can improve the performance.
-We plotted the critical difference (CD) diagram as shown in Fig.~\ref{fig:channel_ablation_cd} to visualize Table~\ref{tab:channel_ablation} to make the performances of different combinations more obvious.
+We plotted the critical difference (CD) diagram as shown in Figure~\ref{fig:channel_ablation_cd} to visualize Table~\ref{tab:channel_ablation} to make the performances of different combinations more obvious.
 In CD diagrams, lower-ranked methods (toward the right) are better.
 A horizontal bar connecting combinations indicates no statistically significant difference.
-\begin{figure}[htbp]
+% \begin{figure}[htbp]
+%     \centering
+%     \begin{subfigure}[b]{0.3\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/channel_ablation_cd_5p.pdf}
+%         \caption{5p arm}
+%         % \label{fig:sub1}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.3\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/channel_ablation_cd_3p.pdf}
+%         \caption{3p arm}
+%         % \label{fig:sub2}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.3\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/channel_ablation_cd_multi.pdf}
+%         \caption{multi-class}
+%         % \label{fig:sub3}
+%     \end{subfigure}
+%     \caption{CD diagrams of channel ablation study.}
+%     \label{fig:channel_ablation_cd}
+% \end{figure}
+\begin{figure*}[htbp]
     \centering
-    \begin{subfigure}[b]{0.3\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/channel_ablation_cd_5p.pdf}
-        \caption{5p arm}
+    % First Image
+    \subfloat[5p arm]{
+        \includegraphics[width=0.3\linewidth]{figures/channel_ablation_cd_5p.pdf}
         % \label{fig:sub1}
-    \end{subfigure}
+    }
     \hfill
-    \begin{subfigure}[b]{0.3\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/channel_ablation_cd_3p.pdf}
-        \caption{3p arm}
+    % Second Image
+    \subfloat[3p arm]{
+        \includegraphics[width=0.3\linewidth]{figures/channel_ablation_cd_3p.pdf}
         % \label{fig:sub2}
-    \end{subfigure}
+    }
     \hfill
-    \begin{subfigure}[b]{0.3\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/channel_ablation_cd_multi.pdf}
-        \caption{multi-class}
+    % Third Image
+    \subfloat[multi-class]{
+        \includegraphics[width=0.3\linewidth]{figures/channel_ablation_cd_multi.pdf}
         % \label{fig:sub3}
-    \end{subfigure}
+    }
     \caption{CD diagrams of channel ablation study.}
     \label{fig:channel_ablation_cd}
-\end{figure}
+\end{figure*}
 From Figure~\ref{fig:channel_ablation_cd}, we can see that including time series derived from secondary structure information and base-pair probability as a separate channel can significantly improve the performance of the classifiers. 
 Incorporating the base-pair probability sequence in the time series encoding of the complementary strand can also improve the classifier, but to a minor degree compared to serving as a standalone channel. 
 In our downstream analysis, we adopted the combination of RNA sequence time series, secondary structure time series, and base-pair probability time series as our multivariate time series input, with 4 to 6 channels, depending on the encoding used.
@@ -180,9 +208,9 @@ The experiment was conducted on three datasets: the 5p arm, the 3p arm, and the 
 Recall that we have nine encoding methods and five ROCKET-based classifiers.
 It results in 45 combinations of encoding methods and classifiers.
 
-\begin{table}[htbp]
+\begin{table*}[htbp]
 \centering
-\resizebox{\columnwidth}{!}{\begin{tabular}{llccccc|ccccc|ccccc}
+\resizebox{2.0\columnwidth}{!}{\begin{tabular}{llccccc|ccccc|ccccc}
 \toprule
 \multirow{2}{*}{} & \multirow{2}{*}{Classifier} 
 & \multicolumn{5}{c|}{5p arm} 
@@ -359,7 +387,7 @@ It results in 45 combinations of encoding methods and classifiers.
               & 0.831 & 0.821 & 0.842 & 0.833 & 0.663  
               & 0.828 & 0.904 & 0.823 & 0.826 & 0.724 \\
               & Hydra
-              & \textcolor{red}{\textbf{0.857}} & 0.821 & \textcolor{red}{\textbf{0.894}} & 0.862 & \textcolor{red}{\textbf{0.717}}  
+              & \textcolor{red}{\textbf{0.857}} & 0.821 & \textcolor{red}{\textbf{0.894}} & \textcolor{red}{\textbf{0.862}} & \textcolor{red}{\textbf{0.717}}  
               & 0.822 & 0.786 & 0.857 & 0.828 & 0.645  
               & 0.826 & 0.898 & 0.806 & 0.820 & 0.717 \\
               & MultiROCKET-Hydra
@@ -373,7 +401,7 @@ It results in 45 combinations of encoding methods and classifiers.
               & \textcolor{red}{\textbf{0.870}} & \textcolor{red}{\textbf{0.861}} & 0.879 & \textcolor{red}{\textbf{0.871}} & \textcolor{red}{\textbf{0.741}}  
               & 0.863 & \textcolor{red}{\textbf{0.921}} & 0.852 & \textcolor{red}{\textbf{0.860}} & \textcolor{red}{\textbf{0.780}} \\
               & MiniROCKET 
-              & \textcolor{red}{\textbf{0.857}} & \textcolor{red}{\textbf{0.845}} & 0.870 & \textcolor{red}{\textbf{0.859}} & 0.715  
+              & \textcolor{red}{\textbf{0.857}} & \textcolor{red}{\textbf{0.845}} & 0.870 & 0.859 & 0.715  
               & 0.840 & 0.821 & 0.859 & 0.843 & 0.681  
               & 0.844 & 0.911 & 0.837 & 0.842 & 0.749 \\
               & MultiROCKET
@@ -392,7 +420,7 @@ It results in 45 combinations of encoding methods and classifiers.
 \end{tabular}}
 \caption{Performance on the 45 combinations between encoding methods and the ROCKET-based classifiers. The best results are highlighted in \textcolor{red}{\textbf{bold}}.}
 \label{tab:results}
-\end{table}
+\end{table*}
 The result is shown in Table~\ref{tab:results}.
 The best combination of encoding method and classifier is shown in Table~\ref{tab:results_best_minirocket_dicleave}.
 For the 5p arm dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
@@ -402,9 +430,10 @@ Out of the five classification metrics, it outperforms DiCleave, except in speci
 For the multi-class dataset, the best combination is ``Global Cumulative grouped fixed-length channel mapping + ROCKET''.
 For all five classification metrics, it outperforms DiCleave.
 Note that for the 3p arm and the multi-class datasets, the combination of ``Cumulative grouped fixed-length channel mapping + ROKCET'' also attains the best result.
-\begin{table}[htbp]
+\begin{table*}[htbp]
 \centering
-\resizebox{\columnwidth}{!}{\begin{tabular}{llcccccc}
+% \resizebox{\columnwidth}{!}{
+\begin{tabular}{llcccccc}
 \toprule
 Dataset & Methods & Acc & Sp & Sn & F1 & MCC & Time (s) \\
 \midrule
@@ -420,65 +449,104 @@ multi-class & enc 9 + ROCKET  & \textcolor{red}{\textbf{0.863}} & \textcolor{red
               & enc 3 + MiniROCKET & 0.851 & 0.915 & 0.844 & 0.849 & 0.760 & \textcolor{red}{\textbf{4.550}} \\
               & DiCleave & 0.820 & 0.895 & 0.804 & 0.815 & 0.710  & 131.151 \\
 \bottomrule
-\end{tabular}}
+\end{tabular}
+% }
     \caption{Comparative analysis between MTSCCleav with the best combination of the encoding method and classifier, with the SOTA, DiCleave, on the three datasets. 
     The best results of using MiniROCKET have also been shown to compare the computational efficiency.
     The best results are highlighted in \textcolor{red}{\textbf{bold}}.
     }
     \label{tab:results_best_minirocket_dicleave}
-\end{table}
+\end{table*}
 
-\begin{figure}[htbp]
+% \begin{figure}[htbp]
+%     \centering
+%     \begin{subfigure}[b]{0.3\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/best_classifier_cd_5p.pdf}
+%         \caption{5p arm}
+%         % \label{fig:sub1}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.3\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/best_classifier_cd_3p.pdf}
+%         \caption{3p arm}
+%         % \label{fig:sub2}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.3\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/best_classifier_cd_multi.pdf}
+%         \caption{multi-class}
+%         % \label{fig:sub3}
+%     \end{subfigure}
+%     \caption{CD diagrams to compare different classifiers.}
+%     \label{fig:best_model_cd}
+% \end{figure}
+\begin{figure*}[htbp]
     \centering
-    \begin{subfigure}[b]{0.3\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/best_classifier_cd_5p.pdf}
-        \caption{5p arm}
+    \subfloat[5p arm]{
+        \includegraphics[width=0.3\linewidth]{figures/best_classifier_cd_5p.pdf}
         % \label{fig:sub1}
-    \end{subfigure}
+    }
     \hfill
-    \begin{subfigure}[b]{0.3\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/best_classifier_cd_3p.pdf}
-        \caption{3p arm}
+    \subfloat[3p arm]{
+        \includegraphics[width=0.3\linewidth]{figures/best_classifier_cd_3p.pdf}
         % \label{fig:sub2}
-    \end{subfigure}
+    }
     \hfill
-    \begin{subfigure}[b]{0.3\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/best_classifier_cd_multi.pdf}
-        \caption{multi-class}
+    \subfloat[multi-class]{
+        \includegraphics[width=0.3\linewidth]{figures/best_classifier_cd_multi.pdf}
         % \label{fig:sub3}
-    \end{subfigure}
+    }
     \caption{CD diagrams to compare different classifiers.}
     \label{fig:best_model_cd}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[htbp]
+% \begin{figure}[htbp]
+%     \centering
+%     \begin{subfigure}[b]{0.3\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/best_encoding_cd_5p.pdf}
+%         \caption{5p arm}
+%         % \label{fig:sub1}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.3\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/best_encoding_cd_3p.pdf}
+%         \caption{3p arm}
+%         % \label{fig:sub2}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.3\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/best_encoding_cd_multi.pdf}
+%         \caption{multi-class}
+%         % \label{fig:sub3}
+%     \end{subfigure}
+%     \caption{CD diagrams to compare different encoding methods.}
+%     \label{fig:best_encoding_cd}
+% \end{figure}
+\begin{figure*}[htbp]
     \centering
-    \begin{subfigure}[b]{0.3\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/best_encoding_cd_5p.pdf}
-        \caption{5p arm}
+    \subfloat[5p arm]{
+        \includegraphics[width=0.3\linewidth]{figures/best_encoding_cd_5p.pdf}
         % \label{fig:sub1}
-    \end{subfigure}
+    }
     \hfill
-    \begin{subfigure}[b]{0.3\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/best_encoding_cd_3p.pdf}
-        \caption{3p arm}
+    \subfloat[3p arm]{
+        \includegraphics[width=0.3\linewidth]{figures/best_encoding_cd_3p.pdf}
         % \label{fig:sub2}
-    \end{subfigure}
+    }
     \hfill
-    \begin{subfigure}[b]{0.3\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/best_encoding_cd_multi.pdf}
-        \caption{multi-class}
+    \subfloat[multi-class]{
+        \includegraphics[width=0.3\linewidth]{figures/best_encoding_cd_multi.pdf}
         % \label{fig:sub3}
-    \end{subfigure}
+    }
     \caption{CD diagrams to compare different encoding methods.}
     \label{fig:best_encoding_cd}
-\end{figure}
+\end{figure*}
 To summarize Table~\ref{tab:results}, we plot the CD diagrams for finding the best classifier, as shown in Figure~\ref{fig:best_model_cd}, and the best encoding method, as shown in Figure~\ref{fig:best_encoding_cd}.
 
 \subsection{Running time analysis}
@@ -515,26 +583,44 @@ Hence, we removed or hid that portion of information from the model during infer
 The changes in classification performance in terms of accuracy relative to the unmasked original score of each $i$ are recorded.
 Intuitively, if the information of a subsequence is critical for the classification, the masking of this subsequence would lead to a great drop in classification performance.
 We aggregated the importance score across the test dataset.
-\begin{figure}[htbp]
+% \begin{figure}[htbp]
+%     \centering
+%     % Top subfigure
+%     \begin{subfigure}[b]{0.8\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/perturbation_5p.pdf}
+%         \caption{5p arm}
+%         % \label{fig:top}
+%     \end{subfigure}
+%     \vspace{0.5cm}  % Space between the two
+%     % Bottom subfigure
+%     \begin{subfigure}[b]{0.8\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{figures/perturbation_3p.pdf}
+%         \caption{3p arm}
+%         % \label{fig:bottom}
+%     \end{subfigure}
+%     \caption{Results of the perturbation experiment.}
+%     \label{fig:perturbation}
+% \end{figure}
+\begin{figure*}[htbp]
     \centering
     % Top subfigure
-    \begin{subfigure}[b]{0.8\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/perturbation_5p.pdf}
-        \caption{5p arm}
+    \subfloat[5p arm]{
+        \includegraphics[width=0.8\linewidth]{figures/perturbation_5p.pdf}
         % \label{fig:top}
-    \end{subfigure}
-    \vspace{0.5cm}  % Space between the two
+    }
+    \\ % Force a line break to stack them vertically
+    \vspace{0.5cm} % Space between the two
+    
     % Bottom subfigure
-    \begin{subfigure}[b]{0.8\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/perturbation_3p.pdf}
-        \caption{3p arm}
+    \subfloat[3p arm]{
+        \includegraphics[width=0.8\linewidth]{figures/perturbation_3p.pdf}
         % \label{fig:bottom}
-    \end{subfigure}
+    }
     \caption{Results of the perturbation experiment.}
     \label{fig:perturbation}
-\end{figure}
+\end{figure*}
 The result is shown in Figure~\ref{fig:perturbation}.
 For the encoding methods, we cannot use the methods derived from the cumulative mapping because the accumulation would leak information from the masked region.
 We adopted ``Grouped fixed-length channel mapping'' as the encoding method and ROCKET as the classifier. 

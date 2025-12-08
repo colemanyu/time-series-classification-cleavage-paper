@@ -3,6 +3,4 @@ Coleman Yu, Raymond Chi-Wing Wong, and Tatsuya Akutsu,
 ([pdf](https://github.com/colemanyu/time-series-classification-cleavage-paper/blob/main/time_series_classification_cleavage_paper.pdf))([code](https://github.com/cyuab/time-series-classification-cleavage))(slides)(arXiv)([TeX](https://github.com/colemanyu/time-series-classification-cleavage-paper/tree/main))
 
 ### Remarks
-- This manuscript is intended to be submitted to [BMC Bioinformatics](https://bmcbioinformatics.biomedcentral.com/submission-guidelines/preparing-your-manuscript).
-- This template is from [here](https://www.springernature.com/gp/authors/campaigns/latex-author-support).
-  - On [Overleaf](https://www.overleaf.com/latex/templates/springer-nature-latex-template/gsvvftmrppwq). 
+Template: Import from [ACCESS_latex_template_20240429.zip](https://ieeeaccess.ieee.org/wp-content/uploads/2025/08/ACCESS_latex_template_20240429.zip), [IEEE Access | Submission Guidelines for Authors](https://ieeeaccess.ieee.org/authors/submission-guidelines/).
