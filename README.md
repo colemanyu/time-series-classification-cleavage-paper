@@ -8,5 +8,5 @@ Coleman Yu, Raymond Chi-Wing Wong, and Tatsuya Akutsu,
 - 2025-12-10: Retract from BMC Bioinformatics due to the long review process.
   - We still have not received the first round's review reports at this time point. 
 - 2025-07-14: Submitted to [BMC Bioinformaitcs](http://www.biomedcentral.com/bmcbioinformatics/): [Commit 500e583](https://github.com/colemanyu/time-series-classification-cleavage-paper/tree/500e583c82b1178851aadce33d22054afa048ead)
-- Template: Imported from [Overleaf](https://www.overleaf.com/latex/templates/springer-nature-latex-template/gsvvftmrppwq), [LaTeX Author Support](https://www.springernature.com/gp/authors/campaigns/latex-author-support).
+  - Template: Imported from [Overleaf](https://www.overleaf.com/latex/templates/springer-nature-latex-template/gsvvftmrppwq), [LaTeX Author Support](https://www.springernature.com/gp/authors/campaigns/latex-author-support).
   
