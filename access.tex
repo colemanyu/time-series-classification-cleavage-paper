@@ -46,6 +46,8 @@
 
 \usepackage{hyperref}
 \usepackage{bookmark}
+\usepackage{xurl}
+\usepackage{hyperref} % Load this after xurl
 
 % Fix outline for References
 \makeatletter
@@ -80,7 +82,7 @@
 
 
 \begin{abstract}
-\subfile{sections/00_abstract}
+\subfile{sections/00-abstract}
 \end{abstract}
 
 \begin{keywords}
@@ -91,15 +93,14 @@ miRNA, Dicer Cleavage Site, Genomic signal processing (GSP), (Multivariate) time
 
 \maketitle
 
-\subfile{sections/01_background} % 1500 words, 2 pages
-\subfile{sections/02_methods} % 1500 words
-\subfile{sections/03_results} % 1000 ~ 1500 words
-\subfile{sections/04_discussion} % 500 words
-\subfile{sections/05_conclusions} % 500 words
+\subfile{sections/01-background} % 1500 words, 2 pages
+\subfile{sections/02-methods} % 1500 words
+\subfile{sections/03-results} % 1000 ~ 1500 words
+\subfile{sections/04-discussion} % 500 words
+\subfile{sections/05-conclusions} % 500 words
 
 % Coleman: thebibliography
 % -------------------------------------------
-% Coleman: Outline
 \bibliographystyle{ieeetr}
 \bibliography{access}
 % -------------------------------------------
@@ -112,7 +113,7 @@ miRNA, Dicer Cleavage Site, Genomic signal processing (GSP), (Multivariate) time
 % -------------------------------------------
 % Coleman: Outline
 \phantomsection
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{author_coleman_yu.jpg}}]{COLEMAN YU} received the 
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{author-coleman-yu.jpg}}]{COLEMAN YU} received the 
 BSc degree in Pure Physics, with minor programs in Mathematics, and Information Technology, in 2014
 and the MPhil degree in Technology Leadership and Entrepreneurship, hosted in the Department of Computer Science and Engineering, in 2016
 from The Hong Kong University of Science and Technology.
@@ -123,13 +124,13 @@ His research interests include data mining, particularly in time series, and bio
 
 % Coleman: Outline
 \phantomsection
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{author_raymond_wong.jpg}}]{RAYMOND CHI-WING WONG} 
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{author-raymond-wong.jpg}}]{RAYMOND CHI-WING WONG} 
 Raymond Chi-Wing Wong is a Professor in Computer Science and Engineering (CSE) of The Hong Kong University of Science and Technology (HKUST). He is currently the associate head of Department of Computer Science and Engineering (CSE) and the director of Undergraduate Research Opportunities Program (UROP). He was the associate director of the Data Science \& Technology (DSCT) program (from 2019 to 2021), the director of the Risk Management and Business Intelligence (RMBI) program (from 2017 to 2019), the director of the Computer Engineering (CPEG) program (from 2014 to 2016) and the associate director of the Computer Engineering (CPEG) program (from 2012 to 2014). He received the BSc, MPhil and PhD degrees in Computer Science and Engineering in the Chinese University of Hong Kong (CUHK) in 2002, 2004 and 2008, respectively. In 2004-2005, he worked as a research and development assistant under an R\&D project funded by ITF and a local industrial company called Lifewood. He received 43 awards. He published 135 conference papers (e.g., SIGMOD, SIGKDD, VLDB, ICDE and ICDM), 50 journal/chapter papers (e.g., TODS, DAMI, TKDE, VLDB journal and TKDD) and 1 book. He reviewed papers from conferences and journals related to data mining and database, including VLDB conference, SIGMOD, TODS, VLDB Journal, TKDE, TKDD, ICDE, SIGKDD, ICDM, DAMI, DaWaK, PAKDD, EDBT and IJDWM. He is a program committee member of conferences, including SIGMOD, VLDB, ICDE, KDD, ICDM and SDM, and a referee of journals, including TODS, VLDBJ, TKDE, TKDD, DAMI and KAIS. His research interests include database and data mining.
 \end{IEEEbiography}
 
 % Coleman: Outline
 \phantomsection
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{author_tatsuya_akutsu.jpg}}]{TATSUYA AKUSTSU} (Senior Member, IEEE) received the B.E. and M.E. degrees
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{author-tatsuya-akutsu.jpg}}]{TATSUYA AKUSTSU} (Senior Member, IEEE) received the B.E. and M.E. degrees
 in aeronautics and the D.E. degree in information
 engineering from the University of Tokyo, 1984, 1986, and 1989,
 respectively.
