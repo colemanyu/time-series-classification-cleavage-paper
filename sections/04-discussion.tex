@@ -13,7 +13,7 @@ It is likely because keeping it as an additional channel can preserve more infor
 Out of the three datasets, the best classifier is ROCKET.
 The ranking of the five classifiers by performance, starting from the best, is as follows: ROCKET, Hydra, MiniROCKET, MultiROCKET-Hydra, and MultiROCKET.
 It indicates that the features created from the pooling operations that are only in MultiROCKET but not in MiniROCKET, confuse the final classifier.
-They are mean of positive values (MPV), mean of indices of positive values (MIPV) and longest stretch of positive values (LSPV)~\cite{MultiRocketMultiplePooling2022}.
+They are mean of positive values (MPV), mean of indices of positive values (MIPV) and longest stretch of positive values (LSPV)~\cite{tan2022multirocket}.
 In contrast, the pooling operator that is only present in ROCKET but not in MiniROCKET, enhances the classification performance. 
 It is maximum (MAX).
 
@@ -29,7 +29,7 @@ In the 5p arm dataset, encoding RNA sequence in two channels appears to worsen t
 This suggests that the 5p arm dataset and the 3p arm dataset need different nucleotide grouping methods for the encoding.
 
 % Using few data
-One limitation of DiCleave is overfitting during training because of the relatively small size of the dataset~\cite{DiCleaveDeepLearning2024}.
+One limitation of DiCleave is overfitting during training because of the relatively small size of the dataset~\cite{mu2024dicleave}.
 DiCleave is a deep learning-based method.
 Deep learning models typically require a large amount of training data to generalize effectively.
 They are data-hungry.
@@ -43,7 +43,7 @@ The subsequence importance reveals some connections between RNA secondary struct
 The perturbation experiment shows that the leading part of 5p arm and the tailing part of 3p arm are important for the classification.
 These parts are close to the center of the RNA secondary structure of pre-miRNA.
 It indicates that the center region is more crucial for human dicer cleavage site prediction.
-It is consistent with the previous study~\cite{ReCGBMGradientBoostingbased2021}.
+It is consistent with the previous study~\cite{liu2021recgbm}.
 %%%
 %%%
 %%%
