@@ -53,7 +53,7 @@ It leads to the following configurations (cfgs):
 \end{enumerate}
 
 
-\input{tables/channel_ablation}
+\input{../tables/channel_ablation}
 
 
 We used single value mapping as the encoding method.
@@ -88,7 +88,7 @@ A horizontal bar connecting combinations indicates no statistically significant 
 %     \label{fig:channel_ablation_cd}
 % \end{figure}
 
-\input{figures/channel_ablation_cd}
+\input{../figures/channel_ablation_cd}
 
 From Figure~\ref{fig:channel_ablation_cd}, we can see that including time series derived from secondary structure information and base-pair probability as a separate channel can significantly improve the performance of the classifiers. 
 Incorporating the base-pair probability sequence in the time series encoding of the complementary strand can also improve the classifier, but to a minor degree compared to serving as a standalone channel. 
@@ -100,7 +100,7 @@ Recall that we have nine encoding methods and five ROCKET-based classifiers.
 It results in 45 combinations of encoding methods and classifiers.
 
 
-\input{tables/results}
+\input{../tables/results}
 
 The result is shown in Table~\ref{tab:results}.
 The best combination of encoding method and classifier is shown in Table~\ref{tab:results_best_minirocket_dicleave}.
@@ -112,7 +112,7 @@ For the multi-class dataset, the best combination is ``Global Cumulative grouped
 For all five classification metrics, it outperforms DiCleave.
 Note that for the 3p arm and the multi-class datasets, the combination of ``Cumulative grouped fixed-length channel mapping + ROKCET'' also attains the best result.
 
-\input{tables/results_best_minirocket_dicleave}
+\input{../tables/results_best_minirocket_dicleave}
 
 
 % \begin{figure}[htbp]
@@ -141,7 +141,7 @@ Note that for the 3p arm and the multi-class datasets, the combination of ``Cumu
 %     \label{fig:best_model_cd}
 % \end{figure}
 
-\input{figures/best_model_cd}
+\input{../figures/best_model_cd}
 
 % \begin{figure}[htbp]
 %     \centering
@@ -169,7 +169,7 @@ Note that for the 3p arm and the multi-class datasets, the combination of ``Cumu
 %     \label{fig:best_encoding_cd}
 % \end{figure}
 
-\input{figures/best_encoding_cd}
+\input{../figures/best_encoding_cd}
 
 To summarize Table~\ref{tab:results}, we plot the CD diagrams for finding the best classifier, as shown in Figure~\ref{fig:best_model_cd}, and the best encoding method, as shown in Figure~\ref{fig:best_encoding_cd}.
 
@@ -228,7 +228,7 @@ We aggregated the importance score across the test dataset.
 %     \label{fig:perturbation}
 % \end{figure}
 
-\input{figures/perturbation}
+\input{../figures/perturbation}
 
 The result is shown in Figure~\ref{fig:perturbation}.
 For the encoding methods, we cannot use the methods derived from the cumulative mapping because the accumulation would leak information from the masked region.

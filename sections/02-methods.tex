@@ -1,6 +1,6 @@
 \section{Methods} \label{sec:methods}
 
-\input{figures/pipeline}
+\input{../figures/pipeline}
 
 The overall pipeline of this study is summarized in Figure~\ref{fig:pipeline}.
 % In this session, we first discuss data preparation.
@@ -10,7 +10,7 @@ The overall pipeline of this study is summarized in Figure~\ref{fig:pipeline}.
 
 \subsection{Data Preparation}
 
-\input{tables/miRBase_representative}
+\input{../tables/miRBase_representative}
 
 We used miRBase database~\cite{griffiths-jones2008mirbase}\footnote{The website is \url{www.mirbase.org}, and the newest version of the database is Release 22.1 (Accessed on 2025-06-22).}. 
 The database comprises miRNA data from various organisms~\cite{xu2018mirbaseconverter}.
@@ -34,7 +34,7 @@ After the selection process, we selected 827 experimental validated pre-miRNA se
 This formed our dataset.
 
 
-\input{tables/hsa-let-7a-1}
+\input{../tables/hsa-let-7a-1}
 
 
 
@@ -88,7 +88,7 @@ The ``four strings'' of our running example are listed in Table~\ref{tab:hsa-let
 % https://tex.stackexchange.com/questions/48632/underscores-in-words-text
 % https://tex.stackexchange.com/questions/534381/underscore-is-shorter-for-ttfamily
 
-\input{tables/hsa-let-7a-1_eight_strings}
+\input{../tables/hsa-let-7a-1_eight_strings}
 
 
 We can construct the complementary strand of each of the strands in the ``four strings'' by finding the corresponding paired base for each of the bases in the input strand by considering the secondary structure information. 
@@ -138,7 +138,7 @@ We noted that DNA strings and RNA strings are equivalent from a computational st
 Many transformation methods designed for DNA can be applied to RNA by simply substituting $T$ with $U$.
 We present nine encoding methods. The relationship among them is shown in Figure~\ref{fig:encodings_relationship}.
 
-\input{figures/encodings_relationship}
+\input{../figures/encodings_relationship}
 
 \subsubsection{Single value versus Cumulative}
 % https://www.reddit.com/r/grammar/comments/bfuqx4/what_is_the_correct_wording_for_one_of_if_not_the/
@@ -184,7 +184,7 @@ When we encode $S$ without incorporating the corresponding base-pair probability
 We use the first ten nucleotides of the complementary strand of the 3p cleav of ``hsa-let-7a-1'', as shown in Table~\ref{tab:hsa-let-7a-1_eight_strings} as $S$ in the examples in Table~\ref{tab:ts_encoding}.
 
 
-\input{tables/ts_encoding}
+\input{../tables/ts_encoding}
 
 With the assigned value to each nucleotide defined in single-value mapping, we can compute a cumulative sum of those values over time.
 It captures the aggregated signal by accumulating past events, allowing us to focus on the trend~\cite{zhang1994curves, berger2004visualization}.
@@ -267,7 +267,7 @@ Additionally, although the original paper~\cite{dempster2020rocket} used the ter
 Recall $T$ with length $m$ has $(m-l+1)$ sliding windows of length $l$, given that the increment is 1\footnote{One step to the right per time.}, which defines the length of $M$.
 
 
-\input{figures/rocket_convolution}
+\input{../figures/rocket_convolution}
 
 Figure~\ref{fig:rocket_convolution} shows two kernels $\omega^1$ and $\omega^2$ with lengths 3 and 5, respectively.
 Each of which performs a convolution with $T$ and returns two activation maps, $M^1$ and $M^2$, respectively.
@@ -301,7 +301,7 @@ The three added operations are mean of positive values (MPV), mean of indices of
 
 % Hydra
 
-\input{figures/hydra_convolution}
+\input{../figures/hydra_convolution}
 
 The HYbrid Dictionary-ROCKET Architecture (Hydra) combines dictionary-based and convolution-based models~\cite{dempster2023hydra}.
 Similar to ROCKET-based classifiers, it uses random kernels to extract features from the input time series.
@@ -343,7 +343,7 @@ The generation of the summary features depends on:
 \end{enumerate}
 
 
-\input{tables/rockets_comparison}
+\input{../tables/rockets_comparison}
 
 \subsection{Evaluation metrics}
 To evaluate the performance of our time series-based classification (MTSC) model, we adopted five standard classification metrics.
