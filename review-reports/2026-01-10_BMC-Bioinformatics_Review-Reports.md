@@ -1,0 +1,92 @@
+### Feedback from the Editor
+> Dear Dr Yu,
+> 
+> Your manuscript, "MTSCCleav: a Multivariate Time Series Classification (MTSC)-based Method for Predicting Human Dicer Cleavage Sites", has now been assessed.
+> 
+> We invite you to revise your paper, carefully addressing the comments from the reviewers and the editor. When your revision is ready, please submit the updated manuscript and a point-by-point response.
+> 
+> Editor Comments:
+> In reading through the review reports, we've noticed that a number of additional specific references have been suggested. We would like to emphasise that we do not expect a research article to be comprehensive in its referencing of the background literature. Apart from the publications identified as directly-relevant to your study, these additions would be entirely at your discretion, and not including references which are not directly relevant to your work would not affect the final decision.
+> I can see one of the reviewers asked for the code to be made publicly available. Please note that this is at your discretion, and it is not a requirement for publication.
+> 
+> We recommend submitting all revisions within the mentioned deadline.
+> 
+> If you need more time, please contact us and include your submission ID.
+> 
+> Kind regards,
+> 
+> Sara Zandomeneghi
+> Editor
+> BMC Bioinformatics
+> 
+> Support contact: bmcbioinformatics@biomedcentral.com
+> 
+> Submission ID: b262ee98-cb6f-404b-a24a-e2c9bf56c412
+
+
+### Feedback from the Reviewer
+
+> Reviewer 1
+> 
+> This manuscript mainly focuses on developing a new method to predict Dicer cleavage sites within sequences. The authors introduce a novel method by reframing the problem as a multivariate time series classification task. Several encoding schemes were designed to convert both the RNA sequence and its predicted secondary structure into a time series format. Additionally, they incorporated base-pairing probability data derived from secondary structure predictions. Their computational analysis showed that this new approach delivers results that are either on par with or better than existing methods while employing a more straightforward and interpretable model. Even though the paper is written well, I have the following comments:
+> 
+> Major:
+> 1- How do you ensure the input matrix is of same for all sequences with different sizes?
+> 2- In Section 2.3, the text mentions about multiclass classification. But, I could not find where it is used in this work.
+> 3- Why does the proposed approach not exist in Table 6 and 7?
+> 4- Can you make the source code publicly available?
+> 
+> Minor:
+> 1- Why do author names and affilications are missing? I don't think journal is double-blind.
+> 2- Why do authors do not compare with the same authors previous work on the same prediction task?
+> 3- References provided are almost sufficient. But, the following 2 papers are also related to sequence-based prediction mentioned in this manuscript. Can you cite them as well?
+> a- Soylu, N.N. and Sefer, E., 2023. Bert2ome: Prediction of 2′-O-methylation modifications from rna sequence by transformer architecture based on bert. IEEE/ACM Transactions on Computational Biology and Bioinformatics, 20(3), pp.2177-2189.
+> b- Soylu, N.N. and Sefer, E., 2024. DeepPTM: protein post-translational modification prediction from protein sequences by combining deep protein language model with vision transformers. Current Bioinformatics, 19(9), pp.810-824.
+> 
+> Reviewer 2
+> 
+> This paper presents MTSCCleav, a multivariate time series classification method for predicting human Dicer cleavage sites in microRNA precursors. The authors convert RNA sequences and secondary structures into time series data using nine encoding methods, then apply ROCKET-based classifiers for analysis. Using 827 experimentally validated pre-miRNA sequences, the method achieves comparable or superior performance to the state-of-the-art DiCleave while providing 3.7X to 28.8X computational speedups. The study demonstrates that incorporating secondary structure information and base-pair probabilities significantly improves accuracy, and that simpler time series methods can effectively compete with complex deep learning approaches for biological prediction tasks.
+> 
+> However, the manuscript lacks clarity in its structure as a scientific paper, making it difficult for readers to understand the authors' intentions. The paper requires improvement in the following aspects:
+> (1) The explanations are overly verbose. The same content and sentences appear repeatedly throughout the manuscript, creating redundancy and hindering overall readability. Scientific papers should be written concisely and clearly.
+> (2) The proposed method is referred to as MTSCCleav, but no clear definition is provided, making it difficult for readers to understand the novel contributions of this work. The proposed framework appears to be a combination of existing methods, making this study more comparable to a comparative analysis rather than a methodological innovation, which limits its novelty. Furthermore, MTSCCleav does not necessarily refer to the best-performing combination. Additionally, placing both the full term and abbreviation in the title is unconventional. Moreover, it is unclear which specific combination corresponds to MTSCCleav in Table 8 due to the lack of a clear definition.
+> (3) Figures 6-8 lack proper definitions, making them completely incomprehensible to readers.
+> 
+> Minor comments:
+> p.1, Abstract, Results: "We proposed a novel approach" should be "We proposed an approach"
+> p.20, Summary: This section is redundant and should be removed.
+> 
+> Reviewer 3
+> 
+> This paper presents a novel and well-motivated approach to predicting human Dicer cleavage sites by framing the problem as a multivariate time series classification (MTSC) task. The idea of leveraging time series encoding methods to represent RNA sequences and secondary structures is innovative and has not been extensively explored in previous work. The method is computationally efficient, achieving significant speedups over the state-of-the-art (DiCleave), while maintaining competitive or superior accuracy across multiple datasets. However, the following concerns need to be addressed before it can be considered for publication.
+> Major concerns:
+> 1. The manuscript does not fully adhere to the journal's formatting guidelines.
+> 2. The Methods section contains an excessive amount of discursive content. It is recommended to streamline the text to highlight the logical flow and procedural details of the methodology.
+> 3. The Methods section introduces multiple encoding methods but does not describe the process of perturbation experiment and justify the hyperparameter choices (e.g., why a masking window size of 4 was used in the perturbation experiment).
+> 4. The padding strategy (using a constant value of 100) is mentioned but not motivated. Explain why this value was chosen and whether it affects model performance.
+> 5. ROC curve is recommended for evaluating performance differences across models. It can provide a more intuitive visualization than CD diagram.
+> 6. Based the results in Table 6, cfg 2 achieves the best performance on each dataset, why cfg 3 is finally selected to be used in the downstream analysis?
+> 7. While DiCleave is used as the main baseline, it would be beneficial to include comparisons with other classical methods to better contextualize the performance gains.
+> 8. The findings from the perturbation experiments fail to provide novel insights. It is recommended to conduct an in-depth interpretability analysis of the model to further elucidate its decision-making process.
+> Minor concerns:
+> 1. Section 2.1.2, “UAUAGUUUUAGGU” should be “UAUAGUUUUAGGGU”.
+> 2. Additional annotations are required for the figures of CD diagram to facilitate interpretation.
+> 3. The Methods section lacks a description of how base-pair probabilities were computed.
+> 4. As other encoding methods, the concept of “Global cumulative mapping” is also better to illustrated in Table 4.
+> 5. Minor Grammatical and punctuation errors are present. (e.g., Page 13, “This results …. g = 64 and k =8 It uses …”, Page 20, “as shown in Figure 7..”)
+> 
+> Reviewer 4
+> 
+> The paper introduces an innovative paradigm for genomic sequence analysis by framing RNA cleavage site prediction as a multivariate time series classification (MTSC) problem1111. The shift from complex feature engineering and opaque deep learning models (like DiCleave) to efficient, convolution-based classifiers like ROCKET is well-motivated and demonstrates impressive computational gains, ranging from 3.7 times 28.8x. However, while the results are promising, the manuscript requires significant refinement in the methodological exposition and the depth of biological discussion to meet the standards of a high-impact bioinformatics journal.
+> 
+> The current description of the methodology, while technically sound, lacks a cohesive "narrative" or detailed composition. The transition between raw RNA sequences and the final feature vector needs a more robust explanatory framework. The authors must provide a more rigorous, step-by-step composition of the "MTSCCleav" framework. Specifically, the rationale behind the mathematical transformation of biological properties (like purine/pyrimidine rings or hydrogen bond stability) into specific numerical magnitudes requires stronger theoretical justification. While Fig. 2 provides a high-level overview, the formal composition of how individual time-series channels are concatenated and how the Ridge classifier handles the resulting high-dimensional feature space needs more mathematical detail.
+> 
+> In Section 2.2.1, the assignment of specific integers for "Single value mapping" appears somewhat heuristic. The authors should discuss why these specific values were chosen over other established DNA numeric representations (DNR) mentioned in the background.
+> 
+> The study notes that 5p and 3p datasets may require different grouping methods. This is a significant finding that is currently glossed over; a deeper investigation into the biological reasons for this asymmetry is necessary.
+> 
+> The perturbation experiment identifies the center of the pre-miRNA as crucial. The authors should expand the discussion on why this region is enzymatically significant for Dicer, perhaps by linking their findings to specific structural motifs or thermodynamic properties of the miRNA duplex.
+> 
+> see above
+> 
+> NA
