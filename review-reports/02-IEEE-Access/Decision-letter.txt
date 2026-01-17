@@ -1,0 +1,99 @@
+17-01-2026
+
+Dear Mr. YU:
+
+Your manuscript entitled "MTSCCleav: a Multivariate Time Series Classification (MTSC)-based Method for Predicting Human Dicer Cleavage Sites" has been accepted for publication in IEEE Access.  The comments of the reviewers who evaluated your manuscript are included at the foot of this letter.  We ask that you make minor changes to your manuscript based on those comments, before uploading final files. 
+
+Please be advised that you are not permitted to add or remove authors or references post-acceptance, regardless of the reviewers' request(s).  Any request to add an author post-acceptance will be denied.  However, we encourage you to check the formatting of your references to ensure that they are accurate in terms of bibliographic details as well as consistent with IEEE style.  Additionally, please take this opportunity to improve the English grammar and check spelling, as the article is only lightly edited before publication.
+
+You can submit your final files through the IEEE Author Portal. 
+
+All files intended for publication need to be submitted during this step, even if some files are unchanged from the initial submission.  If you do not submit all files during this step, it can delay the publication of your article, or result in certain files not being published.  Please be advised that once you submit final files the article will be considered published and cannot be withdrawn.
+
+To assist you with preparing your final files, attached please find a Final Files Checklist.
+ 
+Once you have completed the submission of your final files, the accepted version of your article will be posted Early Access on IEEE Xplore within 2-3 business days.  Within 7-10 business days the corresponding author will receive your page proofs, at which point you can make minor edits as necessary.  Once the corresponding author approves the proofs, the final version will replace the Early Access version on IEEE Xplore. 
+ 
+For more information on what to expect after you submit final files, please visit our Post Acceptance Guide.
+ 
+After you submit final files you will automatically be directed to the Electronic Copyright Form. Once the copyright information is completed, within a few business days you will receive an email from Copyright Clearance Center (CCC) to settle your APC balance of $2,160 USD plus applicable local taxes by check, credit card, or wire transfer. Please note that once you submit final files your article is considered published, and you are responsible for covering the cost of the APC.  If you need assistance with the payment process, please contact CCC Customer Service at IEEESupport@copyright.com.
+ 
+Thank you for your fine contribution.  On behalf of the Editors of IEEE Access, we look forward to your continued contributions to IEEE Access.
+
+Sincerely,
+
+Dr. Vincenzo Conti
+Associate Editor, IEEE Access
+vincenzo.conti@unikore.it, vinc.conti@gmail.com
+
+Reviewer(s)' Comments to Author:
+
+Reviewer: 1
+
+Comments:
+Your work on reframing Dicer cleavage site prediction as a multivariate time series classification problem is novel and impactful. The experiments are thorough, the computational speedup is substantial, and the manuscript is clearly written. To further polish the paper, a few minor revisions are suggested. Please ensure that all references are complete, particularly the source for the multi-class MCC formulation. Consider adding a brief citation or clarification to support the numerical mapping used in the single-value encoding, and explicitly state the final filtering criterion that led to the selection of the 827 pre-miRNA sequences.
+
+Additional Questions:
+Please confirm that you have reviewed all relevant files, including supplementary files and any author response files, which can be found in the "View Author's Response" link above (author responses will only appear for resubmissions): Yes, all files have been reviewed
+
+1) Does the paper contribute to the body of knowledge?: Yes, the paper introduces a novel MTSC-based approach for Dicer cleavage prediction, presenting innovative sequence-to-time-series encodings and leveraging base-pair probabilities. It achieves comparable or better accuracy than SOTA with a 3.7×–28.8× speedup and provides interpretable biological insights. The work offers a faster, simpler, and effective alternative to existing deep learning methods.
+
+2) Is the paper technically sound?: The paper is technically sound. The methods are clearly defined and appropriate, the experimental design is robust using 5-fold cross-validation and standard metrics, and the results are reproducible and well-supported.
+
+3) Is the subject matter presented in a comprehensive manner?: Yes, the paper is thorough. It sets up the biological problem clearly, walks through the method in detail, runs a wide range of experiments, and thoughtfully discusses what the results mean. Nothing important feels skipped or glossed over. The story is complete and easy to follow.
+
+4) Are the references provided applicable and sufficient?: The references are appropriate and generally sufficient, covering prior work on miRNA biogenesis, Dicer cleavage site prediction, RNA secondary structure analysis, and time-series classification methods. They adequately contextualize the study within existing literature without unnecessary or excessive citation.
+
+5) Are there references that are not appropriate for the topic being discussed?: No
+
+5a) If yes, then please indicate which references should be removed.:
+
+
+Reviewer: 2
+
+Comments:
+The manuscript focuses on miRNAs and proposes a multivariate time series classification framework for predicting human Dicer cleavage sites by encoding RNA sequence into time series and applying efficient, classical machine learning classifiers. The topic is relevant, the approach is well motivated, and the experimental evaluation is thorough. In particular, the comparison with deep learning-based methods highlights a favorable trade-off between accuracy and computational efficiency.
+The paper is generally well written and clearly structured. I recommend acceptance after minor revision.
+
+The following requests must be satisfied to improve the manuscript
+Request 1
+The manuscript introduces several encoding strategies (single-value, cumulative, grouped, and global cumulative encodings) and evaluates them experimentally. While the empirical comparison is extensive, the rationale behind the selection of specific encodings for the final reported results could be clarified. A short discussion providing intuition or practical guidelines on when certain encodings may be preferable—possibly from a signal-processing or biological perspective—would improve the interpretability of the proposed framework.
+
+Request 2
+The related work section would benefit from a broader and more structured discussion of prior literature in Genomic Signal Processing (GSP), especially concerning DNA/RNA numerical representations, information-theoretic approaches, and encoding schemes for sequence analysis. These topics are closely related to the proposed time-series encoding framework and would help better position the contribution within the existing body of work.
+In particular, the authors are encouraged to cite and briefly discuss representative works covering entropy-based spectral analysis, information-theoretic perspectives, and genomic data encoding for signal processing and machine learning, such as:
+• Galleani, L., and Garello, R. (2010). The minimum entropy mapping spectrum of a DNA sequence. IEEE Transactions on Information Theory.
+• Vinga, S. (2014). Information theory applications for biological sequence analysis. Briefings in Bioinformatics.
+• Ahmad, M., Jung, L. T., and Bhuiyan, A. A. (2017). From DNA to protein: Why genetic code context of nucleotides for DNA signal processing? A review. Biomedical Signal Processing and Control.
+• Yu, N., Li, Z., and Yu, Z. (2018). Survey on encoding schemes for genomic data representation and feature learning—from signal processing to machine learning. Big Data Mining and Analytics.
+
+
+Request 3
+The discussion on sequence, secondary structure, and tertiary structure contains a potentially ambiguous statement that may be interpreted as contradictory. While the intent is clear, the wording could be improved to better reflect the role of 1D and 2D representations as indirect and more accessible proxies for studying molecular properties when the 3D structure is difficult to obtain.
+The authors are encouraged to clarify this point, for example by rephrasing the relevant sentence along the lines of:
+“However, the three-dimensional (tertiary) structure is difficult to measure experimentally and to predict directly from the one-dimensional sequence. Therefore, many relevant properties are typically investigated by analyzing the 1D sequence or the 2D (secondary) structure, which are more accessible and can be reliably obtained.”
+
+Request 4
+While the comparison with deep learning-based approaches (e.g., DiCleave) is clearly presented in the experimental section, this aspect is only implicitly mentioned in the Introduction. The authors are encouraged to more explicitly state early on that the proposed approach is positioned as a simpler and more computationally efficient alternative to deep learning methods for this task. Making this point clearer in the Introduction would help readers better understand the main contribution of the work.
+
+
+Additional Questions:
+Please confirm that you have reviewed all relevant files, including supplementary files and any author response files, which can be found in the "View Author's Response" link above (author responses will only appear for resubmissions): Yes, all files have been reviewed
+
+1) Does the paper contribute to the body of knowledge?: yes
+
+2) Is the paper technically sound?: yes
+
+3) Is the subject matter presented in a comprehensive manner?: yes
+
+4) Are the references provided applicable and sufficient?: • Galleani, L., and Garello, R. (2010). The minimum entropy mapping spectrum of a DNA sequence. IEEE Transactions on Information Theory.
+• Vinga, S. (2014). Information theory applications for biological sequence analysis. Briefings in Bioinformatics.
+• Ahmad, M., Jung, L. T., and Bhuiyan, A. A. (2017). From DNA to protein: Why genetic code context of nucleotides for DNA signal processing? A review. Biomedical Signal Processing and Control.
+• Yu, N., Li, Z., and Yu, Z. (2018). Survey on encoding schemes for genomic data representation and feature learning—from signal processing to machine learning. Big Data Mining and Analytics.
+
+5) Are there references that are not appropriate for the topic being discussed?: No
+
+5a) If yes, then please indicate which references should be removed.:
+
+
+If you have any questions, please contact article administrator: Dr. Ratnesh Bajpai r.k.bajpai@ieee.org
