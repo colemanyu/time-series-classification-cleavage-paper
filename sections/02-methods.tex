@@ -71,7 +71,7 @@ The same applies to the 3p cleavage site. It is located at the immediate bond be
 
 For each arm of each whole sequence, we extracted a 14-string\footnote{String with length $= 14$.} with the cleavage site located at the center of the string.
 The first 7 nt (nucleotide) before the center are highlighted in \textcolor{red}{\textbf{bold}}.
-In our running example, it would be ``\textcolor{red}{\textbf{UAUAGUU}}UUAGGU'' for the 5p cleavage site and ``\textcolor{red}{\textbf{GAGAUAA}}CUAUACA'' for the 3p cleavage site.
+In our running example, it would be ``\textcolor{red}{\textbf{UAUAGUU}}UUAGGGU'' for the 5p cleavage site and ``\textcolor{red}{\textbf{GAGAUAA}}CUAUACA'' for the 3p cleavage site.
 We refer to these 14-strings as cleavage patterns.
 % , as they contain the cleavage sites.
 We also generate non-cleavage patterns by selecting a 14-string with the center 6 nt away from the corresponding cleavage sites towards the corresponding mature miRNA~\cite{bao2016lbsizecleav, liu2021recgbm} for each arm of each whole sequence.
@@ -311,7 +311,7 @@ For each group of kernels, we slide them across $T$ and compute the dot product 
 Recall that the dot product of two input vectors ($x$ and $w_i$) has the maximum value when the two vectors align in the same direction and the minimum value when they are oriented in opposite directions.
 We record the kernel that best matches the subsequence of $T$ at each timestamp in each group (i.e., argmax). We refer to these kernels as the winning kernels.
 This results in a $k$-dimensional count vector for each of the $g$ groups, where $k=3$ in Figure~\ref{fig:hydra_convolution}.
-This results in a total of $g \times k$ features, with default values of $g = 64$ and $k=8$
+This results in a total of $g \times k$ features, with default values of $g = 64$ and $k=8$.
 It uses a total of $k \times g = 512$ kernels per dilation.
 In addition to recording the kernel with the maximum response, we can also record the kernel with the minimum response, knowing that this kernel will be the best match with the ``inverted'' subsequence of $T$.
 Hydra is applied to both the original time series and its first-order differences.

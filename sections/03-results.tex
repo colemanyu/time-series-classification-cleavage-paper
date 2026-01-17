@@ -234,7 +234,7 @@ The result is shown in Figure~\ref{fig:perturbation}.
 For the encoding methods, we cannot use the methods derived from the cumulative mapping because the accumulation would leak information from the masked region.
 We adopted ``Grouped fixed-length channel mapping'' as the encoding method and ROCKET as the classifier. 
 ``Grouped fixed-length channel mapping'' is the best encoding, other than the methods derived from the cumulative mapping, in all datasets, as shown in Figure~\ref{fig:best_encoding_cd}.
-ROCKET is the best classifier, as shown in Figure~\ref{fig:best_model_cd}..
+ROCKET is the best classifier, as shown in Figure~\ref{fig:best_model_cd}.
 
 In the 5p arm dataset, we found that masking subsequences at the tailing part caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(a).
 In the 3p arm dataset, we found that masking subsequences at the leading part caused a significant drop in the importance score, as shown in Figure~\ref{fig:perturbation}~(b).
