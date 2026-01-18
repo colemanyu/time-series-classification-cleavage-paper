@@ -1,0 +1,1 @@
+It shows the predicted secondary structure of the pre-miRNA sequence. The colors on the nodes reflect the probability of the base pair in this predicted secondary structure. The two scissor symbols indicate the two Dicer cleavage sites on 5' arm and 3' arm. We would like to predict whether a subsequence contains a cleavage site at the center.
