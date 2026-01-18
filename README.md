@@ -5,7 +5,7 @@ IEEE Access, 2026
 
 ## Submission History
 
-- 2026-01-18: Accepted
+- 2026-01-17: Accepted
     - [Review Reports](review-reports/02-IEEE-Access/Decision-letter.txt)
     - Other relevant materials can be found in [here](review-reports/02-IEEE-Access). 
 - 2025-12-10: Submitted to [IEEE Access](https://ieeeaccess.ieee.org/): [Commit f8a67fc](https://github.com/colemanyu/time-series-classification-cleavage-paper/tree/f8a67fc2fde8b9f2779cb947aee18b9de9570a81)
