@@ -28,7 +28,7 @@ In each fold derived from the multi-class dataset, the training set has a size o
 We reported the average of the five classification metrics.
 
 The ROCKET-based classifiers require all channels in the multivariate time series to have equal length.
-We applied padding to the shorter channels with the constant value 100, which does not appear in the original time series and would not introduce new semantic meaning. 
+We applied padding to the shorter channels with the constant value 100, which does not appear in the original time series. 
 It ensures the padding does not introduce ambiguity or interfere with the semantic meaning of the encoded nucleotide signals.
 
 \subsection{Channel Importance Study}
@@ -92,7 +92,7 @@ A horizontal bar connecting combinations indicates no statistically significant 
 
 From Figure~\ref{fig:channel_ablation_cd}, we can see that including time series derived from secondary structure information and base-pair probability as a separate channel can significantly improve the performance of the classifiers. 
 Incorporating the base-pair probability sequence in the time series encoding of the complementary strand can also improve the classifier, but to a minor degree compared to serving as a standalone channel. 
-In our downstream analysis, we adopted the combination of RNA sequence time series, secondary structure time series, and base-pair probability time series as our multivariate time series input, with 4 to 6 channels, depending on the encoding used.
+In our downstream analysis, we adopted the combination of RNA sequence time series (2 to 4 channels), secondary structure time series (1 channel), and base-pair probability time series (1 channel) as our multivariate time series input, with 4 to 6 channels, depending on the encoding used.
 
 \subsection{Predictive Performance}
 The experiment was conducted on three datasets: the 5p arm, the 3p arm, and the multi-class datasets.
@@ -173,7 +173,7 @@ Note that for the 3p arm and the multi-class datasets, the combination of ``Cumu
 
 To summarize Table~\ref{tab:results}, we plot the CD diagrams for finding the best classifier, which is ROCKET in all cases, as shown in Figure~\ref{fig:best_model_cd}, and the best encoding method, which is enc 9 in the 5p arm dataset and enc 7 for the others, as shown in Figure~\ref{fig:best_encoding_cd}.
 It is suggested to use ROCKET as the baseline classifier.
-For the encoding, it is suggested to use the global cumulative approach (enc 7 or enc 9).
+For the encoding, it is suggested to use enc 7 or enc 9.
 
 \subsection{Running Time Analysis}
 To compare the computational efficiency of MTSCCleav and DiCleave, we conducted a comparative analysis of their running times.

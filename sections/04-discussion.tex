@@ -11,7 +11,7 @@ It is likely because keeping it as an additional channel can preserve more infor
 
 % Discuss classifier
 Out of the three datasets, the best classifier is ROCKET.
-The ranking of the five classifiers by performance, starting from the best, is as follows: ROCKET, Hydra, MiniROCKET, MultiROCKET-Hydra, and MultiROCKET.
+The ranking of the five classifiers by performance, starting from the best, is as follows: ROCKET, MiniROCKET, Hydra, MultiROCKET-Hydra, and MultiROCKET, where the ranking of Hydra and MiniROCKET is interchanged in different cases.
 It indicates that the features created from the pooling operations that are only in MultiROCKET but not in MiniROCKET, confuse the final classifier.
 They are mean of positive values (MPV), mean of indices of positive values (MIPV) and longest stretch of positive values (LSPV)~\cite{tan2022multirocket}.
 In contrast, the pooling operator that is only present in ROCKET but not in MiniROCKET, enhances the classification performance. 
@@ -25,7 +25,7 @@ Global cumulative methods consistently yield better performance than local cumul
 It suggests that the upstream information of the cleavage pattern plays a critical role in identifying cleavage sites.
 Cumulative-based encodings perform better than single-value mappings, with one exception in the 3p dataset, suggesting that the accumulated nucleotide signal is more informative for cleavage site prediction than the local or isolated presence of nucleotides.
 % In the 3p dataset, grouped fixed-length is better than its counterpart. 
-According to Figure~\ref{fig:best_encoding_cd}~(b), for the 3p arm dataset, encoding RNA sequence in two channels (i.e., enc 9) appears to worsen the result.
+According to Figure~\ref{fig:best_encoding_cd}~(b), for the 3p arm dataset, encoding RNA sequence in two channels in a global cumulative manner (i.e., enc 9) appears to worsen the result.
 This suggests that the 5p arm and 3p arm datasets may require different nucleotide grouping methods for encoding.
 
 % Using few data
