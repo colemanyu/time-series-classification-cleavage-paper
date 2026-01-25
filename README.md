@@ -5,7 +5,8 @@ IEEE Access, 2026](https://ieeexplore.ieee.org/document/11359221)
 
 ## Notifications
 
-- 2026-01-17: Suggested references about encoding by a reviewer from IEEE Access (Sorted by year (Newest First))
+- 2026-01-17: Suggested references about encoding by a reviewer from IEEE Access
+    (Sorted by year (Newest First))
     - [yu2018survey] "Survey on encoding schemes for genomic data representation and feature learning—from signal processing to machine learning"
     - [ahmad2017dna] "From DNA to protein: Why genetic code context of nucleotides for DNA signal processing? A review"
     - [vinga2014information] "Information theory applications for biological sequence analysis"
@@ -19,7 +20,7 @@ IEEE Access, 2026](https://ieeexplore.ieee.org/document/11359221)
     - Other relevant materials can be found in [here](submissions/02-IEEE-Access-final-submission). 
 - 2026-01-17: Accepted
     - [Review Reports](submissions/02-IEEE-Access-review-reports/Decision-letter.txt)
-    - Other relevant materials can be found in [here](submissions/02-IEEE-Access). 
+    - Other relevant materials can be found in [here](submissions/02-IEEE-Access-review-reports). 
 - 2025-12-10: Submitted to [IEEE Access](https://ieeeaccess.ieee.org/): [Commit f8a67fc](https://github.com/colemanyu/time-series-classification-cleavage-paper/tree/f8a67fc2fde8b9f2779cb947aee18b9de9570a81)
   - Template: Imported from [ACCESS_latex_template_20240429.zip](https://ieeeaccess.ieee.org/wp-content/uploads/2025/08/ACCESS_latex_template_20240429.zip) | [Submission Guidelines](https://ieeeaccess.ieee.org/authors/submission-guidelines/).
 - 2025-12-10: Retract from BMC Bioinformatics due to the long review process.
