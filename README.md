@@ -6,7 +6,7 @@ IEEE Access, 2026](https://ieeexplore.ieee.org/document/11359221)
 ## Notifications
 
 - 2026-01-17: Suggested references about encoding by a reviewer from IEEE Access
-    (Sorted by year (Newest First))
+    - (Sorted by year (Newest First))
     - [yu2018survey] "Survey on encoding schemes for genomic data representation and feature learning—from signal processing to machine learning"
     - [ahmad2017dna] "From DNA to protein: Why genetic code context of nucleotides for DNA signal processing? A review"
     - [vinga2014information] "Information theory applications for biological sequence analysis"
