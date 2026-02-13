@@ -26,6 +26,6 @@ IEEE Access, pp. 11048 - 11063, Vol.14, 2026](https://ieeexplore.ieee.org/docume
 - 2025-12-10: Retract from BMC Bioinformatics due to the long review process.
   - We still have not received the first round's review reports at this time point.
   - [Review Reports](submissions/01-BMC-Bioinformatics/2026-01-10_BMC-Bioinformatics_Review-Reports.txt) ([Manuscript File](submissions/01-BMC-Bioinformatics/2026-01-10_BMC-Bioinformatics-time_series_classification_cleavage_paper-500e583.pdf))
-  - Other relevant materials can be found [here](submissions/01-BMC-Bioinformatics-review-reports). 
+  - Other relevant materials can be found [here](submissions/01-BMC-Bioinformatics). 
 - 2025-07-14: Submitted to [BMC Bioinformaitcs](http://www.biomedcentral.com/bmcbioinformatics/): [Commit 500e583](https://github.com/colemanyu/time-series-classification-cleavage-paper/tree/500e583c82b1178851aadce33d22054afa048ead) 
   - Template: Imported from [Springer Nature LaTeX Template](https://www.overleaf.com/latex/templates/springer-nature-latex-template/gsvvftmrppwq) | [LaTeX Author Support](https://www.springernature.com/gp/authors/campaigns/latex-author-support).
